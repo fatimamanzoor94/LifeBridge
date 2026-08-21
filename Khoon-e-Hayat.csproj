@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Screenshots\" />
     <Folder Include="wwwroot\uploads\profiles\" />
   </ItemGroup>
 
