@@ -246,3 +246,20 @@ Service / Business Logic
 Entity Framework
   ↓
 SQL Server Database
+
+
+## 🩸 Built with Purpose
+
+LifeBridge was designed and developed by **Fatima Manzoor** with the goal of using technology to make blood donation management more organized, accessible, and efficient.
+
+### 👩‍💻 Meet the Developer
+
+**Fatima Manzoor**
+
+Software Engineering Student | Full-Stack Web Developer
+
+Passionate about building modern, responsive, and meaningful web applications using technologies such as **ASP.NET MVC, C#, SQL Server, JavaScript, Bootstrap, and React.js**.
+
+🔗 **GitHub:** [fatimamanzoor94](https://github.com/fatimamanzoor94)
+
+🔗 **LinkedIn:** [Fatima Manzoor](https://linkedin.com/in/fatimamanzoorfati)
