@@ -247,6 +247,7 @@ Entity Framework
   ↓
 SQL Server Database
 
+---
 
 ## 🩸 Built with Purpose
 
@@ -263,3 +264,41 @@ Passionate about building modern, responsive, and meaningful web applications us
 🔗 **GitHub:** [fatimamanzoor94](https://github.com/fatimamanzoor94)
 
 🔗 **LinkedIn:** [Fatima Manzoor](https://linkedin.com/in/fatimamanzoorfati)
+
+---
+
+## 📸 Project Preview
+
+Here are some screenshots showcasing the main interfaces and workflows of LifeBridge.
+
+### 🏠 Landing Page
+
+![LifeBridge Landing Page](Screenshots/home.png)
+
+### 👨‍💼 Admin Dashboard
+
+![LifeBridge Admin Dashboard](Screenshots/admin-dashboard.png)
+
+### 🩸 Donor Dashboard
+
+![LifeBridge Donor Dashboard](Screenshots/donor-dashboard.png)
+
+### 👤 Receiver Dashboard
+
+![LifeBridge Receiver Dashboard](Screenshots/receiver-dashboard.png)
+
+### 🏥 Hospital Dashboard
+
+![LifeBridge Hospital Dashboard](Screenshots/hospital-dashboard.png)
+
+### 🚨 Blood Request Management
+
+![LifeBridge Blood Request](Screenshots/blood-request.png)
+
+### 🧠 Smart Donor Search
+
+![LifeBridge Smart Donor Search](Screenshots/smart-donor-search.png)
+
+
+
+
