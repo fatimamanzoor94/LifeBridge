@@ -612,7 +612,7 @@ The following screenshots showcase the main interfaces and workflows of LifeBrid
 
 ## 🏠 Landing Page
 
-![LifeBridge Landing Page](Screenshots/home.png)
+![LifeBridge Landing Page](Screenshots/landing-page.png)
 
 ---
 
