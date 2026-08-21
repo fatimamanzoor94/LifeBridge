@@ -1,0 +1,241 @@
+﻿@model Khoon_e_Hayat.Models.ViewModels.RegisterReceiverViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register as Receiver - Khoon-e-Hayat</title>
+    <link rel="icon" type="image/png" href="~/assets/Favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#23BBB7', secondary: '#23BBB7', accent: '#90151C', success: '#23BBB7', background: '#F6F6F6', muted: 'black', deep: '#063154', border: '#bcc5cc' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root { --primary: #23BBB7; --accent: #90151C; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: #1f2937; overflow-x: hidden; }
+        .glass-nav { background: rgba(144, 21, 28, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .solid-card { background: #FFFFFF; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15); border-radius: 30px; }
+        .form-input-solid { background: #F8FAFC; border: 1px solid #E5E7EB; color: #111827; transition: all 0.3s ease; }
+        .form-input-solid:focus { background: #FFFFFF; border-color: #23BBB7; box-shadow: 0 0 0 4px rgba(35, 187, 183, 0.15); outline: none; }
+        .form-input-solid::placeholder { color: #9CA3AF; }
+        .form-select-solid { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 16px 12px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+        @@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @@keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease forwards; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+    <div class="fixed inset-0 z-0" style="background-image: url('../assets/Khoon-e-Hayat-Bg-1.png'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
+    <div class="fixed inset-0 z-0 bg-black/70"></div>
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-24 h-24 rounded-full bg-white/5 blur-sm animate-float"></div>
+        <div class="absolute bottom-20 right-20 w-32 h-32 rounded-full bg-[#90151C]/20 blur-md animate-float" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 right-10 w-16 h-16 rounded-full bg-[#23BBB7]/20 blur-sm animate-float" style="animation-delay: 2s;"></div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null) {
+        <div class="fixed top-24 left-1/2 transform -translate-x-1/2 z-[60] bg-[#23BBB7] text-white px-6 py-3 rounded-xl shadow-lg flex items-center space-x-3 animate-fadeInUp">
+            <i class="fas fa-check-circle"></i><span class="font-medium">@TempData["SuccessMessage"]</span>
+        </div>
+    }
+
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <a href="/" class="flex items-center group">
+                    <div class="w-32 h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <img src="~/assets/finalLogo-01.png" alt="Khoon-e-Hayat Logo" class="w-full h-full object-contain drop-shadow-lg">
+                    </div>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <span class="text-white/80 text-sm hidden sm:inline">Already have an account?</span>
+                    <a href="/Account/Login" class="px-5 py-2 rounded-full border-2 border-white text-white hover:bg-white hover:text-[#90151C] font-semibold transition-all shadow-lg">Login</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 min-h-screen flex items-center justify-center pt-24 pb-12 px-4">
+        <div class="w-full max-w-3xl animate-fadeInUp">
+            <div class="solid-card p-8 lg:p-12">
+                <div class="text-center mb-10">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#23BBB7]/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-droplet text-4xl text-[#23BBB7]"></i>
+                    </div>
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3">Register as Blood Receiver</h2>
+                    <p class="text-gray-500 max-w-lg mx-auto text-lg">Request blood urgently from our verified donor network and partner hospitals.</p>
+                </div>
+
+                <form asp-action="RegisterReceiver" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-red-600 bg-red-50 border border-red-200 p-4 rounded-xl mb-8 text-sm font-medium"></div>
+
+                    <div class="mb-10">
+                        <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
+                            <div class="w-10 h-10 rounded-lg bg-[#23BBB7]/10 flex items-center justify-center"><i class="fas fa-user text-[#23BBB7] text-lg"></i></div>
+                            <h3 class="text-xl font-bold text-gray-900">Personal Information</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label asp-for="FullName" class="block text-gray-700 text-sm font-semibold mb-2">Full Name</label>
+                                <input asp-for="FullName" class="form-input-solid w-full px-4 py-3.5 rounded-xl" placeholder="Enter your full name" />
+                                <span asp-validation-for="FullName" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label asp-for="Email" class="block text-gray-700 text-sm font-semibold mb-2"></label>
+                                <input asp-for="Email" class="form-input-solid w-full px-4 py-3.5 rounded-xl" placeholder="name@example.com" />
+                                <span asp-validation-for="Email" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+
+                            <!-- Password with Strength Meter -->
+                            <div>
+                                <label asp-for="Password" class="block text-gray-700 text-sm font-semibold mb-2"></label>
+                                <div class="relative">
+                                    <input asp-for="Password" class="form-input-solid w-full px-4 py-3.5 pr-12 rounded-xl" id="Password" placeholder="••••••••" />
+                                    <button type="button" onclick="togglePassword('Password', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="w-full bg-gray-200 rounded-full h-1.5">
+                                        <div id="strengthBar" class="h-1.5 rounded-full transition-all duration-300"></div>
+                                    </div>
+                                    <p id="strengthText" class="text-xs mt-1"></p>
+                                </div>
+                                <span asp-validation-for="Password" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+
+                            <div>
+                                <label asp-for="ConfirmPassword" class="block text-gray-700 text-sm font-semibold mb-2">Confirm Password</label>
+                                <div class="relative">
+                                    <input asp-for="ConfirmPassword" class="form-input-solid w-full px-4 py-3.5 pr-12 rounded-xl" id="ConfirmPassword" placeholder="••••••••" />
+                                    <button type="button" onclick="togglePassword('ConfirmPassword', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label asp-for="Phone" class="block text-gray-700 text-sm font-semibold mb-2"></label>
+                                <input asp-for="Phone" class="form-input-solid w-full px-4 py-3.5 rounded-xl" placeholder="03XXXXXXXXX" />
+                                <span asp-validation-for="Phone" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-10">
+                        <div class="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-200">
+                            <div class="w-10 h-10 rounded-lg bg-[#23BBB7]/10 flex items-center justify-center"><i class="fas fa-tint text-[#23BBB7] text-lg"></i></div>
+                            <h3 class="text-xl font-bold text-gray-900">Blood Requirement Details</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label asp-for="BloodGroupNeeded" class="block text-gray-700 text-sm font-semibold mb-2">Blood Group Needed</label>
+                                <select asp-for="BloodGroupNeeded" class="form-input-solid form-select-solid w-full px-4 py-3.5 rounded-xl">
+                                    <option value="">Select Blood Group</option>
+                                    <option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option>
+                                    <option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option>
+                                </select>
+                                <span asp-validation-for="BloodGroupNeeded" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+                            <div>
+                                <label asp-for="UrgencyLevel" class="block text-gray-700 text-sm font-semibold mb-2">Urgency Level</label>
+                                <select asp-for="UrgencyLevel" class="form-input-solid form-select-solid w-full px-4 py-3.5 rounded-xl">
+                                    <option value="">Select Urgency</option>
+                                    <option value="Critical">Critical</option><option value="High">High</option>
+                                    <option value="Medium">Medium</option><option value="Low">Low</option>
+                                </select>
+                                <span asp-validation-for="UrgencyLevel" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label asp-for="HospitalName" class="block text-gray-700 text-sm font-semibold mb-2">Hospital Name</label>
+                                <input asp-for="HospitalName" class="form-input-solid w-full px-4 py-3.5 rounded-xl" placeholder="Name of the hospital" />
+                                <span asp-validation-for="HospitalName" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+                            <div>
+                                <label asp-for="City" class="block text-gray-700 text-sm font-semibold mb-2"></label>
+                                <input asp-for="City" class="form-input-solid w-full px-4 py-3.5 rounded-xl" placeholder="City" />
+                                <span asp-validation-for="City" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+                            <div>
+                                <label asp-for="RequiredDate" class="block text-gray-700 text-sm font-semibold mb-2">Required Date</label>
+                                <input asp-for="RequiredDate" type="date" class="form-input-solid w-full px-4 py-3.5 rounded-xl" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="RequiredDate" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-[#23BBB7] hover:bg-[#1A9A96] text-white font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-droplet"></i><span>Register as Receiver</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function togglePassword(id, btn) {
+            var input = document.getElementById(id);
+            var icon = btn.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
+        document.getElementById("Password").addEventListener("keyup", function () {
+            let password = this.value;
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            let bar = document.getElementById("strengthBar");
+            let text = document.getElementById("strengthText");
+
+            if (password.length === 0) {
+                bar.style.width = "0%";
+                text.innerHTML = "";
+            } else if (strength <= 2) {
+                bar.style.width = "30%";
+                bar.style.background = "red";
+                text.innerHTML = "Weak Password";
+            } else if (strength <= 4) {
+                bar.style.width = "70%";
+                bar.style.background = "orange";
+                text.innerHTML = "Medium Password";
+            } else {
+                bar.style.width = "100%";
+                bar.style.background = "green";
+                text.innerHTML = "Strong Password";
+            }
+        });
+    </script>
+</body>
+</html>

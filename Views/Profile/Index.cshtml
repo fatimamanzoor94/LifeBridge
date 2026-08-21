@@ -1,0 +1,1073 @@
+﻿@{
+    var role = ViewBag.Role?.ToString() ?? "Donor";
+
+    Layout = role switch
+    {
+        "Admin" => "~/Views/Shared/_AdminLayout.cshtml",
+        "Donor" => "~/Views/Shared/_DonorLayout.cshtml",
+        "Hospital" => "~/Views/Shared/_HospitalLayout.cshtml",
+        "Receiver" => "~/Views/Shared/_ReceiverLayout.cshtml",
+        _ => "~/Views/Shared/_DonorLayout.cshtml"
+    };
+
+    var defaultImg = Url.Content("~/aassets/img/avatars/DefaultAvatar.png");
+    var profileImg = string.IsNullOrEmpty(Model.ProfilePicture) ? defaultImg : Model.ProfilePicture;
+}
+
+@Html.AntiForgeryToken()
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- ==================== PROFILE HEADER CARD ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+                        <!-- Avatar -->
+                        <div class="position-relative">
+                            <img src="@profileImg" id="mainAvatar" class="rounded-circle shadow-sm"
+                                 style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #fff;"
+                                 onerror="this.onerror=null; this.src='@defaultImg';">
+                            <span class="badge bg-@(Model.IsActive ? "success" : "danger") rounded-pill position-absolute"
+                                  style="bottom: 5px; right: 5px; font-size: 0.7rem; border: 2px solid #fff;">
+                                @(Model.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </div>
+
+                        <!-- User Info -->
+                        <div class="text-center text-md-start flex-grow-1">
+                            <h3 class="fw-bold mb-1">@Model.FullName</h3>
+                            <span class="badge bg-label-primary rounded-pill px-3 py-2 mb-2">@Model.Role</span>
+                            <div class="d-flex flex-column flex-sm-row gap-3 text-muted mt-2">
+                                <span><i class="bx bx-envelope me-1 text-primary"></i> @Model.Email</span>
+                                <span><i class="bx bx-phone me-1 text-success"></i> @(Model.Phone ?? "N/A")</span>
+                                <span><i class="bx bx-calendar me-1 text-info"></i> Joined @Model.CreatedAt.ToString("dd MMM yyyy")</span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Action -->
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary rounded-pill px-4" onclick="document.getElementById('edit-tab').click()">
+                                <i class="bx bx-edit me-1"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== TAB NAVIGATION ==================== -->
+            <ul class="nav nav-pills mb-4 justify-content-center" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="btn btn-outline-primary rounded-pill mx-1 active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button">Overview</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn btn-outline-primary rounded-pill mx-1" id="edit-tab" data-bs-toggle="pill" data-bs-target="#edit" type="button">Edit Profile</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn btn-outline-primary rounded-pill mx-1" id="security-tab" data-bs-toggle="pill" data-bs-target="#security" type="button">Security</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn btn-outline-primary rounded-pill mx-1" id="photo-tab" data-bs-toggle="pill" data-bs-target="#photo" type="button">Profile Photo</button>
+                </li>
+            </ul>
+
+            <style>
+                            :root {
+                                --deep: #063154;
+                            }
+
+                            /* Normal Button */
+                            #profileTabs .btn-outline-primary {
+                                color: var(--deep);
+                                border-color: var(--deep);
+                                background-color: transparent;
+                            }
+
+                                /* Hover */
+                                #profileTabs .btn-outline-primary:hover {
+                                    background-color: var(--deep);
+                                    border-color: var(--deep);
+                                    color: #fff;
+                                }
+
+                                /* Active Button */
+                                #profileTabs .btn-outline-primary.active,
+                                #profileTabs .btn-outline-primary:active,
+                                #profileTabs .btn-check:checked + .btn-outline-primary {
+                                    background-color: var(--deep);
+                                    border-color: var(--deep);
+                                    color: #fff;
+                                }
+
+                                /* Focus Effect */
+                                #profileTabs .btn-outline-primary:focus {
+                                    /* box-shadow: 0 0 0 0.25rem rgba(6, 49, 84, 0.25); */
+                                }
+
+
+                            /* Validation Styles */
+                            .form-control.is-invalid,
+                            .form-select.is-invalid {
+                                border-color: #dc3545;
+                                padding-right: calc(1.5em + 0.75rem);
+                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+                                background-repeat: no-repeat;
+                                background-position: right calc(0.375em + 0.1875rem) center;
+                                background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+                            }
+
+                            .form-control.is-valid,
+                            .form-select.is-valid {
+                                border-color: #28a745;
+                                padding-right: calc(1.5em + 0.75rem);
+                                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+                                background-repeat: no-repeat;
+                                background-position: right calc(0.375em + 0.1875rem) center;
+                                background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+                            }
+
+                            .invalid-feedback {
+                                display: none;
+                                color: #dc3545;
+                                font-size: 0.875rem;
+                                margin-top: 0.25rem;
+                            }
+
+                            .form-control.is-invalid ~ .invalid-feedback,
+                            .form-select.is-invalid ~ .invalid-feedback {
+                                display: block;
+                            }
+
+                            /* Required field indicator */
+                            .text-danger {
+                                color: #dc3545 !important;
+                            }
+            </style>
+
+            <!-- ==================== TAB CONTENT ==================== -->
+            <div class="tab-content" id="profileTabsContent">
+
+                <!-- TAB 1: OVERVIEW -->
+                <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- Personal Information -->
+                        <div class="col-lg-8">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100">
+                                <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                                    <h4 class="mb-1 fw-semibold">Personal Information</h4>
+                                    <small class="text-muted">Your personal details and contact info</small>
+                                </div>
+                                <div class="card-body px-4 pb-4">
+                                    <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                        <span class="text-muted"><i class="bx bx-user me-2"></i>Full Name</span>
+                                        <span class="fw-semibold">@Model.FullName</span>
+                                    </div>
+                                    <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                        <span class="text-muted"><i class="bx bx-envelope me-2"></i>Email Address</span>
+                                        <span class="fw-semibold">@Model.Email</span>
+                                    </div>
+                                    <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                        <span class="text-muted"><i class="bx bx-phone me-2"></i>Phone Number</span>
+                                        <span class="fw-semibold">@(Model.Phone ?? "N/A")</span>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(Model.CNIC))
+                                    {
+                                        <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                            <span class="text-muted"><i class="bx bx-id-card me-2"></i>CNIC</span>
+                                            <span class="fw-semibold">@Model.CNIC</span>
+                                        </div>
+                                    }
+                                    @if (Model.Role == "Donor" || Model.Role == "Receiver")
+                                    {
+                                        <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                            <span class="text-muted"><i class="bx bx-droplet me-2"></i>Blood Group</span>
+                                            <span class="fw-semibold text-danger">@(Model.BloodGroup ?? Model.BloodGroupNeeded ?? "N/A")</span>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.City))
+                                    {
+                                        <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                            <span class="text-muted"><i class="bx bx-map me-2"></i>City</span>
+                                            <span class="fw-semibold">@Model.City</span>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.Country))
+                                    {
+                                        <div class="info-row d-flex justify-content-between py-2">
+                                            <span class="text-muted"><i class="bx bx-globe me-2"></i>Country</span>
+                                            <span class="fw-semibold">@Model.Country</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Information -->
+                        <div class="col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100">
+                                <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                                    <h4 class="mb-1 fw-semibold">Account Information</h4>
+                                    <small class="text-muted">Your account status and details</small>
+                                </div>
+                                <div class="card-body px-4 pb-4">
+                                    <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                        <span class="text-muted"><i class="bx bx-shield me-2"></i>Role</span>
+                                        <span class="fw-semibold">@Model.Role</span>
+                                    </div>
+                                    <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                        <span class="text-muted"><i class="bx bx-check-circle me-2"></i>Status</span>
+                                        <span class="badge bg-@(Model.IsActive ? "success-subtle text-success" : "danger-subtle text-danger") rounded-pill">
+                                            @(Model.IsActive ? "Active" : "Inactive")
+                                        </span>
+                                    </div>
+                                    <div class="info-row d-flex justify-content-between py-2 border-bottom">
+                                        <span class="text-muted"><i class="bx bx-calendar-check me-2"></i>Registered</span>
+                                        <span class="fw-semibold">@Model.CreatedAt.ToString("dd MMM yyyy")</span>
+                                    </div>
+                                    <div class="info-row d-flex justify-content-between py-2">
+                                        <span class="text-muted"><i class="bx bx-log-in me-2"></i>Last Login</span>
+                                        <span class="fw-semibold">@(Model.LastLogin?.ToString("dd MMM yyyy, hh:mm tt") ?? "N/A")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: EDIT PROFILE -->
+                <div class="tab-pane fade" id="edit" role="tabpanel">
+                    <div class="card custom-card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold">Edit Profile</h4>
+                            <small class="text-muted">Update your personal information</small>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            <!-- Validation Summary -->
+                            <div id="validationSummary" class="alert alert-danger d-none rounded-3 mb-3" role="alert">
+                                <i class="bx bx-error-circle me-2"></i>
+                                <span id="validationSummaryText"></span>
+                                <ul id="validationErrorsList" class="mb-0 mt-2"></ul>
+                            </div>
+
+                            <!-- Success Message -->
+                            <div id="successMessage" class="alert alert-success d-none rounded-3 mb-3" role="alert">
+                                <i class="bx bx-check-circle me-2"></i>
+                                <span id="successMessageText"></span>
+                            </div>
+
+                            <form id="editProfileForm" novalidate>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted mb-1">Full Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control rounded-3" id="FullName" name="FullName"
+                                               value="@Model.FullName" required
+                                               pattern="^[a-zA-Z\s]+$"
+                                               title="Full name can only contain letters and spaces"
+                                               minlength="2" maxlength="100">
+                                        <div class="invalid-feedback">Please enter a valid full name (2-100 characters, letters only)</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted mb-1">Phone Number</label>
+                                        <input type="tel" class="form-control rounded-3" id="Phone" name="Phone"
+                                               value="@Model.Phone"
+                                               pattern="^03[0-9]{9}$"
+                                               title="Phone number must be in format 03XXXXXXXXX"
+                                               maxlength="11"
+                                               placeholder="03XXXXXXXXX">
+                                        <div class="invalid-feedback">Please enter a valid phone number (03XXXXXXXXX)</div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted mb-1">CNIC</label>
+                                        <input type="text" class="form-control rounded-3" id="CNIC" name="CNIC"
+                                               value="@Model.CNIC"
+                                               placeholder="XXXXX-XXXXXXX-X"
+                                               pattern="^\d{5}-\d{7}-\d{1}$"
+                                               title="CNIC must be in format XXXXX-XXXXXXX-X"
+                                               maxlength="15">
+                                        <div class="invalid-feedback">Please enter CNIC in format XXXXX-XXXXXXX-X</div>
+                                        <small class="form-text text-muted">Format: 12345-1234567-8</small>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted mb-1">Country</label>
+                                        <input type="text" class="form-control rounded-3" id="Country" name="Country"
+                                               value="@Model.Country" maxlength="100">
+                                    </div>
+
+                                    @if (Model.Role == "Donor")
+                                    {
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Blood Group</label>
+                                            <select class="form-select rounded-3" id="BloodGroup" name="BloodGroup">
+                                                <option value="">Select Blood Group</option>
+                                                @foreach (var bg in new[] { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" })
+                                                {
+                                                    <option value="@bg" selected="@(Model.BloodGroup == bg)">@bg</option>
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Date of Birth</label>
+                                            <input type="date" class="form-control rounded-3" id="DateOfBirth" name="DateOfBirth"
+                                                   value="@(Model.DateOfBirth?.ToString("yyyy-MM-dd"))"
+                                                   max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")">
+                                            <small class="form-text text-muted">Must be at least 18 years old</small>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Gender</label>
+                                            <select class="form-select rounded-3" id="Gender" name="Gender">
+                                                <option value="Male" selected="@(Model.Gender == "Male")">Male</option>
+                                                <option value="Female" selected="@(Model.Gender == "Female")">Female</option>
+                                                <option value="Other" selected="@(Model.Gender == "Other")">Other</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Weight (kg)</label>
+                                            <input type="number" class="form-control rounded-3" id="Weight" name="Weight"
+                                                   value="@Model.Weight" min="50" max="200" step="0.1" required>
+                                            <div class="invalid-feedback">Weight must be at least 50 kg to donate blood.</div>
+                                            <small class="form-text text-muted">Minimum 50 kg required for blood donation.</small>
+                                        </div>
+                                    }
+
+                                    @if (Model.Role == "Receiver")
+                                    {
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Blood Group Needed</label>
+                                            <select class="form-select rounded-3" id="BloodGroupNeeded" name="BloodGroupNeeded">
+                                                <option value="">Select Blood Group</option>
+                                                @foreach (var bg in new[] { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" })
+                                                {
+                                                    <option value="@bg" selected="@(Model.BloodGroupNeeded == bg)">@bg</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    }
+
+                                    @if (Model.Role == "Hospital")
+                                    {
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Hospital Name</label>
+                                            <input type="text" class="form-control rounded-3" id="HospitalName" name="HospitalName"
+                                                   value="@Model.HospitalName" readonly style="background-color: #e9ecef;">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Contact Person</label>
+                                            <input type="text" class="form-control rounded-3" id="ContactPerson" name="ContactPerson"
+                                                   value="@Model.ContactPerson" maxlength="100">
+                                        </div>
+                                    }
+
+                                    @if (Model.Role != "Admin")
+                                    {
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">Address</label>
+                                            <input type="text" class="form-control rounded-3" id="Address" name="Address"
+                                                   value="@Model.Address" maxlength="255">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted mb-1">City</label>
+                                            <input type="text" class="form-control rounded-3" id="City" name="City"
+                                                   value="@Model.City" maxlength="100">
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="mt-4 d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4" id="saveChangesBtn">
+                                        <i class="bx bx-save me-1"></i> Save Changes
+                                    </button>
+                                    <button type="reset" class="btn btn-outline-secondary rounded-pill px-4">
+                                        <i class="bx bx-reset me-1"></i> Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: SECURITY -->
+                <div class="tab-pane fade" id="security" role="tabpanel">
+                    <div class="card custom-card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold">Change Password</h4>
+                            <small class="text-muted">Ensure your account is using a strong, secure password</small>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            <form id="changePasswordForm">
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label small text-muted mb-1">Current Password</label>
+                                        <input type="password" class="form-control rounded-3" name="CurrentPassword" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted mb-1">New Password</label>
+                                        <input type="password" class="form-control rounded-3" id="newPassword" name="NewPassword" required minlength="6">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small text-muted mb-1">Confirm New Password</label>
+                                        <input type="password" class="form-control rounded-3" id="confirmPassword" name="ConfirmPassword" required minlength="6">
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-danger rounded-pill px-4">
+                                        <i class="bx bx-lock-alt me-1"></i> Update Password
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: PROFILE PHOTO -->
+                <div class="tab-pane fade" id="photo" role="tabpanel">
+                    <div class="card custom-card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold">Profile Photo</h4>
+                            <small class="text-muted">Upload or change your profile picture</small>
+                        </div>
+                        <div class="card-body px-4 pb-4 text-center">
+                            <div class="position-relative d-inline-block mb-3">
+                                <img src="@profileImg" id="photoPreview" class="rounded-circle shadow-sm"
+                                     style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #fff;"
+                                     onerror="this.onerror=null; this.src='@defaultImg';">
+                                <label for="profilePictureInput" class="position-absolute bottom-0 end-0 btn btn-sm btn-primary rounded-circle p-2 shadow"
+                                       style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                                    <i class="bx bx-camera"></i>
+                                </label>
+                                <input type="file" id="profilePictureInput" name="file" accept="image/*" class="d-none" />
+                            </div>
+                            <div class="d-flex gap-2 justify-content-center mt-3">
+                                <button type="button" class="btn btn-outline-primary rounded-pill px-4" id="uploadBtn">
+                                    <i class="bx bx-upload me-1"></i> Upload / Replace
+                                </button>
+                                @if (!string.IsNullOrEmpty(Model.ProfilePicture) && !Model.ProfilePicture.Contains("DefaultAvatar"))
+                                {
+                                    <button type="button" class="btn btn-outline-danger rounded-pill px-4" id="removeBtn">
+                                        <i class="bx bx-trash me-1"></i> Remove
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== STYLES ==================== -->
+<style>
+    .custom-card {
+        background: #ffffff;
+        border-radius: 16px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .custom-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px dashed #dee2e6;
+    }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row .text-muted {
+            font-size: 0.9rem;
+        }
+
+        .info-row .fw-semibold {
+            font-size: 0.95rem;
+        }
+
+    .nav-pills .btn-outline-primary {
+        border-color: #0d6efd;
+        color: #0d6efd;
+    }
+
+        .nav-pills .btn-outline-primary.active, .nav-pills .btn-outline-primary:hover {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+</style>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+@section Scripts {
+    <script>
+        // --- NOTIFICATION HELPER ---
+        function showNotification(message, type = 'error') {
+            const bg = type === 'success' ? '#28a745' : '#dc3545';
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                        position: fixed; top: 20px; right: 20px; z-index: 9999;
+                        background: ${bg}; color: white; padding: 15px 25px;
+                        border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+                        font-weight: 500; animation: slideIn 0.3s ease;
+                        max-width: 400px;
+                    `;
+            notification.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="bx bx-${type === 'success' ? 'check-circle' : 'error-circle'}" style="font-size: 20px;"></i>
+                            <span>${message}</span>
+                        </div>
+                    `;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Add CSS animations
+        const animStyle = document.createElement('style');
+        animStyle.textContent = `
+                    @@keyframes slideIn {
+                        from { transform: translateX(400px); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @@keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(400px); opacity: 0; }
+                    }
+                `;
+        document.head.appendChild(animStyle);
+
+        // --- GET ANTI-FORGERY TOKEN ---
+        function getAntiForgeryToken() {
+            return document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+        }
+
+        // --- UPDATE ALL PROFILE PICTURES (INCLUDING NAVBAR) ---
+        function updateAllProfilePictures(imageUrl) {
+            const timestamp = Date.now();
+            const fullUrl = imageUrl + '?t=' + timestamp;
+
+            // Update main avatar
+            const mainAvatar = document.getElementById('mainAvatar');
+            if (mainAvatar) mainAvatar.src = fullUrl;
+
+            // Update photo preview
+            const photoPreview = document.getElementById('photoPreview');
+            if (photoPreview) photoPreview.src = fullUrl;
+
+            // ✅ CRITICAL FIX: Update navbar profile picture
+            // Method 1: By class name
+            document.querySelectorAll('.profile-img').forEach(img => {
+                img.src = fullUrl;
+            });
+
+            // Method 2: By checking if in navbar/dropdown
+            document.querySelectorAll('nav img, .dropdown img, .navbar img').forEach(img => {
+                if (img.classList.contains('rounded-circle') || img.alt === 'Profile') {
+                    img.src = fullUrl;
+                }
+            });
+
+            // Method 3: Update session storage for page reloads
+            sessionStorage.setItem('profilePicture', fullUrl);
+        }
+
+        // --- EDIT PROFILE FORM ---
+        const editForm = document.getElementById('editProfileForm');
+        const validationSummary = document.getElementById('validationSummary');
+        const validationSummaryText = document.getElementById('validationSummaryText');
+        const validationErrorsList = document.getElementById('validationErrorsList');
+        const successMessage = document.getElementById('successMessage');
+        const successMessageText = document.getElementById('successMessageText');
+
+        if (editForm) {
+            // Real-time validation
+            const inputs = editForm.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        this.classList.remove('is-invalid');
+                    }
+                    hideValidationSummary();
+                });
+            });
+
+            editForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                hideValidationSummary();
+                hideSuccessMessage();
+
+                let isValid = true;
+                const requiredInputs = this.querySelectorAll('input[required], select[required]');
+                requiredInputs.forEach(input => {
+                    if (!validateField(input)) isValid = false;
+                });
+
+                // Validate CNIC format
+                const cnicInput = document.getElementById('CNIC');
+                if (cnicInput && cnicInput.value) {
+                    const cnicPattern = /^\d{5}-\d{7}-\d{1}$/;
+                    if (!cnicPattern.test(cnicInput.value)) {
+                        cnicInput.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                }
+
+                // Validate Phone format
+                const phoneInput = document.getElementById('Phone');
+                if (phoneInput && phoneInput.value) {
+                    const phonePattern = /^03[0-9]{9}$/;
+                    if (!phonePattern.test(phoneInput.value)) {
+                        phoneInput.classList.add('is-invalid');
+                        isValid = false;
+                    }
+                }
+
+                // Validate Weight range        
+        const weightInput = document.getElementById('Weight');
+        if (weightInput) {
+            // Jab user field se bahar click kare (blur)
+            weightInput.addEventListener('blur', function() {
+                const weight = parseFloat(this.value);
+                if (this.value && (weight < 50 || weight > 200)) {
+                    this.classList.add('is-invalid');
+                    this.classList.remove('is-valid');
+                } else if (this.value) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+            
+            // Jab user type kar raha ho (input)
+            weightInput.addEventListener('input', function() {
+                if (this.classList.contains('is-invalid')) {
+                    const weight = parseFloat(this.value);
+                    if (weight >= 50 && weight <= 200) {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    }
+                }
+                // Agar validation summary open hai to usay chupana
+                if (typeof hideValidationSummary === 'function') {
+                    hideValidationSummary();
+                }
+            });
+        }
+
+                const formData = new FormData(this);
+                const submitBtn = document.getElementById('saveChangesBtn');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="bx bx-loader bx-spin me-1"></i> Saving...';
+                submitBtn.disabled = true;
+
+                fetch('/Profile/Edit', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': getAntiForgeryToken()
+                    }
+                })
+                    .then(async res => {
+                        const contentType = res.headers.get("content-type");
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            return res.json();
+                        } else {
+                            const text = await res.text();
+                            console.error('Non-JSON response:', text);
+                            throw new Error('Server returned non-JSON response');
+                        }
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            showSuccessMessage(data.message);
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+                                showValidationSummary(data.errors);
+                            } else {
+                                showValidationSummary([data.message || 'An error occurred']);
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Fetch error:', err);
+                        showValidationSummary(['Network error. Please check your connection and try again.']);
+                    })
+                    .finally(() => {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                    });
+            });
+        }
+
+        function validateField(field) {
+            let isValid = true;
+            if (field.hasAttribute('required') && !field.value.trim()) isValid = false;
+            if (field.hasAttribute('pattern') && field.value) {
+                const pattern = new RegExp(field.getAttribute('pattern'));
+                if (!pattern.test(field.value)) isValid = false;
+            }
+            if (field.hasAttribute('minlength') && field.value) {
+                if (field.value.length < parseInt(field.getAttribute('minlength'))) isValid = false;
+            }
+            if (field.hasAttribute('maxlength') && field.value) {
+                if (field.value.length > parseInt(field.getAttribute('maxlength'))) isValid = false;
+            }
+            if (field.type === 'number' && field.value) {
+                const value = parseFloat(field.value);
+                if (field.min && value < parseFloat(field.min)) isValid = false;
+                if (field.max && value > parseFloat(field.max)) isValid = false;
+            }
+
+            if (isValid) {
+                field.classList.remove('is-invalid');
+                field.classList.add('is-valid');
+            } else {
+                field.classList.remove('is-valid');
+                field.classList.add('is-invalid');
+            }
+            return isValid;
+        }
+
+        function showValidationSummary(errors) {
+            validationSummaryText.textContent = errors.length > 1 ? 'Please correct the following errors:' : errors[0];
+            validationErrorsList.innerHTML = '';
+            if (errors.length > 1) {
+                errors.forEach(error => {
+                    const li = document.createElement('li');
+                    li.textContent = error;
+                    validationErrorsList.appendChild(li);
+                });
+            }
+            validationSummary.classList.remove('d-none');
+            validationSummary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideValidationSummary() {
+            validationSummary.classList.add('d-none');
+            validationErrorsList.innerHTML = '';
+        }
+
+        function showSuccessMessage(message) {
+            successMessageText.textContent = message;
+            successMessage.classList.remove('d-none');
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideSuccessMessage() {
+            successMessage.classList.add('d-none');
+        }
+
+        // CNIC auto-formatting
+        const cnicInput = document.getElementById('CNIC');
+        if (cnicInput) {
+            cnicInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 13) value = value.slice(0, 13);
+                if (value.length > 5) value = value.slice(0, 5) + '-' + value.slice(5);
+                if (value.length > 13) value = value.slice(0, 13) + '-' + value.slice(13);
+                e.target.value = value;
+            });
+        }
+
+        // Phone auto-formatting
+        const phoneInput = document.getElementById('Phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                if (value.length > 0 && !value.startsWith('03')) value = '03' + value;
+                e.target.value = value;
+            });
+        }
+
+        // --- CHANGE PASSWORD FORM ---
+        const passwordForm = document.getElementById('changePasswordForm');
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const newPass = document.getElementById('newPassword')?.value || '';
+                const confirmPass = document.getElementById('confirmPassword')?.value || '';
+
+                if (newPass !== confirmPass) {
+                    showNotification('New password and confirm password do not match!', 'error');
+                    return;
+                }
+
+                const formData = new FormData(this);
+                formData.append('__RequestVerificationToken', getAntiForgeryToken());
+
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="bx bx-loader bx-spin me-1"></i> Updating...';
+                submitBtn.disabled = true;
+
+                fetch('/Profile/ChangePassword', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                    .then(async res => {
+                        const contentType = res.headers.get("content-type");
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            return res.json();
+                        } else {
+                            const text = await res.text();
+                            console.error('Non-JSON response:', text);
+                            throw new Error('Server returned non-JSON response');
+                        }
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            showNotification(data.message, 'success');
+                            this.reset();
+                        } else {
+                            showNotification(data.message, 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
+                        showNotification('An error occurred. Please try again.', 'error');
+                    })
+                    .finally(() => {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                    });
+            });
+        }
+
+        // --- CUSTOM CONFIRMATION DIALOG ---
+        function showConfirmationDialog(message, onConfirm, onCancel) {
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0, 0, 0, 0.5); z-index: 9998; backdrop-filter: blur(3px);`;
+
+            const dialog = document.createElement('div');
+            dialog.style.cssText = `position: fixed; top: 50%; left: 50%;
+                        transform: translate(-50%, -50%); background: white; border-radius: 15px;
+                        padding: 30px; min-width: 350px; max-width: 90%;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 9999;`;
+
+            dialog.innerHTML = `
+                        <div style="text-align: center;">
+                            <div style="background: #fff5f5; width: 60px; height: 60px;
+                                border-radius: 50%; display: flex; align-items: center;
+                                justify-content: center; margin: 0 auto 15px;">
+                                <i class="bx bx-trash" style="font-size: 30px; color: #ff3b3b;"></i>
+                            </div>
+                            <h5 style="margin-bottom: 10px; color: #333;">Confirm Action</h5>
+                            <p style="color: #666; margin-bottom: 25px;">${message}</p>
+                            <div style="display: flex; gap: 10px; justify-content: center;">
+                                <button id="confirmDialogYes" class="btn btn-danger rounded-pill px-4">Yes</button>
+                                <button id="confirmDialogNo" class="btn btn-outline-secondary rounded-pill px-4">Cancel</button>
+                            </div>
+                        </div>`;
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(dialog);
+
+            const cleanup = () => { overlay.remove(); dialog.remove(); };
+
+            document.getElementById('confirmDialogYes').addEventListener('click', () => { cleanup(); if (onConfirm) onConfirm(); });
+            document.getElementById('confirmDialogNo').addEventListener('click', () => { cleanup(); if (onCancel) onCancel(); });
+            overlay.addEventListener('click', () => { cleanup(); if (onCancel) onCancel(); });
+        }
+
+        // --- PROFILE PHOTO LOGIC ---
+        const photoInput = document.getElementById('profilePictureInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const mainAvatar = document.getElementById('mainAvatar');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const removeBtn = document.getElementById('removeBtn');
+
+        let selectedFile = null;
+
+        if (photoInput) {
+            photoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) {
+                        showNotification('File size cannot exceed 5MB', 'error');
+                        this.value = '';
+                        return;
+                    }
+
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                    if (!validTypes.includes(file.type)) {
+                        showNotification('Only JPG, PNG, GIF, and WEBP files are allowed', 'error');
+                        this.value = '';
+                        return;
+                    }
+
+                    selectedFile = file;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (photoPreview) photoPreview.src = e.target.result;
+                        if (mainAvatar) mainAvatar.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+
+                    setTimeout(() => { if (uploadBtn) uploadBtn.click(); }, 500);
+                }
+            });
+        }
+
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', function() {
+                if (!selectedFile) {
+                    if (photoInput) photoInput.click();
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('photo', selectedFile);
+                formData.append('__RequestVerificationToken', getAntiForgeryToken());
+
+                const originalText = uploadBtn.innerHTML;
+                uploadBtn.innerHTML = '<i class="bx bx-loader bx-spin me-1"></i> Uploading...';
+                uploadBtn.disabled = true;
+
+                fetch('/Profile/UploadPhoto', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                    .then(async res => {
+                        const contentType = res.headers.get("content-type");
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            return res.json();
+                        } else {
+                            throw new Error('Server returned non-JSON response');
+                        }
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            showNotification(data.message, 'success');
+
+                            // ✅ CRITICAL: Update ALL profile pictures including navbar
+                            updateAllProfilePictures(data.imageUrl);
+
+                            updateNavbarProfilePicture(data.imageUrl);
+
+                            // Show remove button if not exists
+                            if (!document.getElementById('removeBtn')) {
+                                const removeBtnHtml = `
+                                        <button type="button" class="btn btn-outline-danger rounded-pill px-4" id="removeBtn">
+                                            <i class="bx bx-trash me-1"></i> Remove
+                                        </button>`;
+                                uploadBtn.insertAdjacentHTML('afterend', removeBtnHtml);
+                                document.getElementById('removeBtn').addEventListener('click', handleRemovePicture);
+                            }
+
+                            selectedFile = null;
+                            if (photoInput) photoInput.value = '';
+                        } else {
+                            showNotification(data.message || 'Upload failed', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Upload error:', err);
+                        showNotification('Upload failed. Please try again.', 'error');
+                    })
+                    .finally(() => {
+                        uploadBtn.innerHTML = originalText;
+                        uploadBtn.disabled = false;
+                    });
+            });
+        }
+
+        // Update navbar profile picture
+        function updateNavbarProfilePicture(imageUrl) {
+            const timestamp = Date.now();
+            const fullUrl = imageUrl + '?t=' + timestamp;
+
+            // Update navbar image
+            const navbarImg = document.getElementById('navbarProfileImg');
+            if (navbarImg) {
+                navbarImg.src = fullUrl;
+            }
+
+            // Also update all other profile images
+            document.querySelectorAll('.profile-img').forEach(img => {
+                if (img.id !== 'navbarProfileImg') {
+                    img.src = fullUrl;
+                }
+            });
+        }
+
+        function handleRemovePicture() {
+            showConfirmationDialog('Are you sure you want to remove your profile picture?',
+                function() {
+                    const removeBtn = document.getElementById('removeBtn');
+                    const originalText = removeBtn.innerHTML;
+                    removeBtn.innerHTML = '<i class="bx bx-loader bx-spin me-1"></i> Removing...';
+                    removeBtn.disabled = true;
+
+                    fetch('/Profile/RemovePicture', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': getAntiForgeryToken()
+                        }
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                showNotification(data.message, 'success');
+                                const defaultImg = '/aassets/img/avatars/DefaultAvatar.png';
+
+                                // Update ALL images including navbar
+                                updateAllProfilePictures(defaultImg);
+
+                                removeBtn.remove();
+                                selectedFile = null;
+                            } else {
+                                showNotification(data.message, 'error');
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Remove error:', err);
+                            showNotification('Failed to remove picture', 'error');
+                        })
+                        .finally(() => {
+                            removeBtn.innerHTML = originalText;
+                            removeBtn.disabled = false;
+                        });
+                },
+                function() { console.log('Remove cancelled'); }
+            );
+        }
+
+        if (removeBtn) {
+            removeBtn.addEventListener('click', handleRemovePicture);
+        }
+
+        // Check for updated profile picture on page load
+        window.addEventListener('load', function() {
+            const savedPic = sessionStorage.getItem('profilePicture');
+            if (savedPic) {
+                updateAllProfilePictures(savedPic.replace(/\?t=\d+/, ''));
+                sessionStorage.removeItem('profilePicture');
+            }
+        });
+
+        console.log('Profile page loaded successfully');
+    </script>
+}

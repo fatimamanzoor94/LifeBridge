@@ -1,0 +1,2706 @@
+﻿@model Khoon_e_Hayat.ViewModels.ReceiverCreateBloodRequestViewModel
+@{
+    ViewData["Title"] = "Create Blood Request";
+    Layout = "~/Views/Shared/_ReceiverLayout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- ==================== PREMIUM HEADER ==================== -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-3">
+                <div>
+
+                    <h4 class="mb-1 fw-bold" style="color: #212529;">Create Blood Request</h4>
+                    <small class="text-muted">Submit patient details to initiate our Smart Matching System.</small>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="badge" style="background-color: #e6f4ff; color: #5C88A8; border-radius: 50rem; padding: 0.5rem 1rem; font-weight: 600;">
+                        <i class="bi bi-clock me-1" style="color: #5C88A8;"></i> 2-3 Minutes
+                    </span>
+                    <span class="badge" style="background-color: #e6f7ee; color: #198754; border-radius: 50rem; padding: 0.5rem 1rem; font-weight: 600;">
+                        <i class="bi bi-shield-check me-1" style="color: #198754;"></i> Secure & Encrypted
+                    </span>
+                </div>
+            </div>
+
+            <!-- ==================== RECEIVER INFORMATION CARD ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4"
+                 style="border-left:5px solid #90151C !important; box-shadow:none;">
+
+                <div class="card-body p-4">
+
+                    <!-- Heading -->
+                    <div class="d-flex align-items-center gap-3 mb-4">
+
+                        <div class="icon-box bg-danger-subtle">
+                            <i class="bi bi-person-badge-fill" style="color:#5C88A8;"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-0" style="color:#5C88A8;">
+                            Receiver Information
+                        </h4>
+
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Left -->
+                        <div class="col-lg-8">
+
+                            <div class="row g-4">
+
+                                <div class="col-md-4">
+
+                                    <small class="text-uppercase fw-semibold text-muted d-block mb-1">
+                                        Name
+                                    </small>
+
+                                    <div class="fw-semibold fs-6"
+                                         id="receiverNameDisplay">
+                                        @Model.ReceiverName
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+
+                                    <small class="text-uppercase fw-semibold text-muted d-block mb-1">
+                                        Email
+                                    </small>
+
+                                    <div class="fw-semibold"
+                                         id="receiverEmailDisplay">
+                                        @Model.ReceiverEmail
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+
+                                    <small class="text-uppercase fw-semibold text-muted d-block mb-1">
+                                        Status
+                                    </small>
+
+                                    <span class="badge rounded-pill px-3 py-2"
+                                          style="background:#198754;color:#fff;">
+
+                                        <i class="bi bi-check-circle-fill me-1"></i>
+
+                                        @Model.ReceiverStatus
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Right -->
+                        <div class="col-lg-4 mt-4 mt-lg-0 text-lg-end">
+
+                            <small class="text-muted d-block mb-2">
+                                Request submitted from your account
+                            </small>
+
+                            <span class="fw-semibold text-dark">
+                                <i class="bi bi-shield-check me-1"
+                                   style="color:#5C88A8;"></i>
+
+                                Receiver ID:
+                                @ViewContext.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Information Box -->
+                    <div class="alert border-0 rounded-4 mt-4 mb-0 d-flex align-items-start gap-3"
+                         role="alert"
+                         style="background:#5C88A8;color:#fff;">
+
+                        <i class="bi bi-info-circle-fill fs-3"></i>
+
+                        <div>
+
+                            <strong class="d-block mb-1">
+                                Account Information
+                            </strong>
+
+                            <span>
+                                This blood request will be linked with your receiver account.
+                                Your receiver details are automatically used for verification and communication.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ==================== MAIN GRID ==================== -->
+            <div class="row g-4">
+
+                <!-- ==================== LEFT: FORM AREA ==================== -->
+                <div class="col-lg-8">
+
+                    <!-- Wizard Timeline -->
+                    <div class="card custom-card border-0 rounded-4 mb-4" style="box-shadow: none;">
+                        <div class="card-body p-4">
+                            <div class="wizard-timeline" id="wizardTimeline">
+                                <div class="timeline-step active" data-step="1">
+                                    <div class="timeline-icon"><i class="bi bi-person"></i></div>
+                                    <div class="timeline-label">Patient</div>
+                                </div>
+                                <div class="timeline-step" data-step="2">
+                                    <div class="timeline-icon"><i class="bi bi-hospital"></i></div>
+                                    <div class="timeline-label">Hospital</div>
+                                </div>
+                                <div class="timeline-step" data-step="3">
+                                    <div class="timeline-icon"><i class="bi bi-clipboard-check"></i></div>
+                                    <div class="timeline-label">Details</div>
+                                </div>
+                                <div class="timeline-step" data-step="4">
+                                    <div class="timeline-icon"><i class="bi bi-check2-circle"></i></div>
+                                    <div class="timeline-label">Review</div>
+                                </div>
+                            </div>
+                            <div class="progress mt-4" style="height: 6px; border-radius: 3px; background: #e9ecef;">
+                                <div class="progress-bar" id="wizardProgress" style="width: 25%; transition: width 0.4s ease; border-radius: 3px; background-color: #5C88A8;"></div>
+                            </div>
+                            <small class="text-muted d-block mt-2 text-center fw-semibold" id="progressText">Step 1 of 4 - Patient Information</small>
+                        </div>
+                    </div>
+
+                    <form id="bloodRequestForm" method="post" asp-action="CreateBloodRequest" asp-controller="Receiver" novalidate>
+                        @Html.HiddenFor(m => m.Latitude)
+                        @Html.HiddenFor(m => m.Longitude)
+                        @Html.HiddenFor(m => m.ReceiverName)
+                        @Html.HiddenFor(m => m.ReceiverEmail)
+                        @Html.HiddenFor(m => m.ReceiverStatus)
+
+                        <!-- ==================== STEP 1: PATIENT ==================== -->
+                        <div class="wizard-step active" data-step="1">
+                            <div class="card custom-card border-0 rounded-4 mb-4" style="box-shadow: none;">
+                                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                                    <h5 class="mb-1 fw-bold" style="color: #212529;"><i class="bi bi-person-fill me-2" style="color: #5C88A8;"></i>Patient Information</h5>
+                                    <small class="text-muted">Provide accurate patient details for precise donor matching.</small>
+                                </div>
+                                <div class="card-body px-4 pb-4">
+
+                                    <!-- "I am the Patient" Checkbox -->
+                                    <div class="alert alert-info d-flex align-items-center mb-4" style="border-radius: 12px; border-left: 4px solid #5C88A8;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="iAmThePatient" style="width: 1.5em; height: 1.5em; margin-right: 12px;">
+                                            <label class="form-check-label fw-semibold" for="iAmThePatient" style="cursor: pointer;">
+                                                <i class="bi bi-person-check me-2"></i>I am the patient
+                                            </label>
+                                        </div>
+                                        <small class="text-muted ms-auto">Auto-fill your details</small>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label-premium">Patient Name <span class="text-danger">*</span></label>
+                                            <div class="input-group-premium">
+                                                <i class="bi bi-person input-icon" style="color: #adb5bd;"></i>
+                                                <input asp-for="PatientName" class="form-control-premium" id="PatientName" placeholder="Enter full name" required />
+                                            </div>
+                                            <div class="invalid-feedback-custom" id="err-PatientName"></div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label-premium">Patient Age <span class="text-danger">*</span></label>
+                                            <div class="input-group-premium">
+                                                <i class="bi bi-calendar3 input-icon" style="color: #adb5bd;"></i>
+                                                <input asp-for="PatientAge" type="number" class="form-control-premium" id="PatientAge" placeholder="Age" required />
+                                            </div>
+                                            <div class="invalid-feedback-custom" id="err-PatientAge"></div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label-premium">Gender <span class="text-danger">*</span></label>
+                                            <div class="input-group-premium">
+                                                <i class="bi bi-gender-ambiguous input-icon" style="color: #adb5bd;"></i>
+                                                <select asp-for="Gender" class="form-select-premium" id="Gender" required>
+                                                    <option value="">Select</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="invalid-feedback-custom" id="err-Gender"></div>
+                                        </div>
+
+                                        <div class="col-12 mt-4">
+                                            <label class="form-label-premium mb-3">Blood Group <span class="text-danger">*</span></label>
+                                            <div class="blood-group-grid" id="bloodGroupGrid">
+                                                @foreach (var bg in new[] { "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-" })
+                                                {
+                                                    <div class="blood-group-card" data-value="@bg" tabindex="0" role="button" aria-label="Select Blood Group @bg">
+                                                        <i class="bi bi-droplet-fill" style="color: #90151C;"></i>
+                                                        <div class="bg-text" style="color: #90151C;">@bg</div>
+                                                        <div class="check-indicator"><i class="bi bi-check-lg"></i></div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <input type="hidden" asp-for="BloodGroup" id="BloodGroupHidden" />
+                                            <div class="invalid-feedback-custom" id="err-BloodGroup"></div>
+                                        </div>
+
+                                        <div class="col-md-6 mt-4">
+                                            <label class="form-label-premium">Units Required <span class="text-danger">*</span></label>
+                                            <div class="quantity-selector">
+                                                <button type="button" class="quantity-btn" id="decreaseUnits" aria-label="Decrease units"><i class="bi bi-dash"></i></button>
+                                                <input asp-for="UnitsRequired" type="number" class="quantity-input" id="unitsInput" min="1" max="10" value="1" required />
+                                                <button type="button" class="quantity-btn" id="increaseUnits" aria-label="Increase units"><i class="bi bi-plus"></i></button>
+                                            </div>
+                                            <small class="text-muted d-block mt-2"><i class="bi bi-info-circle me-1" style="color: #0dcaf0;"></i> Estimated donor requirement based on medical need.</small>
+                                            <div class="invalid-feedback-custom" id="err-UnitsRequired"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ==================== STEP 2: HOSPITAL ==================== -->
+                        <div class="wizard-step" data-step="2">
+                            <div class="card custom-card border-0 rounded-4 mb-4" style="box-shadow: none;">
+                                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                                    <h5 class="mb-1 fw-bold" style="color: #212529;"><i class="bi bi-hospital-fill me-2" style="color: #198754;"></i>Hospital Information</h5>
+                                    <small class="text-muted">Where is the patient currently admitted?</small>
+                                </div>
+                                <div class="card-body px-4 pb-4">
+                                    <!-- Hospital Name with Autocomplete -->
+<div class="col-md-6">
+    <label class="form-label-premium">Hospital Name <span class="text-danger">*</span></label>
+    <div class="input-group-premium position-relative">
+        <i class="bi bi-hospital input-icon" style="color: #adb5bd;"></i>
+        <input type="text" id="HospitalNameSearch" class="form-control-premium" placeholder="Type hospital name..." autocomplete="off" required />
+        <input type="hidden" asp-for="HospitalName" id="HospitalName" />
+        <input type="hidden" asp-for="SelectedHospitalId" id="SelectedHospitalId" />
+        
+        <!-- Autocomplete Dropdown -->
+        <div id="hospitalDropdown" class="position-absolute w-100 bg-white border rounded-4 shadow-sm mt-1" style="z-index: 1000; display: none; max-height: 250px; overflow-y: auto;"></div>
+    </div>
+    <div class="invalid-feedback-custom" id="err-HospitalName"></div>
+</div>
+
+<!-- Auto-filled Hospital Info Card (Hidden by default) -->
+<div class="col-12" id="hospitalInfoCard" style="display: none;">
+    <div class="p-3 rounded-4" style="background-color: #f0f7ff; border-left: 4px solid #5C88A8;">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+                <h6 class="fw-bold mb-1" style="color: #212529;" id="info-HospitalName">Hospital Name</h6>
+                <p class="small text-muted mb-1"><i class="bi bi-geo-alt-fill me-1" style="color: #90151C;"></i><span id="info-Address">Address</span>, <span id="info-City">City</span></p>
+                <p class="small text-muted mb-0"><i class="bi bi-telephone-fill me-1" style="color: #198754;"></i><span id="info-Contact">Contact</span></p>
+            </div>
+            <div class="text-end">
+                <span class="badge rounded-pill mb-2" style="background-color: #e6f7ee; color: #198754; font-weight: 600;">
+                    <i class="bi bi-check-circle-fill me-1"></i>Verified
+                </span>
+                <div class="d-flex gap-2 justify-content-end">
+                    <span class="badge" style="background-color: #fff; color: #5C88A8; border: 1px solid #5C88A8;">
+                        <i class="bi bi-signpost-2 me-1"></i><span id="info-Distance">0</span> km
+                    </span>
+                    <span class="badge" style="background-color: #fff; color: #0dcaf0; border: 1px solid #0dcaf0;">
+                        <i class="bi bi-clock me-1"></i><span id="info-Time">0</span> mins
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Live Inventory Mockup -->
+        <div class="mt-3 pt-2 border-top" style="border-color: #dee2e6 !important;">
+            <small class="fw-semibold text-muted d-block mb-2">Live Blood Inventory Status</small>
+            <div class="d-flex gap-2 flex-wrap">
+                <span class="badge" style="background-color: #ffebee; color: #90151C;"><i class="bi bi-droplet-fill me-1"></i>O+ : High</span>
+                <span class="badge" style="background-color: #e6f7ee; color: #198754;"><i class="bi bi-droplet-fill me-1"></i>A+ : Adequate</span>
+                <span class="badge" style="background-color: #fff3cd; color: #d39e00;"><i class="bi bi-droplet-fill me-1"></i>B- : Low</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden fields for auto-fill mapping -->
+<input type="hidden" asp-for="HospitalContact" id="HospitalContactHidden" />
+<input type="hidden" asp-for="Address" id="AddressHidden" />
+<input type="hidden" asp-for="City" id="CityHidden" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ==================== STEP 3: REQUEST DETAILS ==================== -->
+                        <div class="wizard-step" data-step="3">
+                            <div class="card custom-card border-0 rounded-4 mb-4" style="box-shadow: none;">
+                                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                                    <h5 class="mb-1 fw-bold" style="color: #212529;"><i class="bi bi-clipboard-check-fill me-2" style="color: #0dcaf0;"></i>Request Details</h5>
+                                    <small class="text-muted">Specify urgency, reason, and precise location.</small>
+                                </div>
+                                <div class="card-body px-4 pb-4">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label-premium">Required Date <span class="text-danger">*</span></label>
+                                            <div class="input-group-premium">
+                                                <i class="bi bi-calendar-event input-icon" style="color: #adb5bd;"></i>
+                                                <input asp-for="RequiredDate" type="date" class="form-control-premium" required />
+                                            </div>
+                                            <div class="invalid-feedback-custom" id="err-RequiredDate"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label-premium">Urgency Level <span class="text-danger">*</span></label>
+                                            <div class="urgency-selector">
+                                                <div class="urgency-option" data-value="Normal">
+                                                    <i class="bi bi-clock"></i> Normal
+                                                </div>
+                                                <div class="urgency-option" data-value="High">
+                                                    <i class="bi bi-exclamation-circle"></i> High
+                                                </div>
+                                                <div class="urgency-option" data-value="Critical">
+                                                    <i class="bi bi-exclamation-octagon"></i> Critical
+                                                </div>
+                                            </div>
+                                            <select asp-for="UrgencyLevel" class="d-none" id="UrgencyLevelHidden" required>
+                                                <option value="Normal">Normal</option>
+                                                <option value="High">High</option>
+                                                <option value="Critical">Critical</option>
+                                            </select>
+                                            <div class="invalid-feedback-custom" id="err-UrgencyLevel"></div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label-premium">Reason for Request <span class="text-danger">*</span></label>
+                                            <textarea asp-for="Reason" class="form-control-premium" rows="3" maxlength="500" placeholder="Briefly describe why blood is required" required></textarea>
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <small class="text-muted">Provide medical context for donors</small>
+                                                <small class="text-muted fw-semibold char-counter" id="reasonCounter">0 / 500</small>
+                                            </div>
+                                            <div class="invalid-feedback-custom" id="err-Reason"></div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="form-label-premium">Additional Notes</label>
+                                            <textarea asp-for="AdditionalNotes" class="form-control-premium" rows="2" maxlength="1000" placeholder="Any special instructions or landmarks..."></textarea>
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <small class="text-muted">Optional information</small>
+                                                <small class="text-muted fw-semibold char-counter" id="notesCounter">0 / 1000</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label-premium">Area / Locality</label>
+                                            <div class="input-group-premium">
+                                                <i class="bi bi-pin-map input-icon" style="color: #adb5bd;"></i>
+                                                <input asp-for="Area" class="form-control-premium" placeholder="e.g. Clifton, DHA" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label-premium">Full Address</label>
+                                            <div class="input-group-premium">
+                                                <i class="bi bi-geo input-icon" style="color: #adb5bd;"></i>
+                                                <input asp-for="FullAddress" class="form-control-premium" placeholder="Complete address" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Emergency Module -->
+                                    <div class="emergency-card mt-4" id="emergencyCard" style="border: 2px solid #e9ecef; border-radius: 20px; padding: 24px; background: #fff;">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="emergency-icon-box" style="width: 48px; height: 48px; border-radius: 12px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #90151C;">
+                                                    <i class="bi bi-shield-exclamation"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold" style="color: #212529;">Emergency Request</h6>
+                                                    <small class="text-muted">Flag as medical emergency for priority matching</small>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input emergency-switch" type="checkbox" asp-for="IsEmergency" id="IsEmergencyToggle" style="background-color: #e9ecef;" />
+                                            </div>
+                                        </div>
+                                        <div class="emergency-details mt-3" id="emergencyDetails" style="display: none; margin-top: 20px; padding: 16px; background: rgba(144, 21, 28, 0.05); border-radius: 12px; border-left: 4px solid #90151C;">
+                                            <div class="d-flex gap-2 mb-2 flex-wrap">
+                                                <span class="badge" style="background-color: #ffebee; color: #90151C; border-radius: 50rem; padding: 0.5rem 1rem;"><i class="bi bi-lightning-charge me-1"></i> Emergency</span>
+                                                <span class="badge" style="background-color: #ffebee; color: #90151C; border-radius: 50rem; padding: 0.5rem 1rem;">Highest Priority</span>
+                                            </div>
+                                            <p class="small text-muted mb-0">
+                                                <i class="bi bi-info-circle me-1" style="color: #0dcaf0;"></i> Nearby compatible donors and hospitals will receive immediate push notifications and SMS alerts. Smart Matching will prioritize this request above all others.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ==================== STEP 4: REVIEW ==================== -->
+                        <div class="wizard-step" data-step="4">
+                            <div class="card custom-card border-0 rounded-4 mb-4" style="box-shadow: none;">
+                                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                                    <h5 class="mb-1 fw-bold" style="color: #212529;"><i class="bi bi-check2-circle me-2" style="color: #198754;"></i>Review & Confirm</h5>
+                                    <small class="text-muted">Please verify the information below before submitting.</small>
+                                </div>
+                                <div class="card-body px-4 pb-4">
+                                    <div class="row g-3">
+                                        <!-- Receiver Information -->
+                                        <div class="col-12">
+                                            <!-- Changed from gradient to solid #5C88A8 -->
+                                            <div class="review-card-premium" style="background-color: #5C88A8; color: white; border: none;">
+                                                <div class="review-header" style="border-bottom-color: rgba(255,255,255,0.3);">
+                                                    <div class="review-title" style="color: white;">
+                                                        <i class="bi bi-person-badge me-2"></i>Receiver Information
+                                                    </div>
+                                                    <span class="badge bg-white text-primary">
+                                                        <i class="bi bi-check-circle me-1"></i>@Model.ReceiverStatus
+                                                    </span>
+                                                </div>
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <div class="review-item" style="color: rgba(255,255,255,0.9);">
+                                                            <span class="review-label" style="color: rgba(255,255,255,0.7);">Name:</span>
+                                                            <span class="review-value fw-semibold" id="rev-ReceiverName" style="color: white;">@Model.ReceiverName</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="review-item" style="color: rgba(255,255,255,0.9);">
+                                                            <span class="review-label" style="color: rgba(255,255,255,0.7);">Email:</span>
+                                                            <span class="review-value fw-semibold" id="rev-ReceiverEmail" style="color: white;">@Model.ReceiverEmail</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Patient Information -->
+                                        <div class="col-md-6">
+                                            <div class="review-card-premium" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px;">
+                                                <div class="review-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e9ecef;">
+                                                    <div class="review-title" style="font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #212529;">
+                                                        <i class="bi bi-person-fill" style="color: #5C88A8;"></i>Patient Information
+                                                    </div>
+                                                    <button type="button" class="review-edit-btn" data-goto="1" style="background: #fff; border: 1px solid #e9ecef; color: #5C88A8; font-weight: 600; cursor: pointer; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px;">Edit</button>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Name:</span>
+                                                    <span class="review-value" id="rev-PatientName" style="font-weight: 600; color: #212529;">-</span>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Age:</span>
+                                                    <span class="review-value" id="rev-PatientAge" style="font-weight: 600; color: #212529;">-</span>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Gender:</span>
+                                                    <span class="review-value" id="rev-Gender" style="font-weight: 600; color: #212529;">-</span>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Blood Group:</span>
+                                                    <span class="review-value" id="rev-BloodGroup">
+                                                        <span class="badge" style="background-color: #ffebee; color: #90151C; padding: 0.5rem 1rem;">-</span>
+                                                    </span>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Units:</span>
+                                                    <span class="review-value fw-bold" id="rev-UnitsRequired" style="color: #212529;">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hospital Information -->
+                                        <div class="col-md-6">
+                                            <div class="review-card-premium" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px;">
+                                                <div class="review-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e9ecef;">
+                                                    <div class="review-title" style="font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #212529;">
+                                                        <i class="bi bi-hospital-fill" style="color: #198754;"></i>Hospital Information
+                                                    </div>
+                                                    <button type="button" class="review-edit-btn" data-goto="2" style="background: #fff; border: 1px solid #e9ecef; color: #5C88A8; font-weight: 600; cursor: pointer; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px;">Edit</button>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Name:</span>
+                                                    <span class="review-value" id="rev-HospitalName" style="font-weight: 600; color: #212529;">-</span>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Contact:</span>
+                                                    <span class="review-value" id="rev-HospitalContact" style="font-weight: 600; color: #212529;">-</span>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">City:</span>
+                                                    <span class="review-value" id="rev-City" style="font-weight: 600; color: #212529;">-</span>
+                                                </div>
+                                                <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                    <span class="review-label" style="color: #6c757d;">Address:</span>
+                                                    <span class="review-value" id="rev-Address" style="font-weight: 600; color: #212529;">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Request Details -->
+                                        <div class="col-12">
+                                            <div class="review-card-premium" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px;">
+                                                <div class="review-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e9ecef;">
+                                                    <div class="review-title" style="font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #212529;">
+                                                        <i class="bi bi-clipboard-check-fill" style="color: #0dcaf0;"></i>Request Details
+                                                    </div>
+                                                    <button type="button" class="review-edit-btn" data-goto="3" style="background: #fff; border: 1px solid #e9ecef; color: #5C88A8; font-weight: 600; cursor: pointer; font-size: 0.8rem; padding: 4px 12px; border-radius: 20px;">Edit</button>
+                                                </div>
+                                                <div class="row g-2">
+                                                    <div class="col-md-6">
+                                                        <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                            <span class="review-label" style="color: #6c757d;">Date:</span>
+                                                            <span class="review-value" id="rev-RequiredDate" style="font-weight: 600; color: #212529;">-</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                            <span class="review-label" style="color: #6c757d;">Urgency:</span>
+                                                            <span class="review-value" id="rev-UrgencyLevel" style="font-weight: 600; color: #212529;">-</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="review-item align-items-start" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                            <span class="review-label mt-1" style="color: #6c757d;">Reason:</span>
+                                                            <span class="review-value text-wrap" id="rev-Reason" style="font-weight: 600; color: #212529;">-</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="review-item" style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.9rem;">
+                                                            <span class="review-label" style="color: #6c757d;">Emergency:</span>
+                                                            <span class="review-value" id="rev-IsEmergency" style="font-weight: 600; color: #212529;">-</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ==================== NAVIGATION BUTTONS ==================== -->
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                            <button type="button" id="prevBtn" class="btn rounded-pill px-4 py-2 fw-semibold" style="display: none; border: 1px solid #ced4da; color: #6c757d; background-color: #fff;">
+                                <i class="bi bi-arrow-left me-2"></i>Previous
+                            </button>
+                            <div class="ms-auto d-flex gap-2 flex-wrap">
+                                <button type="button" id="draftBtn" class="btn rounded-pill px-4 py-2 fw-semibold" style="border: 1px solid #5C88A8; color: #5C88A8; background-color: #fff;">
+                                    <i class="bi bi-save me-2"></i>Save Draft
+                                </button>
+                                <button type="button" id="nextBtn" class="btn rounded-pill px-4 py-2 fw-semibold" style="background-color: #5C88A8; color: #fff;">
+                                    Next<i class="bi bi-arrow-right ms-2"></i>
+                                </button>
+                                <button type="submit" id="submitBtn" class="btn rounded-pill px-4 py-2 fw-semibold" style="display: none; background-color: #198754; color: #fff;">
+                                    <i class="bi bi-check-circle me-2"></i>Submit Request
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- ==================== RIGHT: SIDEBAR ==================== -->
+                <div class="col-lg-4">
+                    <!-- Live Summary -->
+                    <div class="sidebar-card-premium sticky-top" style="top: 20px; background: #fff; border: 1px solid #e9ecef; border-radius: 20px; padding: 24px; box-shadow: none;">
+                        <div class="sidebar-card-title" style="font-size: 1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #212529;">
+                            <i class="bi bi-speedometer2" style="color: #5C88A8;"></i>Request Preview
+                        </div>
+                        <div class="preview-header"
+                             style="display:flex; align-items:center; gap:16px; padding-bottom:16px; border-bottom:1px dashed #e9ecef;">
+
+                            <!-- Avatar -->
+                            <div class="preview-avatar"
+                                 style="
+                                width:56px;
+                                height:56px;
+                                min-width:56px;
+                                border-radius:50%;
+                                background:#5C88A8 !important;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                color:#fff;
+                                flex-shrink:0;
+                                box-shadow:none;
+                                border:none;">
+
+                                <i class="bi bi-person"
+                                   style="font-size:1.5rem; color:#fff !important;"></i>
+                            </div>
+
+                            <!-- Patient Info -->
+                            <div>
+                                <div id="sum-PatientName"
+                                     style="font-weight:700; font-size:1rem; color:#212529; margin-bottom:2px;">
+                                    Patient Name
+                                </div>
+
+                                <div id="sum-Hospital"
+                                     style="font-size:0.85rem; color:#6c757d;">
+                                    Hospital Name
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="preview-badges mt-3" id="previewBadges" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <span class="badge" id="sum-BloodGroup" style="background-color: #f8f9fa; color: #212529; border: 1px solid #e9ecef; font-weight: 600; font-size: 0.8rem; padding: 0.5rem 1rem;">
+                                <i class="bi bi-droplet me-1" style="color: #90151C;"></i>Blood Group
+                            </span>
+                            <span class="badge" id="sum-Units" style="background-color: #f8f9fa; color: #212529; border: 1px solid #e9ecef; font-weight: 600; font-size: 0.8rem; padding: 0.5rem 1rem;">
+                                <i class="bi bi-box me-1" style="color: #5C88A8;"></i>0 Units
+                            </span>
+                            <span class="badge" id="sum-Date" style="background-color: #f8f9fa; color: #212529; border: 1px solid #e9ecef; font-weight: 600; font-size: 0.8rem; padding: 0.5rem 1rem;">
+                                <i class="bi bi-calendar me-1" style="color: #0dcaf0;"></i>Date
+                            </span>
+                            <span class="badge d-none" id="sum-Emergency" style="background-color: #ffebee; color: #90151C; font-weight: 600; font-size: 0.8rem; padding: 0.5rem 1rem;">
+                                <i class="bi bi-lightning-charge me-1"></i>Emergency
+                            </span>
+                        </div>
+
+                        <div class="mt-4">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small class="text-muted fw-semibold">Form Completion</small>
+                                <small class="fw-bold" id="completionText" style="color: #5C88A8;">0%</small>
+                            </div>
+                            <div class="progress" style="height: 8px; border-radius: 4px; background: #e9ecef;">
+                                <div class="progress-bar" id="completionBar" style="width: 0%; transition: width 0.3s ease; border-radius: 4px; background-color: #5C88A8;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compatibility Preview -->
+                    <div class="sidebar-card-premium mt-3" style="background: #fff; border: 1px solid #e9ecef; border-radius: 20px; padding: 24px; box-shadow: none;">
+                        <div class="sidebar-card-title" style="font-size: 1rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #212529;">
+                            <i class="bi bi-cpu" style="color: #0dcaf0;"></i>Smart Matching
+                        </div>
+                        <div id="compatibilityPreview">
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-droplet fs-1 d-block mb-2 text-muted opacity-50"></i>
+                                <small>Select a blood group to see compatibility details</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== SAVE DRAFT MODAL ==================== -->
+<div class="modal fade" id="saveDraftModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0" style="border-radius: 20px; box-shadow: none;">
+            <div class="modal-body text-center p-5">
+                <div class="mb-4">
+                    <div class="icon-box mx-auto" style="width: 70px; height: 70px; background: #e7f1ff; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-save fs-2" style="color: #5C88A8;"></i>
+                    </div>
+                </div>
+                <h5 class="fw-bold mb-2">Save as Draft?</h5>
+                <p class="text-muted small mb-4">Your progress will be saved securely. You can continue filling the form later from your dashboard.</p>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="button" class="btn rounded-pill px-4" data-bs-dismiss="modal" style="border: 1px solid #ced4da; color: #6c757d; background-color: #fff;">Cancel</button>
+                    <button type="button" class="btn rounded-pill px-4" id="confirmSaveDraft" style="background-color: #5C88A8; color: #fff;">Save Draft</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== SUCCESS MODAL ==================== -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: 24px; box-shadow: none;">
+            <div class="modal-body text-center p-5">
+                <div class="success-animation mb-4">
+                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" style="stroke: #198754;" />
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" style="stroke: #198754;" />
+                    </svg>
+                </div>
+                <h4 class="fw-bold mb-2">Request Submitted!</h4>
+                <p class="text-muted mb-4">Your blood request has been created successfully and Smart Matching has been initiated.</p>
+                <div class="bg-light rounded-4 p-3 mb-4 text-start" style="background-color: #f8f9fa !important;">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="bi bi-hash fs-5" style="color: #5C88A8;"></i>
+                        <span>Request ID: <strong id="modalRequestId">REQ-0000</strong></span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-cpu fs-5" style="color: #0dcaf0;"></i>
+                        <span>Smart Matching initiated</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="@Url.Action("MyBloodRequests", "Receiver")" class="btn rounded-pill px-4 flex-fill" style="border: 1px solid #ced4da; color: #6c757d; background-color: #fff;">My Requests</a>
+                    <button type="button" class="btn rounded-pill px-4 flex-fill" id="createAnotherBtn" style="background-color: #5C88A8; color: #fff;">Create Another</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== NOTIFICATION CONTAINER ==================== -->
+<div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;"></div>
+
+<style>
+    /* ==================== WIZARD STEPS VISIBILITY & ANIMATION ==================== */
+    .wizard-step {
+        display: none;
+    }
+
+        .wizard-step.active {
+            display: block;
+        }
+
+        .wizard-step.slide-in-right {
+            animation: wizardSlideInRight 0.4s ease forwards;
+        }
+
+        .wizard-step.slide-in-left {
+            animation: wizardSlideInLeft 0.4s ease forwards;
+        }
+
+    @@keyframes wizardSlideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes wizardSlideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* ==================== PREMIUM FORM CONTROLS ==================== */
+    .form-label-premium {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .input-group-premium {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 16px;
+        color: #adb5bd;
+        font-size: 1.1rem;
+        z-index: 2;
+        pointer-events: none;
+        transition: color 0.2s;
+    }
+
+    .form-control-premium, .form-select-premium {
+        width: 100%;
+        border: 1.5px solid #e9ecef;
+        border-radius: 12px;
+        padding: 12px 16px 12px 44px;
+        font-size: 0.95rem;
+        color: #212529;
+        background: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .form-select-premium {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 16px 12px;
+        padding-right: 40px;
+    }
+
+        .form-control-premium:focus, .form-select-premium:focus {
+            outline: none;
+            border-color: #5C88A8;
+            box-shadow: none;
+        }
+
+            .form-control-premium:focus + .input-icon,
+            .input-group-premium:focus-within .input-icon {
+                color: #5C88A8;
+            }
+
+        .form-control-premium.is-invalid, .form-select-premium.is-invalid {
+            border-color: #dc3545;
+            box-shadow: none;
+        }
+
+    .invalid-feedback-custom {
+        font-size: 0.8rem;
+        color: #dc3545;
+        margin-top: 4px;
+        display: none;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .invalid-feedback-custom.show {
+            display: flex;
+        }
+
+        .invalid-feedback-custom::before {
+            content: '\f33a';
+            font-family: 'bootstrap-icons';
+        }
+
+    /* ==================== BLOOD GROUP CARDS ==================== */
+    .blood-group-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .blood-group-card {
+        position: relative;
+        border: 2px solid #e9ecef;
+        border-radius: 16px;
+        padding: 20px 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #fff;
+        box-shadow: none;
+    }
+
+        .blood-group-card:hover {
+            border-color: #5C88A8;
+            transform: translateY(-4px);
+        }
+
+        .blood-group-card:focus {
+            outline: none;
+            border-color: #5C88A8;
+        }
+
+        .blood-group-card.active {
+            border-color: #90151C;
+            background: #fff5f5;
+            transform: translateY(-4px);
+        }
+
+        .blood-group-card i {
+            font-size: 1.8rem;
+            color: #90151C;
+            transition: transform 0.3s;
+        }
+
+        .blood-group-card.active i {
+            transform: scale(1.1);
+        }
+
+        .blood-group-card .bg-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #90151C;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+    .check-indicator {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #90151C;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .blood-group-card.active .check-indicator {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* ==================== QUANTITY & URGENCY SELECTORS ==================== */
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 16px;
+        border: 1.5px solid #e9ecef;
+    }
+
+    .quantity-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: none;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.2rem;
+        color: #5C88A8;
+        box-shadow: none;
+    }
+
+        .quantity-btn:hover {
+            background: #5C88A8;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .quantity-btn:active {
+            transform: scale(0.95);
+        }
+
+    .quantity-input {
+        flex: 1;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        border: none;
+        background: transparent;
+        color: #212529;
+    }
+
+        .quantity-input:focus {
+            outline: none;
+        }
+
+    .urgency-selector {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .urgency-option {
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        font-size: 0.9rem;
+        background: #fff;
+    }
+
+        .urgency-option:hover {
+            border-color: #adb5bd;
+        }
+
+        .urgency-option.active[data-value="Normal"] {
+            border-color: #198754;
+            background: #e6f7ee;
+            color: #198754;
+        }
+
+        .urgency-option.active[data-value="High"] {
+            border-color: #ffc107;
+            background: #fff3cd;
+            color: #d39e00;
+        }
+
+        .urgency-option.active[data-value="Critical"] {
+            border-color: #90151C;
+            background: #ffebee;
+            color: #90151C;
+        }
+
+        .urgency-option i {
+            margin-right: 4px;
+        }
+
+    /* ==================== WIZARD TIMELINE ==================== */
+    .wizard-timeline {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+
+        .wizard-timeline::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: #e9ecef;
+            z-index: 0;
+            border-radius: 2px;
+        }
+
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
+        flex: 1;
+    }
+
+    .timeline-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #fff;
+        border: 3px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 1.1rem;
+        color: #adb5bd;
+    }
+
+    .timeline-step.active .timeline-icon {
+        border-color: #5C88A8;
+        background: #5C88A8;
+        color: #fff;
+        transform: scale(1.1);
+    }
+
+    .timeline-step.completed .timeline-icon {
+        border-color: #198754;
+        background: #198754;
+        color: #fff;
+    }
+
+        .timeline-step.completed .timeline-icon::before {
+            content: '\f26b';
+            font-family: 'bootstrap-icons';
+        }
+
+        .timeline-step.completed .timeline-icon i {
+            display: none;
+        }
+
+    .timeline-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #adb5bd;
+        transition: color 0.3s;
+    }
+
+    .timeline-step.active .timeline-label {
+        color: #5C88A8;
+    }
+
+    .timeline-step.completed .timeline-label {
+        color: #198754;
+    }
+
+    /* ==================== EMERGENCY CARD ==================== */
+    .emergency-card {
+        border: 2px solid #e9ecef;
+        border-radius: 20px;
+        padding: 24px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #fff;
+    }
+
+        .emergency-card.active {
+            border-color: #90151C;
+            background: #fff5f5;
+        }
+
+    .emergency-switch {
+        width: 50px !important;
+        height: 26px !important;
+        cursor: pointer;
+    }
+
+        .emergency-switch:checked {
+            background-color: #90151C !important;
+            border-color: #90151C !important;
+        }
+
+    .emergency-details {
+        display: none;
+        margin-top: 20px;
+        padding: 16px;
+        background: rgba(144, 21, 28, 0.05);
+        border-radius: 12px;
+        border-left: 4px solid #90151C;
+    }
+
+    .emergency-card.active .emergency-details {
+        display: block;
+    }
+
+    /* ==================== SIDEBAR ==================== */
+    .sidebar-card-premium {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: none;
+    }
+
+    .sidebar-card-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #212529;
+    }
+
+    .preview-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px dashed #e9ecef;
+    }
+
+    .preview-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5C88A8, #0dcaf0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.5rem;
+    }
+
+    .preview-name {
+        font-weight: 700;
+        font-size: 1rem;
+        color: #212529;
+        margin-bottom: 2px;
+    }
+
+    .preview-hospital {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .preview-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .preview-badges .badge {
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+    /* ==================== REVIEW CARDS ==================== */
+    .review-card-premium {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 20px;
+        height: 100%;
+        transition: all 0.2s;
+        box-shadow: none;
+    }
+
+        .review-card-premium:hover {
+            box-shadow: none;
+        }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .review-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #212529;
+    }
+
+    .review-edit-btn {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        color: #5C88A8;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.8rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        transition: all 0.2s;
+    }
+
+        .review-edit-btn:hover {
+            background: #5C88A8;
+            color: #fff;
+            border-color: #5C88A8;
+        }
+
+    .review-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 0.9rem;
+    }
+
+    .review-label {
+        color: #6c757d;
+    }
+
+    .review-value {
+        font-weight: 600;
+        text-align: right;
+        max-width: 60%;
+        word-break: break-word;
+        color: #212529;
+    }
+
+    /* ==================== SUCCESS ANIMATION ==================== */
+    .success-animation {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+    }
+
+    .checkmark {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    }
+
+    .checkmark-circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        fill: none;
+        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+
+    .checkmark-check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+    }
+
+    @@keyframes stroke {
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    @@keyframes scale {
+        0%, 100% {
+            transform: none;
+        }
+
+        50% {
+            transform: scale3d(1.1, 1.1, 1);
+        }
+    }
+
+    @@keyframes fill {
+        100% {
+            box-shadow: inset 0px 0px 0px 40px #fff;
+        }
+    }
+
+    /* ==================== NOTIFICATIONS ==================== */
+    .custom-notification {
+        background: #fff;
+        border-radius: 12px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 300px;
+        max-width: 400px;
+        animation: slideIn 0.3s ease-out;
+        border-left: 4px solid;
+        box-shadow: none;
+    }
+
+        .custom-notification.success {
+            border-left-color: #198754;
+        }
+
+        .custom-notification.error {
+            border-left-color: #dc3545;
+        }
+
+        .custom-notification.info {
+            border-left-color: #0dcaf0;
+        }
+
+        .custom-notification i {
+            font-size: 1.5rem;
+        }
+
+        .custom-notification.success i {
+            color: #198754;
+        }
+
+        .custom-notification.error i {
+            color: #dc3545;
+        }
+
+        .custom-notification.info i {
+            color: #0dcaf0;
+        }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @@media (max-width: 991px) {
+        .col-lg-4 {
+            order: -1;
+        }
+
+        .sidebar-card-premium.sticky-top {
+            position: relative;
+            top: 0;
+            margin-bottom: 20px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .blood-group-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .urgency-selector {
+            grid-template-columns: 1fr;
+        }
+
+        .wizard-timeline {
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+            .wizard-timeline::before {
+                display: none;
+            }
+
+        .timeline-step {
+            flex-direction: row;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .timeline-icon {
+            margin-bottom: 0;
+        }
+    }
+
+    .hover-bg-light:hover {
+    background-color: #f8f9fa;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+/* Smooth transition for info card */
+#hospitalInfoCard, #nearestHospitalsSuggestion {
+    animation: fadeIn 0.4s ease-in-out;
+}
+@@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hospital Dropdown Styling */
+#hospitalDropdown {
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border: 1px solid #e9ecef;
+    z-index: 1050 !important; /* Bootstrap modal se upar */
+}
+
+#hospitalDropdown .hover-bg-light:hover {
+    background-color: #f8f9fa !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let currentStep = 1;
+            const totalSteps = 4;
+            const stepTitles = ["Patient Information", "Hospital Information", "Request Details", "Review & Confirm"];
+            let isHospitalSelected = false; // ✅ MUST BE DECLARED HERE AT TOP LEVEL
+
+            // ==================== DOM ELEMENTS ====================
+            const form = document.getElementById('bloodRequestForm');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            const draftBtn = document.getElementById('draftBtn');
+            const progress = document.getElementById('wizardProgress');
+            const progressText = document.getElementById('progressText');
+            const timelineSteps = document.querySelectorAll('.timeline-step');
+            const wizardSteps = document.querySelectorAll('.wizard-step');
+
+            // ==================== HELPER: NOTIFICATIONS ====================
+            function showNotification(message, type = 'info') {
+                const container = document.getElementById('notificationContainer');
+                const icons = { success: 'bi-check-circle-fill', error: 'bi-exclamation-triangle-fill', info: 'bi-info-circle-fill' };
+
+                const notif = document.createElement('div');
+                notif.className = `custom-notification ${type}`;
+                notif.innerHTML = `<i class="bi ${icons[type]}"></i><div><strong style="display:block; font-size:0.9rem;">${type.charAt(0).toUpperCase() + type.slice(1)}</strong><span style="font-size:0.85rem; color:#6c757d;">${message}</span></div>`;
+
+                container.appendChild(notif);
+                setTimeout(() => {
+                    notif.style.animation = 'slideIn 0.3s ease-out reverse';
+                    setTimeout(() => notif.remove(), 300);
+                }, 3500);
+            }
+
+            // ==================== FORM INPUT ELEMENTS ====================
+            const patientNameInput = document.getElementById('PatientName');
+            const patientAgeInput = document.getElementById('PatientAge');
+            const genderSelect = document.getElementById('Gender');
+            const bloodGroupHidden = document.getElementById('BloodGroupHidden');
+            const unitsInput = document.getElementById('unitsInput');
+            const hospitalSearchInput = document.getElementById('HospitalNameSearch');
+            const hospitalNameHidden = document.getElementById('HospitalName');
+            const hospitalContactInput = document.getElementById('HospitalContactHidden');
+            const cityInput = document.getElementById('CityHidden');
+            const addressInput = document.getElementById('AddressHidden');
+            const requiredDateInput = document.getElementById('RequiredDate');
+            const reasonTextarea = document.getElementById('Reason');
+            const notesTextarea = document.getElementById('AdditionalNotes');
+            const areaInput = document.getElementById('Area');
+            const emergencyToggle = document.getElementById('IsEmergencyToggle');
+            const urgencyHidden = document.getElementById('UrgencyLevelHidden');
+            const iAmThePatientCheckbox = document.getElementById('iAmThePatient');
+
+            // ==================== REAL-TIME INPUT VALIDATIONS ====================
+            
+            // Patient Name Validation
+            if(patientNameInput) {
+                patientNameInput.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+                    this.value = this.value.replace(/\s+/g, ' ').trim();
+                    if (this.value.length > 0 && this.value.length < 3) {
+                        showError('PatientName', 'Patient name must be at least 3 characters');
+                    } else {
+                        clearError('PatientName');
+                    }
+                    updateSummary();
+                });
+            }
+
+            // Patient Age Validation
+            if(patientAgeInput) {
+                patientAgeInput.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    if (this.value.startsWith('0') && this.value.length > 1) {
+                        this.value = this.value.replace(/^0+/, '');
+                    }
+                    const age = parseInt(this.value);
+                    if (this.value.length > 0) {
+                        if (age < 1) {
+                            showError('PatientAge', 'Age must be at least 1 year');
+                        } else if (age > 120) {
+                            showError('PatientAge', 'Age cannot exceed 120 years');
+                            this.value = '120';
+                        } else {
+                            clearError('PatientAge');
+                        }
+                    }
+                    updateSummary();
+                });
+            }
+
+            // Hospital Search Input Validation
+            if(hospitalSearchInput) {
+                hospitalSearchInput.addEventListener('input', function(e) {
+                    if(hospitalNameHidden) {
+                        hospitalNameHidden.value = this.value;
+                    }
+                    const val = this.value.trim();
+                    if (val.length > 0 && val.length < 3) {
+                        showError('HospitalName', 'Hospital name must contain at least 3 characters.');
+                    } else {
+                        clearError('HospitalName');
+                    }
+                    updateSummary();
+                });
+            }
+
+            // City Validation
+            if(cityInput) {
+                cityInput.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^a-zA-Z\s\-]/g, '');
+                    this.value = this.value.trim();
+                    if (this.value.length > 50) {
+                        this.value = this.value.substring(0, 50);
+                    }
+                    if (this.value.length > 0 && this.value.length < 2) {
+                        showError('City', 'City must contain at least 2 characters.');
+                    } else {
+                        clearError('City');
+                    }
+                });
+            }
+
+            // Reason Validation
+            if(reasonTextarea) {
+                reasonTextarea.addEventListener('input', function(e) {
+                    const words = this.value.trim().split(/\s+/).filter(w => w.length > 0);
+                    const counter = document.getElementById('reasonCounter');
+                    if(counter) {
+                        counter.textContent = `${this.value.length} / 500`;
+                    }
+                    if (this.value.length > 500) {
+                        this.value = this.value.substring(0, 500);
+                        if(counter) counter.textContent = `500 / 500`;
+                    }
+                    if (this.value.length > 0 && this.value.trim().length === 0) {
+                        showError('Reason', 'Reason cannot contain only blank spaces.');
+                    }
+                    else if (this.value.trim().length > 0 && words.length < 10) {
+                        showError('Reason', 'Please provide at least 10 words describing the reason.');
+                    } else {
+                        clearError('Reason');
+                    }
+                    if(counter) {
+                        counter.style.color = this.value.length > 450 ? '#dc3545' : this.value.length > 400 ? '#ffc107' : '#6c757d';
+                    }
+                });
+            }
+
+            // Additional Notes Counter
+            if(notesTextarea) {
+                notesTextarea.addEventListener('input', function(e) {
+                    const counter = document.getElementById('notesCounter');
+                    if(counter) {
+                        const count = this.value.length;
+                        counter.textContent = `${count} / 1000`;
+                        counter.style.color = count > 900 ? '#dc3545' : count > 800 ? '#ffc107' : '#6c757d';
+                    }
+                });
+            }
+
+            // Area Input
+            if(areaInput) {
+                areaInput.addEventListener('input', function(e) {
+                    this.value = this.value.trim();
+                });
+            }
+
+            // Required Date Validation
+            const today = new Date().toISOString().split('T')[0];
+            if(requiredDateInput) {
+                requiredDateInput.min = today;
+                requiredDateInput.addEventListener('change', function(e) {
+                    const selectedDate = new Date(this.value);
+                    const currentDate = new Date(today);
+                    if (selectedDate < currentDate) {
+                        showError('RequiredDate', 'Date cannot be in the past');
+                        this.value = today;
+                    } else {
+                        clearError('RequiredDate');
+                    }
+                });
+            }
+
+            // Emergency Toggle
+            const emergencyCard = document.getElementById('emergencyCard');
+            if(emergencyToggle && requiredDateInput) {
+                emergencyToggle.addEventListener('change', function() {
+                    if(emergencyCard) {
+                        emergencyCard.classList.toggle('active', this.checked);
+                    }
+                    if (this.checked) {
+                        requiredDateInput.value = today;
+                        requiredDateInput.readOnly = true;
+                        showNotification('Emergency request: Date set to today', 'info');
+                    } else {
+                        requiredDateInput.readOnly = false;
+                    }
+                    updateSummary();
+                });
+            }
+
+            // ==================== "I AM THE PATIENT" CHECKBOX ====================
+            const receiverName = '@Model.ReceiverName';
+            const receiverEmail = '@Model.ReceiverEmail';
+
+            if(iAmThePatientCheckbox && patientNameInput) {
+                iAmThePatientCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        patientNameInput.value = receiverName;
+                        patientNameInput.readOnly = true;
+                        patientNameInput.classList.add('bg-light');
+                        showNotification('Patient details auto-filled with your information', 'info');
+                    } else {
+                        patientNameInput.readOnly = false;
+                        patientNameInput.classList.remove('bg-light');
+                        patientNameInput.value = '';
+                        showNotification('You can now enter different patient details', 'info');
+                    }
+                    updateSummary();
+                });
+            }
+
+            // ==================== BLOOD GROUP SELECTION ====================
+            const bloodGroupCards = document.querySelectorAll('.blood-group-card');
+            
+            function selectBloodGroup(card) {
+                bloodGroupCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                if(bloodGroupHidden) {
+                    bloodGroupHidden.value = card.getAttribute('data-value');
+                }
+                clearError('BloodGroup');
+                updateSummary();
+                updateCompatibility(bloodGroupHidden ? bloodGroupHidden.value : '');
+            }
+
+            bloodGroupCards.forEach(card => {
+                card.addEventListener('click', () => selectBloodGroup(card));
+                card.addEventListener('keypress', (e) => { 
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectBloodGroup(card);
+                    }
+                });
+            });
+
+            // ==================== QUANTITY SELECTOR ====================
+            const decreaseUnitsBtn = document.getElementById('decreaseUnits');
+            const increaseUnitsBtn = document.getElementById('increaseUnits');
+            
+            if(decreaseUnitsBtn) {
+                decreaseUnitsBtn.addEventListener('click', () => {
+                    if(unitsInput) {
+                        let val = parseInt(unitsInput.value) || 1;
+                        if (val > 1) unitsInput.value = val - 1;
+                        updateSummary();
+                    }
+                });
+            }
+            
+            if(increaseUnitsBtn) {
+                increaseUnitsBtn.addEventListener('click', () => {
+                    if(unitsInput) {
+                        let val = parseInt(unitsInput.value) || 1;
+                        if (val < 10) unitsInput.value = val + 1;
+                        updateSummary();
+                    }
+                });
+            }
+            
+            if(unitsInput) {
+                unitsInput.addEventListener('input', () => {
+                    let val = parseInt(unitsInput.value);
+                    if (val < 1) unitsInput.value = 1;
+                    if (val > 10) unitsInput.value = 10;
+                    updateSummary();
+                });
+            }
+
+            // ==================== URGENCY SELECTOR ====================
+            const urgencyOptions = document.querySelectorAll('.urgency-option');
+            
+            urgencyOptions.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    urgencyOptions.forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    if(urgencyHidden) {
+                        urgencyHidden.value = opt.getAttribute('data-value');
+                    }
+                    clearError('UrgencyLevel');
+                    updateSummary();
+                });
+            });
+            
+            // Set default urgency
+            const defaultUrgency = document.querySelector('.urgency-option[data-value="Normal"]');
+            if(defaultUrgency) {
+                defaultUrgency.classList.add('active');
+            }
+
+            // ==================== WIZARD NAVIGATION ====================
+            function goToStep(step) {
+                if (step < 1 || step > totalSteps || step === currentStep) return;
+
+                const isForward = step > currentStep;
+                const currentStepEl = document.querySelector(`.wizard-step[data-step="${currentStep}"]`);
+                const nextStepEl = document.querySelector(`.wizard-step[data-step="${step}"]`);
+
+                if (currentStepEl) {
+                    currentStepEl.classList.remove('active', 'slide-in-left', 'slide-in-right');
+                }
+
+                if (nextStepEl) {
+                    nextStepEl.classList.add('active');
+                    nextStepEl.classList.add(isForward ? 'slide-in-right' : 'slide-in-left');
+
+                    setTimeout(() => {
+                        nextStepEl.classList.remove('slide-in-right', 'slide-in-left');
+                    }, 400);
+                }
+
+                timelineSteps.forEach((s, i) => {
+                    s.classList.remove('active', 'completed');
+                    if (i + 1 < step) s.classList.add('completed');
+                    else if (i + 1 === step) s.classList.add('active');
+                });
+
+                currentStep = step;
+                updateProgress();
+                updateNavButtons();
+                if (step === 4) updateReview();
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function updateProgress() {
+                const percent = (currentStep / totalSteps) * 100;
+                if(progress) progress.style.width = `${percent}%`;
+                if(progressText) progressText.textContent = `Step ${currentStep} of ${totalSteps} - ${stepTitles[currentStep - 1]}`;
+            }
+
+            function updateNavButtons() {
+                if(prevBtn) prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-flex';
+                if(nextBtn) nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-flex';
+                if(submitBtn) submitBtn.style.display = currentStep === totalSteps ? 'inline-flex' : 'none';
+            }
+
+            // Next Button Click
+            if(nextBtn) {
+                nextBtn.addEventListener('click', () => { 
+                    if (validateStep(currentStep)) {
+                        goToStep(currentStep + 1); 
+                    }
+                });
+            }
+            
+            // Previous Button Click
+            if(prevBtn) {
+                prevBtn.addEventListener('click', () => goToStep(currentStep - 1));
+            }
+            
+            // Review Edit Buttons
+            document.querySelectorAll('.review-edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() { 
+                    const stepNum = parseInt(this.getAttribute('data-goto'));
+                    goToStep(stepNum); 
+                });
+            });
+
+            // ==================== VALIDATION FUNCTIONS ====================
+            function showError(fieldName, message) {
+                const errEl = document.getElementById(`err-${fieldName}`);
+                const inputEl = document.querySelector(`[name="${fieldName}"]`) || 
+                               document.getElementById(fieldName) ||
+                               document.querySelector(`#${fieldName}Hidden`);
+                if (errEl) { 
+                    errEl.textContent = message; 
+                    errEl.classList.add('show'); 
+                }
+                if (inputEl) {
+                    inputEl.classList.add('is-invalid');
+                }
+            }
+
+            function clearError(fieldName) {
+                const errEl = document.getElementById(`err-${fieldName}`);
+                const inputEl = document.querySelector(`[name="${fieldName}"]`) || 
+                               document.getElementById(fieldName) ||
+                               document.querySelector(`#${fieldName}Hidden`);
+                if (errEl) { 
+                    errEl.textContent = ''; 
+                    errEl.classList.remove('show'); 
+                }
+                if (inputEl) {
+                    inputEl.classList.remove('is-invalid');
+                }
+            }
+
+            function validateStep(step) {
+    const stepEl = document.querySelector(`.wizard-step[data-step="${step}"]`);
+    let isValid = true;
+    let firstInvalid = null;
+
+    // Clear previous errors
+    stepEl.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    stepEl.querySelectorAll('.invalid-feedback-custom.show').forEach(el => el.classList.remove('show'));
+
+    if (step === 1) {
+        // Patient Name
+        if(patientNameInput) {
+            const pName = patientNameInput.value.trim();
+            if (!pName) {
+                showError('PatientName', 'Patient name is required');
+                isValid = false;
+                firstInvalid = firstInvalid || patientNameInput;
+            } else if (pName.length < 3) {
+                showError('PatientName', 'Patient name must be at least 3 characters');
+                isValid = false;
+                firstInvalid = firstInvalid || patientNameInput;
+            }
+        }
+        // Patient Age
+        if(patientAgeInput) {
+            const pAge = parseInt(patientAgeInput.value);
+            if (!patientAgeInput.value || isNaN(pAge)) {
+                showError('PatientAge', 'Valid age is required');
+                isValid = false;
+                firstInvalid = firstInvalid || patientAgeInput;
+            } else if (pAge < 1 || pAge > 120) {
+                showError('PatientAge', 'Age must be between 1 and 120');
+                isValid = false;
+                firstInvalid = firstInvalid || patientAgeInput;
+            }
+        }
+        // Gender
+        if(genderSelect) {
+            if (!genderSelect.value) {
+                showError('Gender', 'Gender is required');
+                isValid = false;
+                firstInvalid = firstInvalid || genderSelect;
+            }
+        }
+        // Blood Group
+        if(bloodGroupHidden) {
+            if (!bloodGroupHidden.value) {
+                showError('BloodGroup', 'Blood group is required');
+                isValid = false;
+            }
+        }
+        // Units
+        if(unitsInput) {
+            const units = parseInt(unitsInput.value);
+            if (!unitsInput.value || units < 1 || units > 10) {
+                showError('UnitsRequired', 'Units must be between 1 and 10');
+                isValid = false;
+                firstInvalid = firstInvalid || unitsInput;
+            }
+        }
+    } else if (step === 2) {
+        // Hospital Name Validation
+        if (hospitalSearchInput) {
+            const hSearchValue = hospitalSearchInput.value.trim();
+            if (!hSearchValue) {
+                showError('HospitalName', 'Please search and select a hospital');
+                isValid = false;
+                firstInvalid = firstInvalid || hospitalSearchInput;
+            } else if (hSearchValue.length < 3) {
+                showError('HospitalName', 'Please enter at least 3 characters');
+                isValid = false;
+                firstInvalid = firstInvalid || hospitalSearchInput;
+            } else if (!isHospitalSelected) {
+                const infoCard = document.getElementById('hospitalInfoCard');
+                if (!infoCard || infoCard.style.display === 'none') {
+                    showError('HospitalName', '⚠️ Please select a hospital from the dropdown suggestions');
+                    isValid = false;
+                    firstInvalid = firstInvalid || hospitalSearchInput;
+                    if(hSearchValue.length >= 3) {
+                        fetchHospitals(hSearchValue);
+                    }
+                }
+            }
+        }
+        
+        // If hospital is selected, validate auto-filled fields (RELAXED VALIDATION)
+        if (isHospitalSelected) {
+            // Hospital Contact - RELAXED: Accept any non-empty value (name or phone)
+            if (hospitalContactInput) {
+                const hContact = hospitalContactInput.value.trim();
+                if (!hContact || hContact === '' || hContact === 'N/A' || hContact === '-') {
+                    showError('HospitalContact', 'Hospital contact information is required');
+                    isValid = false;
+                    firstInvalid = firstInvalid || hospitalContactInput;
+                } else {
+                    clearError('HospitalContact');
+                }
+            }
+            
+            // City - RELAXED: Extract from address if missing
+            if (cityInput) {
+                const city = cityInput.value.trim();
+                if (!city || city.length < 2 || city === 'N/A' || city === '-') {
+                    // Try to extract city from address
+                    const addr = addressInput ? addressInput.value.trim() : '';
+                    if (addr && addr !== 'N/A' && addr !== '-') {
+                        const parts = addr.split(',').map(p => p.trim());
+                        if (parts.length >= 2) {
+                            const possibleCity = parts[parts.length - 2];
+                            if (possibleCity.length >= 2 && possibleCity.toLowerCase() !== 'pakistan') {
+                                cityInput.value = possibleCity;
+                                clearError('City');
+                            } else {
+                                showError('City', 'Valid city is required');
+                                isValid = false;
+                                firstInvalid = firstInvalid || cityInput;
+                            }
+                        } else {
+                            showError('City', 'Valid city is required');
+                            isValid = false;
+                            firstInvalid = firstInvalid || cityInput;
+                        }
+                    } else {
+                        showError('City', 'Valid city is required');
+                        isValid = false;
+                        firstInvalid = firstInvalid || cityInput;
+                    }
+                } else {
+                    clearError('City');
+                }
+            }
+            
+            // Address - RELAXED: Just check if not empty
+            if (addressInput) {
+                const addr = addressInput.value.trim();
+                if (!addr || addr === 'N/A' || addr === '-') {
+                    showError('Address', 'Hospital address is required');
+                    isValid = false;
+                    firstInvalid = firstInvalid || addressInput;
+                } else {
+                    clearError('Address');
+                }
+            }
+        }
+    } else if (step === 3) {
+        // Required Date
+        if(requiredDateInput) {
+            const reqDate = requiredDateInput.value;
+            if (!reqDate) {
+                showError('RequiredDate', 'Required date is required');
+                isValid = false;
+                firstInvalid = firstInvalid || requiredDateInput;
+            } else {
+                const selectedDate = new Date(reqDate);
+                const currentDate = new Date(today);
+                if (selectedDate < currentDate) {
+                    showError('RequiredDate', 'Date cannot be in the past');
+                    isValid = false;
+                    firstInvalid = firstInvalid || requiredDateInput;
+                }
+            }
+        }
+        // Urgency Level
+        if(urgencyHidden) {
+            if (!urgencyHidden.value) {
+                showError('UrgencyLevel', 'Urgency level is required');
+                isValid = false;
+            }
+        }
+        // Reason
+        if(reasonTextarea) {
+            const reason = reasonTextarea.value;
+            const reasonTrimmed = reason.trim();
+            const words = reasonTrimmed.split(/\s+/).filter(w => w.length > 0);
+            if (!reasonTrimmed) {
+                showError('Reason', 'Reason for request is required.');
+                isValid = false;
+                firstInvalid = firstInvalid || reasonTextarea;
+            } else if (reasonTrimmed.length === 0) {
+                showError('Reason', 'Reason cannot contain only blank spaces.');
+                isValid = false;
+                firstInvalid = firstInvalid || reasonTextarea;
+            } else if (words.length < 10) {
+                showError('Reason', 'Please provide at least 10 words describing the reason.');
+                isValid = false;
+                firstInvalid = firstInvalid || reasonTextarea;
+            } else if (reason.length > 500) {
+                showError('Reason', 'Reason cannot exceed 500 characters.');
+                isValid = false;
+                firstInvalid = firstInvalid || reasonTextarea;
+            }
+        }
+    }
+
+    if (!isValid) {
+        showNotification('Please fill in all required fields correctly.', 'error');
+        if (firstInvalid) {
+            if (firstInvalid.type === 'hidden' && firstInvalid.id === 'HospitalContactHidden') {
+                hospitalSearchInput.focus();
+            } else {
+                firstInvalid.focus();
+            }
+        }
+    }
+    return isValid;
+}
+
+            // Clear errors on input
+            document.querySelectorAll('.form-control-premium, .form-select-premium').forEach(el => {
+                el.addEventListener('input', () => {
+                    if (el.classList.contains('is-invalid')) {
+                        el.classList.remove('is-invalid');
+                        const errEl = el.closest('.col-md-3, .col-md-6, .col-12, .col-md-4')?.querySelector('.invalid-feedback-custom');
+                        if (errEl) errEl.classList.remove('show');
+                    }
+                });
+            });
+
+            // ==================== HOSPITAL AUTOCOMPLETE ====================
+            let userLat = null;
+            let userLng = null;
+            let searchTimeout = null;
+
+            // Get User Location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        userLat = position.coords.latitude;
+                        userLng = position.coords.longitude;
+                        const latInput = document.getElementById('Latitude');
+                        const lngInput = document.getElementById('Longitude');
+                        if(latInput) latInput.value = userLat;
+                        if(lngInput) lngInput.value = userLng;
+                        console.log("📍 Location:", userLat, userLng);
+                    },
+                    (error) => {
+                        console.log("Geolocation denied or unavailable.");
+                    }
+                );
+            }
+
+            const hospitalDropdown = document.getElementById('hospitalDropdown');
+            const hospitalInfoCard = document.getElementById('hospitalInfoCard');
+            const nearestSuggestionBox = document.getElementById('nearestHospitalsSuggestion');
+            const suggestedHospitalsList = document.getElementById('suggestedHospitalsList');
+
+            // Hospital Search Input Handler
+            if(hospitalSearchInput) {
+                hospitalSearchInput.addEventListener('input', function() {
+                    const term = this.value.trim();
+                    clearTimeout(searchTimeout);
+
+                    // Reset selection state when user types
+                    if(term.length < 3) {
+                        if(hospitalDropdown) hospitalDropdown.style.display = 'none';
+                        if(nearestSuggestionBox) nearestSuggestionBox.style.display = 'none';
+                        isHospitalSelected = false;
+                        return;
+                    }
+
+                    searchTimeout = setTimeout(() => {
+                        fetchHospitals(term);
+                    }, 400);
+                });
+
+                // Also handle focus - show dropdown if there's a value
+                hospitalSearchInput.addEventListener('focus', function() {
+                    if(this.value.trim().length >= 3 && hospitalDropdown) {
+                        fetchHospitals(this.value.trim());
+                    }
+                });
+            }
+
+            async function fetchHospitals(term) {
+                try {
+                    let baseUrl = window.location.origin;
+                    let url = `${baseUrl}/Receiver/SearchHospitals?term=${encodeURIComponent(term)}&userLat=${userLat || ''}&userLng=${userLng || ''}`;
+                    
+                    console.log("🔍 Fetching hospitals for:", term);
+                    console.log("📡 Full URL:", url);
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    console.log("📡 Response Status:", response.status);
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error("❌ Server Error:", errorText);
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    
+                    const hospitals = await response.json();
+                    console.log("✅ Hospitals found:", hospitals.length);
+                    console.log("🏥 Hospitals Data:", hospitals);
+
+                    if(hospitalDropdown) {
+                        hospitalDropdown.innerHTML = '';
+
+                        if (hospitals.length === 0) {
+                            // Show helpful message
+                            hospitalDropdown.innerHTML = `
+                                <div class="p-3 text-center">
+                                    <i class="bi bi-exclamation-triangle text-warning mb-2 d-block fs-4"></i>
+                                    <small class="text-muted d-block mb-2">No hospitals found for "${term}"</small>
+                                    <small class="text-primary fw-semibold">Try: "Life", "Agha", "Jinnah"</small>
+                                </div>`;
+                            hospitalDropdown.style.display = 'block';
+                            
+                            // Hide suggestion box if no results
+                            if(nearestSuggestionBox) {
+                                nearestSuggestionBox.style.display = 'none';
+                            }
+                            return;
+                        }
+
+                        // Check if any hospital name contains the exact search term
+                        const isExactMatch = hospitals.some(h => 
+                            (h.HospitalName || '').toLowerCase().includes(term.toLowerCase())
+                        );
+
+                        // Populate dropdown
+                        hospitals.forEach(h => {
+    // Fix: JSON serialization ke baad camelCase ho jata hai
+    const hospitalName = h.HospitalName || h.hospitalName || h.Name || h.name;
+    
+    if (!hospitalName) {
+        console.warn("⚠️ Hospital with null name skipped:", h);
+        return;
+    }
+
+                            const div = document.createElement('div');
+                            div.className = 'p-3 border-bottom hover-bg-light cursor-pointer';
+                            div.style.cursor = 'pointer';
+                            div.innerHTML = `
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <div class="fw-semibold" style="color: #212529;">
+                ${highlightMatch(hospitalName, term)}  <!-- Yahan change -->
+            </div>
+            <div class="small text-muted">
+                <i class="bi bi-geo-alt me-1"></i>${h.City || h.city || 'N/A'}
+            </div>
+        </div>
+        ${h.Distance || h.distance ? `
+            <span class="badge bg-light text-primary">
+                <i class="bi bi-signpost-2 me-1"></i>${h.Distance || h.distance} km
+            </span>
+        ` : ''}
+    </div>
+`;
+                            div.addEventListener('click', () => {
+                                console.log("✅ Hospital clicked:", h.HospitalName);
+                                selectHospital(h);
+                            });
+                            hospitalDropdown.appendChild(div);
+                        });
+
+                        hospitalDropdown.style.display = 'block';
+                        console.log("✅ Dropdown displayed with", hospitals.length, "hospitals");
+
+                        // Show nearest hospitals suggestion if no exact match
+                        showNearestHospitalsSuggestion(hospitals, isExactMatch);
+                    } else {
+                        console.error(" hospitalDropdown element NOT found!");
+                    }
+                } catch (error) {
+                    console.error("❌ Hospital search failed:", error);
+                    console.error("❌ Error stack:", error.stack);
+                    showNotification('Failed to search hospitals. Please try again.', 'error');
+                }
+            }
+
+            // Helper function to highlight matching text
+            function highlightMatch(text, term) {
+                const regex = new RegExp(`(${term})`, 'gi');
+                return text.replace(regex, '<mark class="bg-warning bg-opacity-25">$1</mark>');
+            }
+
+            // Show nearest hospitals suggestion box
+            function showNearestHospitalsSuggestion(hospitals, isExactMatch) {
+                if(!nearestSuggestionBox || !suggestedHospitalsList) {
+                    console.error("❌ nearestSuggestionBox or suggestedHospitalsList not found");
+                    return;
+                }
+                
+                if (!isExactMatch && hospitals.length > 0) {
+                    nearestSuggestionBox.style.display = 'block';
+                    suggestedHospitalsList.innerHTML = '';
+                    
+                    const title = document.createElement('h6');
+                    title.className = 'fw-semibold mb-2';
+                    title.textContent = 'Suggested Registered Hospitals:';
+                    suggestedHospitalsList.appendChild(title);
+                    
+                    hospitals.slice(0, 3).forEach(h => {
+                        if (!h.HospitalName) return;
+                        
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'btn btn-sm btn-outline-primary text-start rounded-3 w-100 mb-2';
+                        btn.innerHTML = `
+                            <i class="bi bi-hospital me-2"></i>
+                            <strong>${h.HospitalName}</strong> 
+                            <span class="text-muted ms-2">
+                                ${h.Distance ? '(' + h.Distance + ' km)' : ''}
+                            </span>
+                        `;
+                        btn.addEventListener('click', () => {
+                            selectHospital(h);
+                            nearestSuggestionBox.style.display = 'none';
+                            if(hospitalSearchInput) hospitalSearchInput.value = h.HospitalName;
+                        });
+                        suggestedHospitalsList.appendChild(btn);
+                    });
+                } else {
+                    nearestSuggestionBox.style.display = 'none';
+                }
+            }
+
+            // Select Hospital Function
+            function selectHospital(h) {
+    console.log(" Selecting hospital:", h);
+    
+    // Fix: Handle both PascalCase and camelCase
+    const hospitalName = h.HospitalName || h.hospitalName;
+    const hospitalId = h.HospitalId || h.hospitalId;
+    const address = h.Address || h.address;
+    const contact = h.Contact || h.contact;
+    const latitude = h.Latitude || h.latitude;
+    const longitude = h.Longitude || h.longitude;
+    const distance = h.Distance || h.distance;
+    const estimatedTime = h.EstimatedTimeMinutes || h.estimatedTimeMinutes;
+    
+    // Fix: Extract city from address if h.City is missing
+    let city = h.City || h.city;
+    if (!city && address) {
+        const parts = address.split(',').map(p => p.trim());
+        if (parts.length >= 2) {
+            city = parts[parts.length - 2]; 
+        }
+    }
+
+    // Set hidden fields
+    if(hospitalNameHidden) hospitalNameHidden.value = hospitalName;
+    const selectedHospitalIdInput = document.getElementById('SelectedHospitalId');
+    if(selectedHospitalIdInput) selectedHospitalIdInput.value = hospitalId;
+    if(hospitalContactInput) hospitalContactInput.value = contact || 'N/A';
+    if(addressInput) addressInput.value = address || 'N/A';
+    if(cityInput) cityInput.value = city || 'N/A';
+    
+    const latInput = document.getElementById('Latitude');
+    const lngInput = document.getElementById('Longitude');
+    if(latitude && latInput) latInput.value = latitude;
+    if(longitude && lngInput) lngInput.value = longitude;
+
+    // Update UI Card
+    const infoHospitalName = document.getElementById('info-HospitalName');
+    const infoAddress = document.getElementById('info-Address');
+    const infoCity = document.getElementById('info-City');
+    const infoContact = document.getElementById('info-Contact');
+    const infoDistance = document.getElementById('info-Distance');
+    const infoTime = document.getElementById('info-Time');
+    
+    if(infoHospitalName) infoHospitalName.textContent = hospitalName;
+    if(infoAddress) infoAddress.textContent = address || 'N/A';
+    if(infoCity) infoCity.textContent = city || 'N/A';
+    if(infoContact) infoContact.textContent = contact || 'N/A';
+    if(infoDistance) infoDistance.textContent = distance ? distance + ' km' : 'N/A';
+    if(infoTime) infoTime.textContent = estimatedTime ? estimatedTime + ' mins' : 'N/A';
+
+    // Show the info card
+    if(hospitalInfoCard) {
+        hospitalInfoCard.style.display = 'block';
+        hospitalInfoCard.classList.add('fade-in');
+    }
+
+    // Hide dropdown
+    if(hospitalDropdown) hospitalDropdown.style.display = 'none';
+
+    // Mark as selected
+    isHospitalSelected = true;
+    console.log("✅ Hospital selected, isHospitalSelected =", isHospitalSelected);
+
+    // Clear any errors
+    clearError('HospitalName');
+    clearError('City');
+    clearError('HospitalContact');
+    clearError('Address');
+
+    // Show success notification
+    showNotification(`Hospital "${hospitalName}" selected successfully!`, 'success');
+    
+    updateSummary();
+}
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (hospitalSearchInput && hospitalDropdown) {
+                    if (!hospitalSearchInput.contains(e.target) && !hospitalDropdown.contains(e.target)) {
+                        // Don't hide immediately - give user time to click
+                        setTimeout(() => {
+                            if(document.activeElement !== hospitalSearchInput) {
+                                hospitalDropdown.style.display = 'none';
+                            }
+                        }, 200);
+                    }
+                }
+            });
+
+            // ==================== SUMMARY & REVIEW ====================
+            function getVal(id) { 
+                const el = document.getElementById(id);
+                return el ? el.value?.trim() || '' : ''; 
+            }
+
+            function updateSummary() {
+                const pName = getVal('PatientName') || 'Patient Name';
+                const hName = getVal('HospitalName') || 'Hospital Name';
+                const bg = getVal('BloodGroupHidden');
+                const units = getVal('unitsInput') || '0';
+                const date = getVal('RequiredDate');
+                const isEm = emergencyToggle ? emergencyToggle.checked : false;
+
+                const sumPatientName = document.getElementById('sum-PatientName');
+                const sumHospital = document.getElementById('sum-Hospital');
+                const sumBloodGroup = document.getElementById('sum-BloodGroup');
+                const sumUnits = document.getElementById('sum-Units');
+                const sumDate = document.getElementById('sum-Date');
+                const sumEmergency = document.getElementById('sum-Emergency');
+                const completionBar = document.getElementById('completionBar');
+                const completionText = document.getElementById('completionText');
+
+                if(sumPatientName) sumPatientName.textContent = pName;
+                if(sumHospital) sumHospital.textContent = hName;
+
+                if(sumBloodGroup) {
+                    sumBloodGroup.innerHTML = bg ? `<i class="bi bi-droplet me-1" style="color: #90151C;"></i> ${bg}` : '<i class="bi bi-droplet me-1" style="color: #90151C;"></i> Blood Group';
+                }
+
+                if(sumUnits) {
+                    sumUnits.innerHTML = `<i class="bi bi-box me-1" style="color: #5C88A8;"></i> ${units} Units`;
+                }
+
+                if(sumDate) {
+                    sumDate.innerHTML = date ? `<i class="bi bi-calendar me-1" style="color: #0dcaf0;"></i> ${new Date(date).toLocaleDateString()}` : '<i class="bi bi-calendar me-1" style="color: #0dcaf0;"></i> Date';
+                }
+
+                if(sumEmergency) {
+                    if (isEm) { 
+                        sumEmergency.classList.remove('d-none'); 
+                        sumEmergency.style.backgroundColor = '#ffebee'; 
+                        sumEmergency.style.color = '#90151C'; 
+                    } else { 
+                        sumEmergency.classList.add('d-none'); 
+                    }
+                }
+
+                // Completion Progress
+                const fields = ['PatientName', 'PatientAge', 'Gender', 'BloodGroupHidden', 'unitsInput', 'HospitalName', 'HospitalContact', 'City', 'RequiredDate', 'UrgencyLevelHidden', 'Reason'];
+                let filled = fields.filter(f => getVal(f)).length;
+                const percent = Math.round((filled / fields.length) * 100);
+                if(completionBar) completionBar.style.width = `${percent}%`;
+                if(completionText) {
+                    completionText.textContent = `${percent}%`;
+                    completionText.style.color = '#5C88A8';
+                }
+            }
+
+            function updateReview() {
+                const revReceiverName = document.getElementById('rev-ReceiverName');
+                const revReceiverEmail = document.getElementById('rev-ReceiverEmail');
+                const revPatientName = document.getElementById('rev-PatientName');
+                const revPatientAge = document.getElementById('rev-PatientAge');
+                const revGender = document.getElementById('rev-Gender');
+                const revBloodGroup = document.getElementById('rev-BloodGroup');
+                const revUnitsRequired = document.getElementById('rev-UnitsRequired');
+                const revHospitalName = document.getElementById('rev-HospitalName');
+                const revHospitalContact = document.getElementById('rev-HospitalContact');
+                const revCity = document.getElementById('rev-City');
+                const revAddress = document.getElementById('rev-Address');
+                const revRequiredDate = document.getElementById('rev-RequiredDate');
+                const revUrgencyLevel = document.getElementById('rev-UrgencyLevel');
+                const revReason = document.getElementById('rev-Reason');
+                const revIsEmergency = document.getElementById('rev-IsEmergency');
+
+                if(revReceiverName) revReceiverName.textContent = '@Model.ReceiverName';
+                if(revReceiverEmail) revReceiverEmail.textContent = '@Model.ReceiverEmail';
+                if(revPatientName) revPatientName.textContent = getVal('PatientName') || '-';
+                if(revPatientAge) revPatientAge.textContent = getVal('PatientAge') || '-';
+                if(revGender) revGender.textContent = getVal('Gender') || '-';
+                
+                if(revBloodGroup) {
+                    const bgVal = getVal('BloodGroupHidden');
+                    revBloodGroup.innerHTML = bgVal ? `<span class="badge" style="background-color: #ffebee; color: #90151C; padding: 0.5rem 1rem;">${bgVal}</span>` : '-';
+                }
+                
+                if(revUnitsRequired) revUnitsRequired.textContent = getVal('unitsInput') || '-';
+                if(revHospitalName) revHospitalName.textContent = getVal('HospitalName') || '-';
+                if(revHospitalContact) revHospitalContact.textContent = getVal('HospitalContact') || '-';
+                if(revCity) revCity.textContent = getVal('City') || '-';
+                if(revAddress) revAddress.textContent = getVal('Address') || '-';
+                
+                if(revRequiredDate) {
+                    const dateVal = getVal('RequiredDate');
+                    revRequiredDate.textContent = dateVal ? new Date(dateVal).toLocaleDateString() : '-';
+                }
+
+                if(revUrgencyLevel) {
+                    const urg = getVal('UrgencyLevelHidden');
+                    if(urg) {
+                        const bgColor = urg === 'Normal' ? '#e6f7ee' : urg === 'High' ? '#fff3cd' : '#ffebee';
+                        const color = urg === 'Normal' ? '#198754' : urg === 'High' ? '#d39e00' : '#90151C';
+                        revUrgencyLevel.innerHTML = `<span class="badge" style="background-color: ${bgColor}; color: ${color}; padding: 0.5rem 1rem;">${urg}</span>`;
+                    } else {
+                        revUrgencyLevel.textContent = '-';
+                    }
+                }
+                
+                if(revReason) revReason.textContent = getVal('Reason') || '-';
+                
+                if(revIsEmergency) {
+                    const isEm = emergencyToggle ? emergencyToggle.checked : false;
+                    revIsEmergency.innerHTML = isEm ? 
+                        '<span class="badge" style="background-color: #ffebee; color: #90151C; padding: 0.5rem 1rem;"><i class="bi bi-lightning-charge me-1"></i>Yes (Highest Priority)</span>' : 
+                        '<span class="badge" style="background-color: #f8f9fa; color: #6c757d; padding: 0.5rem 1rem;">No</span>';
+                }
+            }
+
+            // ==================== COMPATIBILITY PREVIEW ====================
+            function updateCompatibility(bg) {
+                const preview = document.getElementById('compatibilityPreview');
+                if (!preview) return;
+                
+                if (!bg) {
+                    preview.innerHTML = `<div class="text-center text-muted py-4"><i class="bi bi-droplet fs-1 d-block mb-2 text-muted opacity-50"></i><small>Select a blood group to see compatibility details</small></div>`;
+                    return;
+                }
+
+                const compatibility = {
+                    'A+': ['A+', 'AB+'], 'A-': ['A-', 'A+', 'AB-', 'AB+'],
+                    'B+': ['B+', 'AB+'], 'B-': ['B-', 'B+', 'AB-', 'AB+'],
+                    'AB+': ['AB+'], 'AB-': ['AB-', 'AB+'],
+                    'O+': ['O+', 'A+', 'B+', 'AB+'], 'O-': ['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+']
+                };
+
+                const compatible = compatibility[bg] || [];
+                preview.innerHTML = `
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-2 fw-semibold">Can Donate To:</small>
+                        <div class="d-flex flex-wrap gap-2">
+                            ${compatible.map(c => `<span class="badge" style="background-color: #ffebee; color: #90151C; padding: 0.5rem 1rem;">${c}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="p-3" style="background-color: #e6f7ee; border-radius: 1rem; text-align: center; margin-top: 1rem;">
+                        <i class="bi bi-cpu text-info fs-4 d-block mb-2" style="color: #0dcaf0;"></i>
+                        <small class="text-info fw-bold d-block" style="color: #0dcaf0;">Smart Matching Active</small>
+                        <small class="text-muted" style="font-size: 0.75rem;">System will automatically find compatible donors.</small>
+                    </div>
+                `;
+            }
+
+            // ==================== EVENT LISTENERS FOR LIVE UPDATES ====================
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+                el.addEventListener('input', updateSummary);
+                el.addEventListener('change', updateSummary);
+            });
+
+            // ==================== SAVE DRAFT ====================
+            const saveDraftModalEl = document.getElementById('saveDraftModal');
+            if(saveDraftModalEl && typeof bootstrap !== 'undefined') {
+                const saveDraftModal = new bootstrap.Modal(saveDraftModalEl);
+                
+                if(draftBtn) {
+                    draftBtn.addEventListener('click', () => saveDraftModal.show());
+                }
+
+                const confirmSaveDraftBtn = document.getElementById('confirmSaveDraft');
+                if(confirmSaveDraftBtn) {
+                    confirmSaveDraftBtn.addEventListener('click', async function() {
+                        this.disabled = true;
+                        this.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Saving...';
+
+                        try {
+                            const formData = {};
+                            document.querySelectorAll('input, select, textarea').forEach(el => {
+                                if (el.name) {
+                                    if (el.type === 'checkbox') {
+                                        formData[el.name] = el.checked;
+                                    } else if (el.type === 'number') {
+                                        formData[el.name] = el.value ? parseFloat(el.value) : null;
+                                    } else {
+                                        formData[el.name] = el.value;
+                                    }
+                                }
+                            });
+
+                            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                            const response = await fetch('@Url.Action("SaveDraft", "Receiver")', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'RequestVerificationToken': token
+                                },
+                                body: JSON.stringify(formData)
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+
+                            const result = await response.json();
+                            saveDraftModal.hide();
+
+                            if (result.success) {
+                                showNotification(result.message || 'Draft saved successfully!', 'success');
+                            } else {
+                                showNotification(result.message || 'Failed to save draft.', 'error');
+                            }
+                        } catch (error) {
+                            console.error('Save draft error:', error);
+                            showNotification('Failed to save draft. Please try again.', 'error');
+                        } finally {
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-save me-2"></i>Save Draft';
+                        }
+                    });
+                }
+            }
+
+            // ==================== FORM SUBMISSION ====================
+            if(form) {
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    for (let i = 1; i <= totalSteps; i++) {
+                        if (!validateStep(i)) {
+                            goToStep(i);
+                            return;
+                        }
+                    }
+
+                    if(submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Processing...';
+                    }
+
+                    try {
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                        const formData = new FormData(form);
+
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'RequestVerificationToken': token
+                            }
+                        });
+
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(`Server error: ${errorText}`);
+                        }
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            const modalReqId = document.getElementById('modalRequestId');
+                            if(modalReqId) modalReqId.textContent = `REQ-${String(result.requestId).padStart(4, '0')}`;
+                            
+                            const successModalEl = document.getElementById('successModal');
+                            if(successModalEl && typeof bootstrap !== 'undefined') {
+                                new bootstrap.Modal(successModalEl).show();
+                            }
+                        } else {
+                            showNotification(result.message || 'Submission failed.', 'error');
+                        }
+                    } catch (err) {
+                        console.error('Submit error:', err);
+                        showNotification('Network error. Please try again.', 'error');
+                    } finally {
+                        if(submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Submit Request';
+                        }
+                    }
+                });
+            }
+
+            // ==================== CREATE ANOTHER BUTTON ====================
+            const createAnotherBtn = document.getElementById('createAnotherBtn');
+            if(createAnotherBtn) {
+                createAnotherBtn.addEventListener('click', function() {
+                    const successModalEl = document.getElementById('successModal');
+                    if(successModalEl && typeof bootstrap !== 'undefined') {
+                        bootstrap.Modal.getInstance(successModalEl).hide();
+                    }
+                    if(form) form.reset();
+                    
+                    bloodGroupCards.forEach(c => c.classList.remove('active'));
+                    urgencyOptions.forEach(o => o.classList.remove('active'));
+                    
+                    const defaultUrg = document.querySelector('.urgency-option[data-value="Normal"]');
+                    if(defaultUrg) defaultUrg.classList.add('active');
+                    
+                    const emCard = document.getElementById('emergencyCard');
+                    if(emCard) emCard.classList.remove('active');
+                    
+                    isHospitalSelected = false; // Reset hospital selection
+                    
+                    goToStep(1);
+                    updateSummary();
+                    updateCompatibility('');
+                });
+            }
+
+            // ==================== INITIALIZE ====================
+            updateProgress();
+            updateNavButtons();
+            updateSummary();
+            
+            console.log("✅ All buttons and listeners initialized successfully.");
+            console.log(" isHospitalSelected initialized to:", isHospitalSelected);
+        });
+    </script>
+}

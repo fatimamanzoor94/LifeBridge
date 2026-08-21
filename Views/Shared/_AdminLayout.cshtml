@@ -1,0 +1,1070 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>@ViewData["Title"] | Khoon-e-Hayat</title>
+    <meta name="description" content="Khoon-e-Hayat Admin Panel" />
+    <link rel="icon" type="image/x-icon" href="~/assets/Favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/aassets/vendor/fonts/boxicons.css" />
+    <link rel="stylesheet" href="~/aassets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="~/aassets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="~/aassets/css/demo.css" />
+    <link rel="stylesheet" href="~/aassets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="~/aassets/vendor/libs/apex-charts/apex-charts.css" />
+    <script src="~/aassets/vendor/js/helpers.js"></script>
+    <script src="~/aassets/js/config.js"></script>
+
+    @RenderSection("Styles", required: false)
+
+    <!-- PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <!-- Excel Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <style>
+            /* ==================== GLOBAL SEARCH STYLING ==================== */
+            .global-search-container {
+                position: relative;
+                width: 100%;
+                max-width: 360px;
+            }
+
+                .global-search-container .form-control {
+                    border-radius: 50px;
+                    padding-left: 40px;
+                    padding-right: 36px;
+                    background-color: #ffffff;
+                    border: 1px solid #e9ecef;
+                    transition: all 0.25s ease;
+                    font-size: 0.9rem;
+                }
+
+                    .global-search-container .form-control:focus {
+                        background-color: #ffffff;
+                        border-color: #5C88A8;
+                        box-shadow: 0 0 0 3px rgba(92, 136, 168, 0.12);
+                    }
+
+                .global-search-container .search-icon {
+                    position: absolute;
+                    left: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #6c757d;
+                    z-index: 2;
+                    pointer-events: none;
+                }
+
+            .global-search-clear {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: transparent;
+                border: none;
+                color: #adb5bd;
+                cursor: pointer;
+                padding: 4px;
+                border-radius: 50%;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                z-index: 2;
+            }
+
+                .global-search-clear:hover {
+                    background: #f1f3f5;
+                    color: #90151C;
+                }
+
+                .global-search-clear.visible {
+                    display: flex;
+                }
+
+            /* Autocomplete Dropdown */
+            .search-autocomplete {
+                position: absolute;
+                top: calc(100% + 8px);
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                border: 1px solid #e9ecef;
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+                max-height: 420px;
+                overflow-y: auto;
+                z-index: 1050;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-8px);
+                transition: all 0.2s ease;
+            }
+
+                .search-autocomplete.open {
+                    opacity: 1;
+                    visibility: visible;
+                    transform: translateY(0);
+                }
+
+            .search-autocomplete-header {
+                padding: 10px 16px;
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: #6c757d;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border-bottom: 1px solid #f1f3f5;
+                background: #fafbfc;
+                border-radius: 16px 16px 0 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+                .search-autocomplete-header .result-count {
+                    color: #5C88A8;
+                    font-weight: 600;
+                }
+
+            .search-result-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px 16px;
+                cursor: pointer;
+                transition: all 0.15s ease;
+                border-bottom: 1px solid #f8f9fa;
+                text-decoration: none;
+                color: inherit;
+            }
+
+                .search-result-item:last-child {
+                    border-bottom: none;
+                }
+
+                .search-result-item:hover,
+                .search-result-item.active {
+                    background: #f5f8fd;
+                }
+
+                .search-result-item.active {
+                    background: #e6f4ff;
+                }
+
+            .search-result-icon {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                background: #f1f3f5;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.05rem;
+                color: #5C88A8;
+                flex-shrink: 0;
+                transition: all 0.2s;
+            }
+
+            .search-result-item:hover .search-result-icon,
+            .search-result-item.active .search-result-icon {
+                background: #5C88A8;
+                color: #ffffff;
+            }
+
+            .search-result-content {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .search-result-title {
+                font-size: 0.88rem;
+                font-weight: 600;
+                color: #212529;
+                margin-bottom: 2px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+                .search-result-title mark {
+                    background: #fff3cd;
+                    color: #212529;
+                    padding: 0 2px;
+                    border-radius: 3px;
+                    font-weight: 700;
+                }
+
+            .search-result-desc {
+                font-size: 0.76rem;
+                color: #6c757d;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .search-result-arrow {
+                color: #adb5bd;
+                font-size: 0.85rem;
+                opacity: 0;
+                transition: all 0.2s;
+            }
+
+            .search-result-item:hover .search-result-arrow,
+            .search-result-item.active .search-result-arrow {
+                opacity: 1;
+                color: #5C88A8;
+                transform: translateX(2px);
+            }
+
+            .search-no-results {
+                padding: 28px 20px;
+                text-align: center;
+                color: #6c757d;
+            }
+
+            .search-no-results-icon {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                background: #f1f3f5;
+                color: #adb5bd;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                margin: 0 auto 10px;
+            }
+
+            .search-no-results-title {
+                font-size: 0.88rem;
+                font-weight: 600;
+                color: #495057;
+                margin-bottom: 4px;
+            }
+
+            .search-no-results-text {
+                font-size: 0.78rem;
+                color: #6c757d;
+            }
+
+            .search-keyboard-hint {
+                padding: 8px 16px;
+                background: #fafbfc;
+                border-top: 1px solid #f1f3f5;
+                border-radius: 0 0 16px 16px;
+                display: flex;
+                justify-content: flex-end;
+                gap: 12px;
+                font-size: 0.7rem;
+                color: #6c757d;
+            }
+
+            .kbd-hint {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+                .kbd-hint kbd {
+                    background: #ffffff;
+                    border: 1px solid #e9ecef;
+                    border-radius: 4px;
+                    padding: 1px 6px;
+                    font-size: 0.68rem;
+                    font-family: inherit;
+                    color: #495057;
+                    box-shadow: 0 1px 0 #e9ecef;
+                }
+
+            .search-autocomplete::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .search-autocomplete::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .search-autocomplete::-webkit-scrollbar-thumb {
+                background: #dee2e6;
+                border-radius: 3px;
+            }
+
+            /* ==================== DROPDOWNS & PROFILE ==================== */
+            .dropdown-menu {
+                border-radius: 16px;
+                border: 1px solid #e9ecef;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            }
+
+            .profile-img {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #fff;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            /* ==================== NOTIFICATION BADGE STYLES ==================== */
+            .menu-item .badge {
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                transition: all 0.3s ease;
+            }
+
+            .menu-item:hover .badge {
+                transform: scale(1.1);
+            }
+
+            .indicator-dot {
+                animation: pulse-dot 2s infinite;
+            }
+
+            @@keyframes pulse-dot {
+                0%, 100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+
+                50% {
+                    opacity: 0.7;
+                    transform: scale(1.3);
+                }
+            }
+
+            .badge.bg-danger {
+                background: red !important;
+                box-shadow: none !important;
+            }
+
+            /* Navbar notification badge */
+            .navbar-notif-badge {
+                position: absolute;
+                top: 2px;
+                right: 2px;
+                min-width: 18px;
+                height: 18px;
+                font-size: 0.65rem;
+                font-weight: 700;
+                background: red !important;
+                color: #fff;
+                border-radius: 50px;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                padding: 0 5px;
+                border: 2px solid #edf2f9;
+                animation: pulse-dot 2s infinite;
+            }
+
+                .navbar-notif-badge.show {
+                    display: flex;
+                }
+    </style>
+</head>
+<body style="background-color: #edf2f9f5;">
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
+            <!-- Menu -->
+            <aside id="layout-menu" class="layout-menu menu-vertical d-flex flex-column" style="height: 100vh; position: sticky; border-radius: 0px 30px 30px 0px;">
+                <!-- TOP SECTION -->
+                <div class="flex-grow-1 d-flex flex-column overflow-hidden" style="min-height: 0;">
+                    <!-- Brand -->
+                    <div class="app-brand demo d-flex align-items-center justify-content-center py-4">
+                        <a asp-controller="Admin" asp-action="Dashboard" class="app-brand-link d-flex align-items-center">
+                            <span class="app-brand-logo demo">
+                                <img src="~/assets/Dashboard_Logo.png" id="logo" alt="Logo" width="230" />
+                            </span>
+                        </a>
+                        <a href="javascript:void(0);" class="layout-menu-toggle menu-link menu-toggle-btn d-block d-xl-none">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </a>
+                    </div>
+                    <div class="menu-inner-shadow"></div>
+                    <div class="menu-scroll flex-grow-1 overflow-auto px-2" style="min-height: 0;">
+                        <!-- MENU -->
+                        <ul class="menu-inner py-1">
+                            <!-- Dashboard -->
+                            <li class="menu-item">
+                                <a asp-controller="Admin" asp-action="Dashboard" class="menu-link d-flex align-items-center text-dark">
+                                    <i class="menu-icon bi bi-speedometer2 me-2"></i>
+                                    <div>Dashboard</div>
+                                </a>
+                            </li>
+
+                            <!-- User Management -->
+                            <li class="menu-item">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle text-dark">
+                                    <i class="menu-icon bi bi-people me-2"></i>
+                                    <div>User Management</div>
+                                </a>
+                                <ul class="menu-sub">
+                                    <li class="menu-item">
+                                        <a asp-controller="UserManagement" asp-action="Donors" class="menu-link text-dark">
+                                            <i class="menu-icon bi bi-droplet me-2"></i>
+                                            <div>Donors</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a asp-controller="UserManagement" asp-action="Receivers" class="menu-link text-dark">
+                                            <i class="menu-icon bi bi-person-vcard me-2"></i>
+                                            <div>Receivers</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a asp-controller="UserManagement" asp-action="Hospitals" class="menu-link text-dark">
+                                            <i class="menu-icon bi bi-hospital me-2"></i>
+                                            <div>Hospitals</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Hospital Verification -->
+                            <li class="menu-item">
+                                <a asp-controller="Admin" asp-action="HospitalVerification" class="menu-link d-flex align-items-center text-dark">
+                                    <i class="menu-icon bi bi-patch-check me-2"></i>
+                                    <div>Hospital Verification</div>
+                                </a>
+                            </li>
+
+                            <!-- 🩸 NEW: Blood Bank Management -->
+                            <li class="menu-item">
+                                <a href="javascript:void(0);" class="menu-link menu-toggle text-dark">
+                                    <i class="menu-icon bi bi-droplet-half me-2"></i>
+                                    <div>Blood Bank</div>
+                                </a>
+                                <ul class="menu-sub">
+                                    <li class="menu-item">
+                                        <a asp-controller="Admin" asp-action="BloodBankOverview" class="menu-link text-dark">
+                                            <i class="menu-icon bi bi-speedometer2 me-2"></i>
+                                            <div>Overview</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a asp-controller="Admin" asp-action="BloodBankInventory" class="menu-link text-dark">
+                                            <i class="menu-icon bi bi-box-seam me-2"></i>
+                                            <div>Inventory</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a asp-controller="Admin" asp-action="BloodCollectionLog" class="menu-link text-dark">
+                                            <i class="menu-icon bi bi-box-arrow-in-down me-2"></i>
+                                            <div>Collection Log</div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a asp-controller="Admin" asp-action="BloodIssueLog" class="menu-link text-dark">
+                                            <i class="menu-icon bi bi-box-arrow-up-right me-2"></i>
+                                            <div>Issue Log</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Blood Requests -->
+                            <li class="menu-item">
+                                <a asp-controller="Admin" asp-action="BloodRequests" class="menu-link d-flex align-items-center text-dark">
+                                    <i class="menu-icon bi bi-clipboard2-pulse me-2"></i>
+                                    <div>Blood Requests</div>
+                                </a>
+                            </li>
+
+                            <!-- Emergency Alerts -->
+                            <li class="menu-item">
+                                <a asp-controller="Admin" asp-action="EmergencyAlerts" class="menu-link d-flex align-items-center text-dark">
+                                    <i class="menu-icon bi bi-exclamation-triangle me-2"></i>
+                                    <div>Emergency Alerts</div>
+                                </a>
+                            </li>
+
+                            <!-- Smart Match Center -->
+                            <li class="menu-item">
+                                <a asp-controller="Admin" asp-action="SmartMatch" class="menu-link d-flex align-items-center text-dark">
+                                    <i class="menu-icon bi bi-bullseye me-2"></i>
+                                    <div>Smart Match Center</div>
+                                </a>
+                            </li>
+
+                            <!-- Contact Messages -->
+                            <li class="menu-item">
+                                <a asp-controller="Admin" asp-action="ContactMessages" class="menu-link d-flex align-items-center text-dark">
+                                    <div class="position-relative me-2">
+                                        <i class="menu-icon bi bi-chat-dots"></i>
+                                        <span id="notifIndicatorDot" class="indicator-dot"
+                                              style="display:none; position:absolute; top:-2px; right:-2px;
+                                            width:8px; height:8px; background:red;
+                                            border-radius:50%; box-shadow:0 0 0 2px #edf2f9;">
+                                        </span>
+                                    </div>
+                                    <div>Contact Messages</div>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <style>
+                                                    .menu-link {
+                                                        display: flex;
+                                                        align-items: center;
+                                                        gap: 10px;
+                                                        white-space: nowrap;
+                                                    }
+                        </style>
+
+                        <script>
+                                                    document.addEventListener("DOMContentLoaded", function() {
+                                                        const currentPage = window.location.pathname;
+                                                        document.querySelectorAll(".menu-link[href]").forEach(link => {
+                                                            const href = link.getAttribute("href");
+                                                            if (href && currentPage.endsWith(href.split("/").pop())) {
+                                                                const menuItem = link.closest(".menu-item");
+                                                                if (menuItem) menuItem.classList.add("active");
+                                                                const parentMenu = link.closest(".menu-sub");
+                                                                if (parentMenu) {
+                                                                    const parentItem = parentMenu.closest(".menu-item");
+                                                                    if (parentItem) {
+                                                                        parentItem.classList.add("active");
+                                                                        parentItem.classList.add("open");
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                        </script>
+                    </div>
+                </div>
+            </aside>
+            <!-- / Menu -->
+
+            <div class="layout-page">
+                <!-- Navbar -->
+                <div class="mt-1 sticky-top-navbar">
+                    <nav class="layout-navbar navbar navbar-expand-xl align-items-center rounded-4 px-3 py-2" style="background-color: #edf2f9 !important;">
+                        <div class="layout-menu-toggle navbar-nav d-xl-none me-3">
+                            <a class="nav-link px-0" href="javascript:void(0);"><i class="bx bx-menu fs-4"></i></a>
+                        </div>
+
+                        <!-- Global Search with Autocomplete -->
+                        <div class="navbar-nav flex-grow-1 mx-3 global-search-container" id="globalSearchWrapper">
+                            <i class="bi bi-search search-icon"></i>
+                            <input type="text"
+                                   id="globalSearch"
+                                   class="form-control border-0"
+                                   placeholder="Search pages... (e.g. Dashboard, Blood Bank)"
+                                   autocomplete="off"
+                                   aria-label="Search pages"
+                                   aria-haspopup="listbox"
+                                   aria-expanded="false" />
+                            <button type="button" class="global-search-clear" id="globalSearchClear" aria-label="Clear search">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+
+                            <!-- Autocomplete Dropdown -->
+                            <div class="search-autocomplete" id="searchAutocomplete" role="listbox" aria-label="Search results">
+                                <!-- Content injected by JavaScript -->
+                            </div>
+                        </div>
+
+                        <ul class="navbar-nav flex-row align-items-center ms-auto gap-2">
+                            <!-- NOTIFICATIONS DROPDOWN -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 8px;">
+                                    <i class="bi bi-bell fs-5"></i>
+                                    <span id="navbarNotifBadge" class="navbar-notif-badge">0</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" style="min-width: 300px;">
+                                    <li><h6 class="dropdown-header">Notifications</h6></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li id="notifDropdownList">
+                                        <div class="text-center text-muted py-3">No new notifications</div>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-center" asp-controller="Admin" asp-action="Dashboard">View All</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- Profile Dropdown -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @{
+                                        var defaultImg = Url.Content("~/aassets/img/avatars/DefaultAvatar.png");
+                                        var profileImg = Context.Session.GetString("ProfileImageUrl");
+
+                                        // Check ViewBag as fallback
+                                        if (string.IsNullOrWhiteSpace(profileImg))
+                                        {
+                                            profileImg = ViewBag.ProfilePicture as string;
+                                        }
+
+                                        if (string.IsNullOrWhiteSpace(profileImg))
+                                        {
+                                            profileImg = defaultImg;
+                                        }
+                                        else if (!profileImg.StartsWith("/") && !profileImg.StartsWith("http"))
+                                        {
+                                            profileImg = "/" + profileImg;
+                                        }
+                                    }
+                                    <img src="@profileImg" alt="Profile" class="profile-img me-2" id="navbarProfileImg" onerror="this.src='@defaultImg';" />
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <div class="dropdown-header">
+                                            <h6 class="mb-0">@(Context.Session.GetString("UserName") ?? "Admin User")</h6>
+                                            <small class="text-muted">@(Context.Session.GetString("UserRole") ?? "Admin")</small>
+                                        </div>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index"><i class="bi bi-person-circle me-2"></i>My Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                            <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <!-- / Navbar -->
+
+                <div class="content-wrapper">
+                    <div class="flex-grow-1 px-3 py-2 container-p-y">
+                        @RenderBody()
+                    </div>
+                    <div class="content-backdrop fade"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+
+    <!-- Core JS -->
+    <script src="~/aassets/vendor/libs/jquery/jquery.js"></script>
+    <script src="~/aassets/vendor/libs/popper/popper.js"></script>
+    <script src="~/aassets/vendor/js/bootstrap.js"></script>
+    <script src="~/aassets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="~/aassets/vendor/js/menu.js"></script>
+    <script src="~/aassets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="~/aassets/js/main.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+            window.exportTable = function(type, tableId, fileName) {
+                const table = document.getElementById(tableId);
+                if (!table) { alert("Table not found!"); return; }
+                const today = new Date().toLocaleDateString();
+                const headers = [];
+                table.querySelectorAll("thead th").forEach((th) => {
+                    if (th.innerText.trim().toLowerCase() !== "actions") headers.push(th.innerText.trim());
+                });
+                const rows = [];
+                table.querySelectorAll("tbody tr").forEach(row => {
+                    if (row.style.display === "none") return;
+                    const rowData = [];
+                    Array.from(row.cells).forEach((cell, index) => {
+                        const headerText = table.querySelectorAll("thead th")[index]?.innerText?.trim()?.toLowerCase();
+                        if (headerText !== "actions") {
+                            let value = cell.querySelector(".full-message")?.innerText || cell.innerText;
+                            rowData.push(value.trim());
+                        }
+                    });
+                    rows.push(rowData);
+                });
+
+                if (type === "excel") {
+                    const wb = XLSX.utils.book_new();
+                    const data = [headers, ...rows];
+                    const ws = XLSX.utils.aoa_to_sheet(data);
+                    ws['!cols'] = headers.map((header, i) => {
+                        let maxLength = header.length;
+                        rows.forEach(r => { if (r[i] && r[i].toString().length > maxLength) maxLength = r[i].toString().length; });
+                        return { wch: Math.min(maxLength + 10, 120) };
+                    });
+                    XLSX.utils.book_append_sheet(wb, ws, fileName);
+                    XLSX.writeFile(wb, fileName + ".xlsx");
+                }
+
+                if (type === "pdf") {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF("landscape");
+                    doc.setFontSize(18);
+                    doc.setTextColor(8, 145, 178);
+                    doc.text("Khoon-e-Hayat - Blood Donation Management System", 14, 15);
+                    doc.setFontSize(13);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(fileName + " Report", 14, 25);
+                    doc.setFontSize(10);
+                    doc.text("Generated On: " + today, 14, 32);
+
+                    doc.autoTable({
+                        startY: 40, head: [headers], body: rows, theme: "grid",
+                        styles: { fontSize: 8, cellPadding: 3, valign: "middle", overflow: "linebreak", cellWidth: "wrap" },
+                        headStyles: { fillColor: [13, 110, 253], textColor: [255, 255, 255], fontStyle: "bold" },
+                        alternateRowStyles: { fillColor: [245, 247, 250] }
+                    });
+                    doc.save(fileName + ".pdf");
+                }
+            };
+
+            /* ============================================
+            GLOBAL SEARCH - LIVE AUTOCOMPLETE (UPDATED)
+            ============================================ */
+            (function() {
+                const searchInput = document.getElementById("globalSearch");
+                const searchClear = document.getElementById("globalSearchClear");
+                const autocomplete = document.getElementById("searchAutocomplete");
+                if (!searchInput || !autocomplete) return;
+
+                const pages = [
+                    { title: "Dashboard", keywords: ["dashboard", "home", "overview", "main", "panel"], url: "/Admin/Dashboard", icon: "bi-speedometer2", description: "View system overview and analytics" },
+                    { title: "Donors", keywords: ["donors", "users", "donor management"], url: "/UserManagement/Donors", icon: "bi-droplet", description: "Manage donor accounts and profiles" },
+                    { title: "Receivers", keywords: ["receivers", "users", "receiver management"], url: "/UserManagement/Receivers", icon: "bi-person-vcard", description: "Manage receiver accounts" },
+                    { title: "Hospitals", keywords: ["hospitals", "users", "hospital management"], url: "/UserManagement/Hospitals", icon: "bi-hospital", description: "Manage hospital accounts" },
+                    { title: "Hospital Verification", keywords: ["verification", "hospitals", "approve", "pending"], url: "/Admin/HospitalVerification", icon: "bi-patch-check", description: "Verify and approve hospital registrations" },
+
+                    // 🩸 NEW: Blood Bank Pages Added to Search
+                    { title: "Blood Bank Overview", keywords: ["blood bank", "overview", "system inventory", "stock"], url: "/Admin/BloodBankOverview", icon: "bi-speedometer2", description: "System-wide blood inventory overview" },
+                    { title: "Blood Bank Inventory", keywords: ["blood bank", "inventory", "stock", "units"], url: "/Admin/BloodBankInventory", icon: "bi-box-seam", description: "Manage and view system-wide blood inventory" },
+                    { title: "Blood Collection Log", keywords: ["blood", "collection", "log", "history", "donations"], url: "/Admin/BloodCollectionLog", icon: "bi-box-arrow-in-down", description: "View all blood collection records across hospitals" },
+                    { title: "Blood Issue Log", keywords: ["blood", "issue", "log", "history", "distributed"], url: "/Admin/BloodIssueLog", icon: "bi-box-arrow-up-right", description: "View all blood issue and distribution records" },
+
+                    { title: "Blood Requests", keywords: ["requests", "blood", "blood requests"], url: "/Admin/BloodRequests", icon: "bi-clipboard2-pulse", description: "View and manage all blood requests" },
+                    { title: "Emergency Alerts", keywords: ["alerts", "emergency", "urgent", "critical"], url: "/Admin/EmergencyAlerts", icon: "bi-exclamation-triangle", description: "Monitor emergency blood requests" },
+                    { title: "Smart Match Center", keywords: ["smart", "match", "matching", "donors"], url: "/Admin/SmartMatch", icon: "bi-bullseye", description: "AI-powered donor-request matching" },
+                    { title: "Contact Messages", keywords: ["messages", "contact", "inbox", "support"], url: "/Admin/ContactMessages", icon: "bi-chat-dots", description: "View and respond to user messages" },
+                    { title: "My Profile", keywords: ["profile", "my profile", "account", "settings"], url: "/Profile/Index", icon: "bi-person-circle", description: "Manage your admin profile" }
+                ];
+
+                let activeIndex = -1;
+                let currentResults = [];
+                let debounceTimer = null;
+
+                function escapeRegex(str) {
+                    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                }
+
+                function highlightMatch(text, query) {
+                    if (!query) return text;
+                    const regex = new RegExp('(' + escapeRegex(query) + ')', 'gi');
+                    return text.replace(regex, '<mark>$1</mark>');
+                }
+
+                function searchPages(query) {
+                    query = query.trim().toLowerCase();
+                    if (!query) return [];
+
+                    const results = [];
+                    pages.forEach(page => {
+                        if (page.title.toLowerCase().includes(query)) {
+                            results.push({ ...page, matchType: 'title' });
+                            return;
+                        }
+                        for (const kw of page.keywords) {
+                            if (kw.includes(query) || query.includes(kw)) {
+                                results.push({ ...page, matchType: 'keyword' });
+                                return;
+                            }
+                        }
+                        if (page.description.toLowerCase().includes(query)) {
+                            results.push({ ...page, matchType: 'description' });
+                        }
+                    });
+
+                    return results;
+                }
+
+                function renderResults(query) {
+                    currentResults = searchPages(query);
+                    activeIndex = -1;
+
+                    if (!query.trim()) {
+                        closeAutocomplete();
+                        return;
+                    }
+
+                    let html = '';
+
+                    if (currentResults.length === 0) {
+                        html = `
+                                <div class="search-no-results">
+                                    <div class="search-no-results-icon"><i class="bi bi-search"></i></div>
+                                    <div class="search-no-results-title">No matching results found</div>
+                                    <div class="search-no-results-text">Try searching for "Dashboard", "Blood Bank", or "Users"</div>
+                                </div>
+                                `;
+                    } else {
+                        html += `<div class="search-autocomplete-header">
+                                    <span>Pages</span>
+                                    <span class="result-count">${currentResults.length} result${currentResults.length > 1 ? 's' : ''}</span>
+                                </div>`;
+
+                        currentResults.forEach((page, idx) => {
+                            const displayTitle = page.matchType === 'title' ? highlightMatch(page.title, query) : page.title;
+
+                            html += `
+                                    <a href="${page.url}" class="search-result-item" data-index="${idx}" role="option" aria-selected="false">
+                                        <div class="search-result-icon"><i class="bi ${page.icon}"></i></div>
+                                        <div class="search-result-content">
+                                            <div class="search-result-title">${displayTitle}</div>
+                                            <div class="search-result-desc">${page.description}</div>
+                                        </div>
+                                        <i class="bi bi-arrow-right search-result-arrow"></i>
+                                    </a>
+                                    `;
+                        });
+
+                        html += `
+                                <div class="search-keyboard-hint">
+                                    <span class="kbd-hint"><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+                                    <span class="kbd-hint"><kbd>↵</kbd> select</span>
+                                    <span class="kbd-hint"><kbd>esc</kbd> close</span>
+                                </div>
+                                `;
+                    }
+
+                    autocomplete.innerHTML = html;
+                    openAutocomplete();
+                }
+
+                function openAutocomplete() {
+                    autocomplete.classList.add('open');
+                    searchInput.setAttribute('aria-expanded', 'true');
+                }
+
+                function closeAutocomplete() {
+                    autocomplete.classList.remove('open');
+                    searchInput.setAttribute('aria-expanded', 'false');
+                    activeIndex = -1;
+                }
+
+                function setActiveItem(index) {
+                    const items = autocomplete.querySelectorAll('.search-result-item');
+                    if (items.length === 0) return;
+
+                    items.forEach(item => item.classList.remove('active'));
+
+                    if (index < 0) index = items.length - 1;
+                    if (index >= items.length) index = 0;
+
+                    activeIndex = index;
+                    items[activeIndex].classList.add('active');
+                    items[activeIndex].setAttribute('aria-selected', 'true');
+                    items[activeIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                }
+
+                function navigateToActive() {
+                    if (activeIndex >= 0 && currentResults[activeIndex]) {
+                        window.location.href = currentResults[activeIndex].url;
+                    } else if (currentResults.length === 1) {
+                        window.location.href = currentResults[0].url;
+                    }
+                }
+
+                searchInput.addEventListener('input', function() {
+                    const query = this.value;
+                    if (query.length > 0) {
+                        searchClear.classList.add('visible');
+                    } else {
+                        searchClear.classList.remove('visible');
+                    }
+
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        renderResults(query);
+                    }, 120);
+                });
+
+                searchInput.addEventListener('keydown', function(e) {
+                    if (!autocomplete.classList.contains('open')) {
+                        if (e.key === 'ArrowDown' && this.value.trim()) {
+                            renderResults(this.value);
+                            e.preventDefault();
+                        }
+                        return;
+                    }
+
+                    switch (e.key) {
+                        case 'ArrowDown': e.preventDefault(); setActiveItem(activeIndex + 1); break;
+                        case 'ArrowUp': e.preventDefault(); setActiveItem(activeIndex - 1); break;
+                        case 'Enter': e.preventDefault(); navigateToActive(); break;
+                        case 'Escape': e.preventDefault(); closeAutocomplete(); searchInput.blur(); break;
+                        case 'Tab': closeAutocomplete(); break;
+                    }
+                });
+
+                autocomplete.addEventListener('click', function(e) {
+                    const item = e.target.closest('.search-result-item');
+                    if (item) {
+                        e.preventDefault();
+                        const url = item.getAttribute('href');
+                        if (url) window.location.href = url;
+                    }
+                });
+
+                autocomplete.addEventListener('mouseover', function(e) {
+                    const item = e.target.closest('.search-result-item');
+                    if (item) {
+                        const idx = parseInt(item.getAttribute('data-index'));
+                        setActiveItem(idx);
+                    }
+                });
+
+                searchClear.addEventListener('click', function() {
+                    searchInput.value = '';
+                    searchClear.classList.remove('visible');
+                    closeAutocomplete();
+                    searchInput.focus();
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!document.getElementById('globalSearchWrapper').contains(e.target)) {
+                        closeAutocomplete();
+                    }
+                });
+
+                searchInput.addEventListener('focus', function() {
+                    if (this.value.trim()) {
+                        renderResults(this.value);
+                    }
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey && e.key === 'k') || (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA')) {
+                        e.preventDefault();
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                });
+            })();
+
+            /* ============================================
+            ADMIN NOTIFICATION BADGE POLLING
+            ============================================ */
+            function updateAdminNotificationCounts() {
+                fetch('/Admin/GetUnreadNotificationCount')
+                    .then(res => res.json())
+                    .then(data => {
+                        const unreadCount = data.unread || 0;
+
+                        // SIDEBAR DOT INDICATOR
+                        const dot = document.getElementById("notifIndicatorDot");
+                        if (dot) {
+                            dot.style.display = unreadCount > 0 ? "block" : "none";
+                        }
+
+                        // NAVBAR BADGE
+                        const navbarBadge = document.getElementById("navbarNotifBadge");
+                        if (navbarBadge) {
+                            if (unreadCount > 0) {
+                                navbarBadge.textContent = unreadCount;
+                                navbarBadge.classList.add('show');
+                            } else {
+                                navbarBadge.classList.remove('show');
+                            }
+                        }
+                    })
+                    .catch(err => {
+                        console.warn('Notification polling error:', err);
+                    });
+            }
+
+            // Run immediately on page load, then every 5 seconds
+            updateAdminNotificationCounts();
+            setInterval(updateAdminNotificationCounts, 5000);
+
+            /* ============================================
+            NOTIFICATION BELL DROPDOWN FUNCTIONALITY
+            ============================================ */
+            (function() {
+                const notificationBell = document.querySelector('.nav-item.dropdown a[data-bs-toggle="dropdown"]');
+                const notifDropdownList = document.getElementById('notifDropdownList');
+                const navbarNotifBadge = document.getElementById('navbarNotifBadge');
+                let notificationDropdown = null;
+
+                if (notificationBell) {
+                    notificationDropdown = new bootstrap.Dropdown(notificationBell);
+                }
+
+                async function loadNotifications() {
+                    try {
+                        const response = await fetch('/Admin/GetLatestNotifications');
+
+                        if (!response.ok) {
+                            console.error(`HTTP Error: ${response.status} ${response.statusText}`);
+                            return;
+                        }
+
+                        const data = await response.json();
+
+                        if (data.success && notifDropdownList) {
+                            if (data.notifications.length === 0) {
+                                notifDropdownList.innerHTML = `
+                                        <div class="text-center text-muted py-3">
+                                            <i class="bi bi-bell-slash fs-4 d-block mb-2"></i>
+                                            No new notifications
+                                        </div>
+                                        `;
+                            } else {
+                                let html = '';
+                                data.notifications.forEach(notif => {
+                                    const unreadClass = !notif.isRead ? 'bg-light' : '';
+                                    const unreadIndicator = !notif.isRead ? '<span class="badge bg-danger rounded-circle me-2" style="width: 8px; height: 8px;"></span>' : '';
+
+                                    html += `
+                                            <a href="${notif.actionUrl || '#'}" class="dropdown-item ${unreadClass} py-3" data-notification-id="${notif.notificationId}">
+                                                <div class="d-flex align-items-start">
+                                                    ${unreadIndicator}
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="mb-1 small fw-semibold">${notif.title}</h6>
+                                                        <p class="mb-1 small text-muted text-truncate" style="max-width: 250px;">${notif.message}</p>
+                                                        <small class="text-muted" style="font-size: 0.7rem;">${notif.timeAgo}</small>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            `;
+                                });
+
+                                notifDropdownList.innerHTML = html;
+                            }
+
+                            if (navbarNotifBadge) {
+                                if (data.unreadCount > 0) {
+                                    navbarNotifBadge.textContent = data.unreadCount;
+                                    navbarNotifBadge.classList.add('show');
+                                } else {
+                                    navbarNotifBadge.classList.remove('show');
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Error loading notifications:', err);
+                    }
+                }
+
+                if (notificationBell) {
+                    notificationBell.addEventListener('shown.bs.dropdown', function() {
+                        loadNotifications();
+                    });
+                }
+
+                loadNotifications();
+                setInterval(loadNotifications, 30000);
+            })();
+    </script>
+</body>
+</html>

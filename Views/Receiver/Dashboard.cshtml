@@ -1,0 +1,786 @@
+﻿@model Khoon_e_Hayat.ViewModels.ReceiverDashboardViewModel
+@{
+    ViewData["Title"] = "Receiver Dashboard";
+    Layout = "~/Views/Shared/_ReceiverLayout.cshtml";
+}
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-2">
+                <div>
+                    <h4 class="mb-0">Receiver Dashboard</h4>
+                    <small class="text-muted">Welcome back! Here's an overview of your blood request journey and impact.</small>
+                </div>
+                <span class="badge bg-label-primary rounded-pill px-3 py-2">
+                    <i class="bi bi-calendar3 me-1"></i>@DateTime.Now.ToString("dd MMM yyyy")
+                </span>
+            </div>
+
+            <!-- ==================== SUMMARY CARDS ==================== -->
+            <div class="row g-3 mb-4">
+                <!-- Total Requests -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-clipboard2-pulse text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Total Requests</h6>
+                                <small class="text-muted">@Model.TotalRequests.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Requests -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-hourglass-split"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Pending Requests</h6>
+                                <small class="text-muted">@Model.PendingRequests.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Matched Donors -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-people text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Matched Donors</h6>
+                                <small class="text-muted">@Model.MatchedDonors.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Completed Requests -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-check-circle text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Completed</h6>
+                                <small class="text-muted">@Model.CompletedRequests.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Emergencies -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-exclamation-triangle"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Active Emergencies</h6>
+                                <small class="text-muted">@Model.ActiveEmergencyRequests.Count.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-bell"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Notifications</h6>
+                                <small class="text-muted">@Model.UnreadNotificationCount.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blood Group Needed -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-droplet"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Blood Needed</h6>
+                                <small class="text-muted fw-bold text-danger fs-5">@Model.BloodGroupNeeded</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Compatible Groups -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-shield-check text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Compatible Groups</h6>
+                                <small class="text-muted">@Model.CompatibleDonorGroups.Count.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== ANALYTICS SECTION ==================== -->
+            <div class="row g-4 mb-4">
+                <!-- Blood Group Requests Trend -->
+                <div class="col-lg-8">
+                    <div class="card custom-card analytics-card h-100">
+                        <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                            <div>
+                                <h5 class="mb-1 fw-semibold">Blood Group Requests Trend</h5>
+                                <small class="text-muted">Distribution of blood groups you have requested</small>
+                            </div>
+                        </div>
+                        <div class="card-body px-4 pt-2">
+                            <div class="chart-container">
+                                <canvas id="bloodGroupChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Status -->
+                <div class="col-lg-4">
+                    <div class="card custom-card analytics-card h-100">
+                        <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                            <div>
+                                <h5 class="mb-1 fw-semibold">Request Status</h5>
+                                <small class="text-muted">Overview of your request outcomes</small>
+                            </div>
+                        </div>
+                        <div class="card-body px-4 pt-2 d-flex flex-column justify-content-center align-items-center">
+                            <div class="chart-container-doughnut">
+                                <canvas id="requestStatusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== RECENT ACTIVITY & COMPATIBILITY ==================== -->
+            <div class="row g-4 mb-4">
+                <!-- Blood Compatibility -->
+                <div class="col-lg-4">
+                    <div class="card custom-card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold"><i class="bi bi-droplet-half me-2 text-primary"></i>Blood Compatibility</h4>
+                            <small class="text-muted">Compatible donor groups for @Model.BloodGroupNeeded</small>
+                        </div>
+                        <div class="card-body px-4 pb-4 text-center d-flex flex-column justify-content-center">
+                            @if (Model.CompatibleDonorGroups.Any())
+                            {
+                                <div class="d-flex flex-wrap gap-2 justify-content-center mb-3">
+                                    @foreach (var group in Model.CompatibleDonorGroups)
+                                    {
+                                        <span class="badge bg-primary-subtle text-primary fs-6 px-3 py-2">@group</span>
+                                    }
+                                </div>
+                                <p class="text-muted small mt-2">Donors with the above blood groups can safely donate to you. Our smart matching system prioritizes these donors.</p>
+                            }
+                            else
+                            {
+                                <div class="display-1 fw-bold text-muted mb-2"><i class="bi bi-droplet-slash"></i></div>
+                                <h5 class="text-muted">No Compatibility Data</h5>
+                                <p class="text-muted small mt-2">No specific compatibility data available for your blood group.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Emergencies -->
+                <div class="col-lg-4 d-flex">
+                    <div class="card custom-card border-0 shadow-sm rounded-4 w-100">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold"><i class="bi bi-exclamation-triangle me-2 text-danger"></i>Active Emergencies</h4>
+                            <small class="text-muted">Critical requests requiring immediate attention</small>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            @if (Model.ActiveEmergencyRequests.Any())
+                            {
+                                <div class="list-group list-group-flush">
+                                    @foreach (var alert in Model.ActiveEmergencyRequests)
+                                    {
+                                        <div class="list-group-item border-0 px-0 py-2">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1 fw-medium small">@alert.BloodGroup</h6>
+                                                    <p class="small text-muted mb-1">@alert.HospitalName, @alert.City</p>
+                                                    <span class="badge bg-danger-subtle text-danger rounded-pill small">@alert.UrgencyLevel</span>
+                                                </div>
+                                                <div class="text-end">
+                                                    <p class="fw-semibold small mb-1 text-danger">@alert.CreatedDate.ToString("dd MMM")</p>
+                                                    <a asp-action="TrackRequest" asp-route-id="@alert.AlertId" class="btn btn-sm btn-outline-danger rounded-pill mt-1 px-2" style="font-size: 0.75rem;">Track</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-3 text-muted">
+                                    <i class="bi bi-shield-check fs-5 d-block mb-2"></i>
+                                    <small>No active emergencies</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Blood Requests -->
+                <div class="col-lg-4 d-flex">
+                    <div class="card custom-card border-0 shadow-sm rounded-4 w-100">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold"><i class="bi bi-clipboard2-pulse me-2 text-info"></i>Recent Blood Requests</h4>
+                            <small class="text-muted">Your latest blood requests and their status</small>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            @if (Model.RecentRequests.Any())
+                            {
+                                <div class="list-group list-group-flush">
+                                    @foreach (var req in Model.RecentRequests)
+                                    {
+                                        <div class="list-group-item border-0 px-0 py-2">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1 fw-medium small">REQ-@req.RequestId.ToString("D4")</h6>
+                                                    <p class="small text-muted mb-1">@req.HospitalName</p>
+                                                    <span class="badge bg-info-subtle text-info rounded-pill small">@req.Status</span>
+                                                </div>
+                                                <div class="text-end">
+                                                    <p class="fw-semibold small mb-1 text-danger">@req.BloodGroup</p>
+                                                    <small class="text-muted">@req.UnitsRequired Units</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-3 text-muted">
+                                    <i class="bi bi-clipboard2-pulse fs-5 d-block mb-2"></i>
+                                    <small>No recent requests</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== NOTIFICATIONS & QUICK ACTIONS ==================== -->
+            <div class="row g-4 mb-4">
+                <!-- Recent Notifications -->
+                <div class="col-lg-8 d-flex">
+                    <div class="card custom-card border-0 shadow-sm rounded-4 w-100">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold"><i class="bi bi-bell me-2 text-info"></i>Recent Notifications</h4>
+                            <small class="text-muted">Latest updates on your requests</small>
+                        </div>
+                        <div class="card-body px-4 pb-4">
+                            @if (Model.RecentNotifications.Any())
+                            {
+                                <div class="list-group list-group-flush">
+                                    @foreach (var notif in Model.RecentNotifications)
+                                    {
+                                        <div class="list-group-item border-0 px-0 py-2">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1 fw-medium small">@notif.Subject</h6>
+                                                    <p class="small text-muted mb-1">@notif.Category</p>
+                                                </div>
+                                                <div class="text-end">
+                                                    <small class="text-muted d-block mt-1">@notif.SentAt.ToString("dd MMM yyyy")</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-3 text-muted">
+                                    <i class="bi bi-bell-slash fs-5 d-block mb-2"></i>
+                                    <small>No recent notifications</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="col-lg-4">
+                    <div class="card custom-card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-transparent border-0 pb-0 pt-4 px-4">
+                            <h4 class="mb-1 fw-semibold"><i class="bi bi-lightning-charge me-2 text-warning"></i>Quick Actions</h4>
+                            <small class="text-muted">Frequently used options</small>
+                        </div>
+                        <div class="card-body px-4 pb-4 d-flex flex-column gap-3">
+                            <a asp-action="CreateRequest" class="btn btn-outline-primary rounded-pill w-100 text-start d-flex align-items-center">
+                                <i class="bi bi-plus-circle me-2"></i> New Request
+                            </a>
+                            <a asp-action="MyRequests" class="btn btn-outline-success rounded-pill w-100 text-start d-flex align-items-center">
+                                <i class="bi bi-clipboard2-pulse me-2"></i> My Requests
+                            </a>
+                            <a asp-action="TrackRequests" class="btn btn-outline-info rounded-pill w-100 text-start d-flex align-items-center">
+                                <i class="bi bi-geo-alt me-2"></i> Track Requests
+                            </a>
+                            <a asp-action="Compatibility" class="btn btn-outline-danger rounded-pill w-100 text-start d-flex align-items-center">
+                                <i class="bi bi-droplet me-2"></i> Compatibility
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== STYLES ==================== -->
+<style>
+    /* ================= ANALYTICS SECTION ================= */
+    .analytics-card {
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+        box-shadow: 0 10px 30px rgba(16, 24, 40, 0.04) !important;
+    }
+
+        .analytics-card:hover {
+            background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 15px 40px rgba(16, 24, 40, 0.08) !important;
+            transform: translateY(-4px);
+        }
+
+        .analytics-card .card-header h5 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .analytics-card .card-header small {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+    .chart-container {
+        position: relative;
+        height: 320px;
+        width: 100%;
+    }
+
+    .chart-container-doughnut {
+        position: relative;
+        height: 320px;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    @@media (max-width: 991.98px) {
+        .chart-container, .chart-container-doughnut {
+            height: 280px;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .chart-container, .chart-container-doughnut {
+            height: 250px;
+        }
+
+        .analytics-card .card-header .d-flex {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 0.75rem;
+        }
+    }
+
+    /* ================= CUSTOM CARDS & LISTS ================= */
+    .custom-card {
+        background: #fff;
+        border-radius: 24px !important;
+        border: 1px solid #eef1f6 !important;
+        box-shadow: 0 8px 30px rgba(16, 24, 40, 0.04);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .custom-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 24, 40, 0.08);
+        }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: background 0.2s ease;
+    }
+
+    .custom-card:hover .icon-box {
+        background: #e9ecef;
+    }
+
+    .trend-icon {
+        font-size: 1.5rem;
+        color: #28a745;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+    }
+
+    .custom-card:hover .trend-icon {
+        opacity: 1;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #f1f3f7 !important;
+        padding-bottom: 18px !important;
+    }
+
+    .card-body h6 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #2f3e52;
+        margin-bottom: 18px !important;
+    }
+
+    .col-lg-4 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .list-group {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .list-group-item {
+        border: 1px solid #edf1f7 !important;
+        border-radius: 18px !important;
+        background: #ffffff !important;
+        padding: 16px !important;
+        transition: all 0.25s ease;
+        box-shadow: 0 2px 10px rgba(16, 24, 40, 0.03);
+    }
+
+        .list-group-item:hover {
+            transform: translateY(-2px);
+            background: #fafcff !important;
+            border-color: #d9e7ff !important;
+        }
+
+        .list-group-item h6 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px !important;
+        }
+
+        .list-group-item p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px !important;
+        }
+
+    .text-end p {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px !important;
+    }
+
+    .text-end small {
+        font-size: 12px;
+        color: #9ca3af !important;
+    }
+
+    .badge {
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        padding: 7px 12px !important;
+        border-radius: 50px !important;
+        letter-spacing: 0.3px;
+    }
+
+    .text-center.py-3 {
+        border: 2px dashed #e5e7eb;
+        border-radius: 18px;
+        padding: 30px !important;
+        background: #fafafa;
+    }
+
+    @@media (max-width: 992px) {
+        .col-lg-4 {
+            margin-bottom: 20px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .card-header .d-flex {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+
+        .list-group-item {
+            padding: 14px !important;
+        }
+
+            .list-group-item .d-flex {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+        .text-end {
+            text-align: left !important;
+        }
+    }
+</style>
+
+<!-- ==================== CHART.JS INITIALIZATION ==================== -->
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check if Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js library not loaded!');
+                return;
+            }
+
+            // Check if chart elements exist
+            const trendChartElement = document.getElementById('bloodGroupChart');
+            const statusChartElement = document.getElementById('requestStatusChart');
+
+            if (!trendChartElement || !statusChartElement) {
+                console.error('Chart elements not found!');
+                return;
+            }
+
+            // Same defaults as Donor/Admin Dashboard
+            Chart.defaults.font.family = "'Public Sans', 'Inter', system-ui, sans-serif";
+            Chart.defaults.color = '#898F99';
+            Chart.defaults.plugins.legend.labels.usePointStyle = true;
+            Chart.defaults.plugins.legend.labels.pointStyle = 'circle';
+            Chart.defaults.plugins.legend.labels.padding = 20;
+            Chart.defaults.plugins.legend.labels.color = '#898F99';
+            Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(6, 49, 84, 0.95)';
+            Chart.defaults.plugins.tooltip.titleColor = '#ffffff';
+            Chart.defaults.plugins.tooltip.bodyColor = '#ffffff';
+            Chart.defaults.plugins.tooltip.titleFont = { size: 13, weight: '600' };
+            Chart.defaults.plugins.tooltip.bodyFont = { size: 12 };
+            Chart.defaults.plugins.tooltip.padding = 12;
+            Chart.defaults.plugins.tooltip.cornerRadius = 8;
+            Chart.defaults.plugins.tooltip.displayColors = true;
+            Chart.defaults.plugins.tooltip.boxPadding = 4;
+
+            // Same Theme Palette as Donor/Admin Dashboard
+            const theme = [
+                '#0E1A2B', // Dark Navy
+                '#5C88A8', // Light Blue
+                '#06162B', // Very Dark Navy
+                '#2F6E9B', // Bright Blue
+                '#0B2342', // Deep Blue
+                '#214D72', // Medium Blue
+                '#0A1A33', // Dark Blue
+                '#223A5E', // Steel Blue
+                '#1C2F57', // Medium Dark Blue
+                '#0F2E57'  // Royal Blue
+            ];
+
+            // Get data from Model
+            const monthlyData = [@string.Join(",", Model.BloodGroupDistributionData.Select(x => x.Value))];
+            const statusData = [@string.Join(",", Model.RequestStatusData.Select(x => x.Value))];
+            const monthlyLabels = [@Html.Raw(string.Join(",", Model.BloodGroupDistributionData.Select(d => $"'{d.Label}'")))];
+            const statusLabels = [@Html.Raw(string.Join(",", Model.RequestStatusData.Select(d => $"'{d.Label}'")))];
+
+            // Check if there's any data
+            const hasMonthlyData = monthlyData.some(val => val > 0);
+            const hasStatusData = statusData.some(val => val > 0);
+
+            // ==================== Blood Group Requests Trend ====================
+            if (hasMonthlyData) {
+                const ctx = trendChartElement.getContext('2d');
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: monthlyLabels,
+                        datasets: [{
+                            label: 'Requests',
+                            data: monthlyData,
+                            borderColor: '#2F6E9B',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            fill: false,
+                            tension: 0.45,
+                            cubicInterpolationMode: 'monotone',
+                            pointRadius: 5,
+                            pointHoverRadius: 8,
+                            pointBackgroundColor: '#0E1A2B',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2.5,
+                            pointHoverBorderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(6, 49, 84, 0.95)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                titleFont: {
+                                    size: 13,
+                                    weight: '600'
+                                },
+                                bodyFont: {
+                                    size: 12
+                                },
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: true,
+                                boxPadding: 4,
+                                callbacks: {
+                                    label: function (context) {
+                                        const value = context.parsed.y;
+                                        return ' ' + value + ' Request' + (value === 1 ? '' : 's');
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#898F99',
+                                    padding: 10,
+                                    font: {
+                                        size: 11,
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(137,143,153,0.12)',
+                                    drawBorder: false
+                                },
+                                border: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#898F99',
+                                    padding: 15,
+                                    stepSize: 1,
+                                    precision: 0,
+                                    font: {
+                                        size: 11,
+                                        weight: '500'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            else {
+                trendChartElement.parentElement.innerHTML =
+                    `<div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                        <div class="text-center">
+                            <i class="bi bi-graph-down fs-1 d-block mb-2"></i>
+                            <p>No request data available yet</p>
+                        </div>
+                    </div>`;
+            }
+
+            // 2. Request Status (DOUGHNUT CHART)
+            if (hasStatusData) {
+                try {
+                    const ctx = statusChartElement.getContext('2d');
+                    const statusColors = [theme[3], theme[1], theme[5], theme[7]];
+
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: statusLabels,
+                            datasets: [{
+                                data: statusData,
+                                backgroundColor: statusColors,
+                                borderWidth: 0,
+                                hoverOffset: 15,
+                                spacing: 4,
+                                borderRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '72%',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        font: { size: 12, weight: '500' },
+                                        color: '#898F99',
+                                        usePointStyle: true,
+                                        pointStyle: 'rectRounded'
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            var total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            var percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                                            return ' ' + context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error rendering request status chart:', error);
+                }
+            } else {
+                statusChartElement.innerHTML =
+                    '<div class="d-flex align-items-center justify-content-center h-100 text-muted">' +
+                    '<div class="text-center"><i class="bi bi-pie-chart fs-1 d-block mb-2"></i>' +
+                    '<p>No status data available yet</p></div></div>';
+            }
+        });
+    </script>
+}

@@ -1,0 +1,1714 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khoon-e-Hayat</title>
+
+    <link rel="icon" type="image/png" href="assets/Favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#23BBB7',
+                            secondary: '#23BBB7',
+                            accent: '#90151C',
+                            success: '#23BBB7',
+                            background: '#F6F6F6',
+                            muted: 'black',
+                            deep: '#063154',
+                            border: '#bcc5cc',
+                        },
+                        fontFamily: {
+                            sans: ['Inter', 'sans-serif'],
+                        }
+                    }
+                }
+            }
+    </script>
+    <style>
+            :root {
+                --primary: #23BBB7;
+                --secondary: #23BBB7;
+                --accent: #90151C;
+                --success: #23BBB7;
+                --background: #F6F6F6;
+                --text-muted: #898F99;
+                --deep: #063154;
+                --border: #bcc5cc;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: var(--background);
+                color: #1f2937;
+                overflow-x: hidden;
+            }
+
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: var(--background);
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--secondary);
+                border-radius: 10px;
+            }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: var(--primary);
+                }
+
+            .glass {
+                background: #90151C;
+                border: 1px solid var(--border);
+            }
+
+            @@keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(40px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @@keyframes fadeInLeft {
+                from {
+                    opacity: 0;
+                    transform: translateX(-40px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @@keyframes fadeInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(40px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @@keyframes float {
+                0%, 100% {
+                    transform: translateY(0px);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            .animate-fadeInUp {
+                animation: fadeInUp 0.8s ease forwards;
+            }
+
+            .animate-fadeInLeft {
+                animation: fadeInLeft 0.8s ease forwards;
+            }
+
+            .animate-fadeInRight {
+                animation: fadeInRight 0.8s ease forwards;
+            }
+
+            .animate-float {
+                animation: float 3s ease-in-out infinite;
+            }
+
+            .reveal {
+                opacity: 0;
+                transform: translateY(40px);
+                transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+                .reveal.active {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+
+            .hero-section {
+                position: relative;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                min-height: 100vh;
+                transition: background-image 1s ease-in-out;
+            }
+
+                .hero-section::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(0, 0, 0, 0.8);
+                    z-index: 1;
+                }
+
+                .hero-section > * {
+                    position: relative;
+                    z-index: 2;
+                }
+
+            @@media (max-width: 768px) {
+                .hero-section {
+                    background-position: center center;
+                }
+            }
+
+            .service-card {
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 1px solid var(--border);
+            }
+
+                .service-card:hover {
+                    transform: translateY(-8px);
+                    border-color: var(--secondary);
+                }
+
+            .btn-primary {
+                background-color: var(--primary);
+                color: white;
+                transition: all 0.3s ease;
+                border: 2px solid var(--primary);
+            }
+
+                .btn-primary:hover {
+                    background-color: var(--accent);
+                    border-color: var(--accent);
+                    transform: translateY(-2px);
+                }
+
+            .btn-accent {
+                background-color: var(--success);
+                color: white;
+                transition: all 0.3s ease;
+                border: 2px solid var(--success);
+            }
+
+                .btn-accent:hover {
+                    background-color: var(--primary);
+                    border-color: var(--primary);
+                    transform: translateY(-2px);
+                }
+
+            .btn-outline {
+                background-color: transparent;
+                color: white;
+                border: 2px solid white;
+                transition: all 0.3s ease;
+            }
+
+                .btn-outline:hover {
+                    background-color: white;
+                    color: var(--primary);
+                    transform: translateY(-2px);
+                }
+
+            .form-input {
+                transition: all 0.3s ease;
+                border: 2px solid var(--border);
+                background-color: white;
+            }
+
+                .form-input:focus {
+                    border-color: var(--secondary);
+                    outline: none;
+                }
+
+            .testimonial-card {
+                transition: all 0.3s ease;
+                border: 1px solid var(--border);
+            }
+
+                .testimonial-card:hover {
+                    transform: scale(1.02);
+                    border-color: var(--secondary);
+                }
+
+            .counter-section {
+                position: relative;
+                background-image: url('../assets/Khoon-e-Hayat-Bg-9.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+
+                .counter-section::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(0, 0, 0, 0.82);
+                    z-index: 1;
+                }
+
+                .counter-section > * {
+                    position: relative;
+                    z-index: 2;
+                }
+
+            .tab-btn.active {
+                background: var(--primary);
+                color: white;
+            }
+
+
+            .nav-link {
+                position: relative;
+            }
+
+                .nav-link::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -4px;
+                    left: 0;
+                    width: 0;
+                    height: 2px;
+                    background: var(--success);
+                    transition: width 0.3s ease;
+                }
+
+                .nav-link:hover::after {
+                    width: 100%;
+                }
+
+            .calc-slider {
+                -webkit-appearance: none;
+                width: 100%;
+                height: 6px;
+                border-radius: 5px;
+                background: var(--border);
+                outline: none;
+            }
+
+                .calc-slider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: var(--success);
+                    cursor: pointer;
+                    border: 3px solid white;
+                }
+
+            /* Social Icons - Solid Hover */
+            .social-icon {
+                transition: all 0.3s ease;
+                background-color: var(--deep);
+            }
+
+                .social-icon:hover {
+                    transform: translateY(-4px) scale(1.1);
+                    background-color: var(--primary);
+                }
+
+            /* Hamburger Animation */
+            .hamburger span {
+                transition: all 0.3s ease;
+                background-color: #fefefe;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
+            /* Section Divider - Solid Color */
+            .section-divider {
+                height: 4px;
+                width: 60px;
+                background: var(--success);
+                border-radius: 2px;
+            }
+
+            /* Loading Spinner - Solid Colors */
+            .spinner {
+                border: 3px solid rgba(255, 255, 255, 0.3);
+                border-top: 3px solid white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                animation: spin 1s linear infinite;
+            }
+
+            @@keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* Toast Notification - Solid Colors, No Shadow */
+            .toast {
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                padding: 1rem 1.5rem;
+                border-radius: 0.75rem;
+                color: white;
+                font-weight: 500;
+                z-index: 2000;
+                transform: translateX(150%);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 2px solid white;
+            }
+
+                .toast.show {
+                    transform: translateX(0);
+                }
+
+            .toast-success {
+                background: var(--success);
+            }
+
+            .toast-error {
+                background: #dc2626;
+            }
+
+            .toast-info {
+                background: var(--secondary);
+            }
+
+            /* Tab Navigation - Glider Effect - Solid Colors */
+            .tab-nav-container {
+                position: relative;
+                display: flex;
+                align-items: center;
+                background: white;
+                /* border: 1px solid var(--border); */
+                border-radius: 9999px;
+                padding: 0.25rem;
+                gap: 0.25rem;
+            }
+
+            .tab-glider {
+                position: absolute;
+                top: 0.25rem;
+                bottom: 0.25rem;
+                background: var(--accent);
+                border-radius: 9999px;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .tab-link {
+                position: relative;
+                z-index: 1;
+                padding: 0.5rem 1rem;
+                font-weight: 500;
+                font-size: 0.875rem;
+                color: var(--text-muted);
+                border-radius: 9999px;
+                transition: color 0.2s ease;
+                text-decoration: none;
+                white-space: nowrap;
+            }
+
+                .tab-link:hover {
+                    color: var(--accent);
+                }
+
+                .tab-link.active {
+                    color: white;
+                }
+
+            .tab-radio {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+                .tab-radio:focus-visible + .tab-link {
+                    outline: 2px solid var(--success);
+                    outline-offset: 2px;
+                }
+
+            .calculator-section {
+                position: relative;
+                background-image: url('../images/Bg16.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+
+                .calculator-section::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 1;
+                }
+
+                .calculator-section > * {
+                    position: relative;
+                    z-index: 2;
+                }
+
+            /* FEATURE CARD STYLES - LIGHT MODE ONLY */
+            .feature-card h3,
+            .feature-card p {
+                color: #1f2937;
+            }
+
+            .feature-card:hover {
+                background-color: #f9fafb;
+            }
+
+                .feature-card:hover h3,
+                .feature-card:hover p {
+                    color: #1f2937;
+                }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast toast-success">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 glass border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center group">
+                    <div class="w-32 h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <img id="navbarLogo"
+                             src="assets/finalLogo-01.png"
+                             alt="OIMS Logo"
+                             class="w-full h-full object-contain">
+                    </div>
+                </a>
+
+                <input id="heroCoverage" type="hidden">
+                <input id="calcTerm" type="hidden">
+
+                <!-- Desktop Tab Navigation -->
+                <div class="hidden lg:flex items-center">
+                    <div class="tab-nav-container" role="tablist" aria-label="Main Navigation">
+                        <div class="tab-glider" id="tabGlider" aria-hidden="true"></div>
+
+                        <input type="radio" name="nav-tab" id="tab-home" class="tab-radio" value="0" checked>
+                        <input type="radio" name="nav-tab" id="tab-About Us" class="tab-radio" value="1">
+                        <input type="radio" name="nav-tab" id="tab-Hospitals" class="tab-radio" value="2">
+                        <input type="radio" name="nav-tab" id="tab-testimonials" class="tab-radio" value="3">
+                        <input type="radio" name="nav-tab" id="tab-contact" class="tab-radio" value="4">
+
+                        <a href="#home" class="tab-link active" role="tab" aria-controls="home" data-tab="0" aria-selected="true">Home</a>
+                        <a href="#about" class="tab-link" role="tab" aria-controls="about" data-tab="1" aria-selected="false">About Us</a>
+                        <a href="#Hospitals" class="tab-link" role="tab" aria-controls="Hospitals" data-tab="2" aria-selected="false">Hospitals</a>
+                        <a href="#testimonials" class="tab-link" role="tab" aria-controls="testimonials" data-tab="3" aria-selected="false">Testimonials</a>
+                        <a href="#contact" class="tab-link" role="tab" aria-controls="contact" data-tab="4" aria-selected="false">Contact</a>
+                    </div>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="hidden lg:flex items-center space-x-4">
+                    <a asp-controller="Account" asp-action="Login"
+                       class="px-5 py-2 rounded-full border-2 border-white text-white hover:bg-primary hover:border-primary hover:text-white font-semibold transition-all">
+                        Login
+                    </a>
+                    <a asp-controller="Account"
+                       asp-action="Register"
+                       class="btn-accent px-5 py-2 rounded-full text-white font-semibold">
+                        Register
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="flex lg:hidden items-center">
+                    <button id="hamburger" class="hamburger flex flex-col space-y-1.5 p-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobileMenu">
+                        <span class="w-6 h-0.5 block"></span>
+                        <span class="w-6 h-0.5 block"></span>
+                        <span class="w-6 h-0.5 block"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="lg:hidden hidden bg-white border-t border-border">
+            <div class="px-4 py-4 space-y-3">
+                <a href="#home" class="block py-2 px-4 rounded-lg text-gray-600 hover:bg-primary hover:text-white font-medium transition-colors mobile-link">Home</a>
+                <a href="#about" class="block py-2 px-4 rounded-lg text-gray-600 hover:bg-primary hover:text-white font-medium transition-colors mobile-link">About Us</a>
+                <a href="#Hospitals" class="block py-2 px-4 rounded-lg text-gray-600 hover:bg-primary hover:text-white font-medium transition-colors mobile-link">Hospitals</a>
+                <a href="#testimonials" class="block py-2 px-4 rounded-lg text-gray-600 hover:bg-primary hover:text-white font-medium transition-colors mobile-link">Testimonials</a>
+                <a href="#contact" class="block py-2 px-4 rounded-lg text-gray-600 hover:bg-primary hover:text-white font-medium transition-colors mobile-link">Contact</a>
+                <div class="pt-3 border-t border-border space-y-3">
+                    <a href="login-modal.html" class="w-full py-2.5 rounded-lg border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold transition-all text-center block">Login</a>
+                    <a href="register-modal.html" class="w-full btn-accent py-2.5 rounded-lg text-white font-semibold text-center block">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== HERO SECTION ========== -->
+    <section id="home" class="hero-section min-h-screen flex items-center relative overflow-hidden pt-20">
+
+        <!-- Floating Shapes -->
+        <div class="absolute top-20 left-10 w-20 h-20 rounded-full bg-white/10 animate-float"></div>
+        <div class="absolute bottom-20 right-20 w-32 h-32 rounded-full bg-white/5 animate-float" style="animation-delay: 1s;"></div>
+        <div class="absolute top-40 right-40 w-16 h-16 rounded-full bg-white/10 animate-float" style="animation-delay: 2s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+
+                <!-- Left Content -->
+                <div class="text-white space-y-8 animate-fadeInLeft">
+                    <div class="inline-flex items-center space-x-2 bg-white px-4 py-2 rounded-full border border-border">
+                        <i class="fas fa-heart text-red-600"></i>
+                        <span class="text-sm font-medium text-deep">
+                            Saving Lives Through Blood Donation
+                        </span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+                        Donate Blood,<br>
+                        <span class="text-[#23BBB7]">Save Lives</span><br>
+                        Every Day
+                    </h1>
+
+                    <p class="text-lg text-white/80 max-w-lg leading-relaxed">
+                        Khoon-e-Hayat connects blood donors, patients, hospitals, and blood banks
+                        on one platform. Find donors quickly, request blood instantly, and help
+                        save lives when every second matters.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+
+                        <a href="@Url.Action("Login", "Account")"
+                           class="px-8 py-4 rounded-full text-white font-bold text-lg bg-[#90151C] hover:bg-[#7A1117] text-center">
+                            <i class="fas fa-hand-holding-heart mr-2"></i>
+                            Become a Donor
+                        </a>
+
+                        <a href="@Url.Action("Login", "Account")"
+                           class="px-8 py-4 rounded-full bg-transparent text-white border border-white hover:bg-white hover:text-black font-bold text-lg transition-all text-center">
+                            <i class="fas fa-search mr-2"></i>
+                            Find a Donor
+                        </a>
+
+                    </div>
+
+                    <!-- Trust Badges -->
+                    <div class="flex items-center space-x-6 pt-4">
+
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-users text-[#23BBB7]"></i>
+                            <span class="text-sm text-white/80">Verified Donors</span>
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-hospital text-[#23BBB7]"></i>
+                            <span class="text-sm text-white/80">Partner Hospitals</span>
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-clock text-[#23BBB7]"></i>
+                            <span class="text-sm text-white/80">Emergency Requests</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right Content -->
+                <div class="animate-fadeInRight">
+
+                    <div class="bg-white/15 backdrop-blur-xl border border-white/30 shadow-2xl rounded-3xl p-8">
+
+                        <div class="text-center mb-8">
+                            <!-- <i class="fas fa-heartbeat text-6xl text-[#90151C] mb-4"></i> -->
+                            <h3 class="text-3xl font-bold text-white">
+                                Lives Saved
+                            </h3>
+                            <p class="text-white/70 mt-2">
+                                Together We Make a Difference
+                            </p>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="grid grid-cols-2 gap-4">
+
+                            <div class="bg-white/10 rounded-2xl p-4 text-center">
+                                <h4 class="text-3xl font-bold text-[#23BBB7]">5K+</h4>
+                                <p class="text-white/70 text-sm">Donors</p>
+                            </div>
+
+                            <div class="bg-white/10 rounded-2xl p-4 text-center">
+                                <h4 class="text-3xl font-bold text-[#23BBB7]">2K+</h4>
+                                <p class="text-white/70 text-sm">Requests</p>
+                            </div>
+
+                            <div class="bg-white/10 rounded-2xl p-4 text-center">
+                                <h4 class="text-3xl font-bold text-[#23BBB7]">50+</h4>
+                                <p class="text-white/70 text-sm">Hospitals</p>
+                            </div>
+
+                            <div class="bg-white/10 rounded-2xl p-4 text-center">
+                                <h4 class="text-3xl font-bold text-[#23BBB7]">24/7</h4>
+                                <p class="text-white/70 text-sm">Support</p>
+                            </div>
+
+                        </div>
+
+                        <!-- Blood Groups -->
+                        <div class="mt-8">
+                            <h4 class="text-white font-semibold mb-4 text-center">
+                                Available Blood Groups
+                            </h4>
+
+                            <div class="grid grid-cols-4 gap-3">
+
+                                <div class="bg-[#90151C] text-white rounded-xl py-2 text-center font-bold">A+</div>
+                                <div class="bg-[#90151C] text-white rounded-xl py-2 text-center font-bold">B+</div>
+                                <div class="bg-[#90151C] text-white rounded-xl py-2 text-center font-bold">AB+</div>
+                                <div class="bg-[#90151C] text-white rounded-xl py-2 text-center font-bold">O+</div>
+
+                                <div class="bg-[#23BBB7] text-white rounded-xl py-2 text-center font-bold">A-</div>
+                                <div class="bg-[#23BBB7] text-white rounded-xl py-2 text-center font-bold">B-</div>
+                                <div class="bg-[#23BBB7] text-white rounded-xl py-2 text-center font-bold">AB-</div>
+                                <div class="bg-[#23BBB7] text-white rounded-xl py-2 text-center font-bold">O-</div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT US ========== -->
+    <section id="about" class="py-20 lg:py-28 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Section Heading -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-[#90151C] font-semibold text-sm uppercase tracking-wider">
+                    Who We Are
+                </span>
+
+                <h2 class="text-4xl lg:text-5xl font-extrabold text-black mt-3 mb-4">
+                    About <span class="text-[#23BBB7]">Khoon-e-Hayat</span>
+                </h2>
+
+                <div class="section-divider mx-auto mt-4"></div>
+
+                <p class="text-lg text-gray-600 leading-relaxed max-w-4xl mx-auto mt-8">
+                    Khoon-e-Hayat is a modern blood donation platform dedicated to connecting
+                    blood donors, patients, hospitals, and blood banks through a single
+                    trusted network. Our goal is to make blood accessible whenever and
+                    wherever it is needed, helping save lives during emergencies.
+                </p>
+
+                <p class="text-lg text-gray-600 leading-relaxed max-w-4xl mx-auto mt-4">
+                    By enabling instant donor searches, emergency blood requests, and
+                    hospital collaboration, we create a community-driven ecosystem that
+                    promotes voluntary blood donation and strengthens healthcare support.
+                </p>
+            </div>
+
+            <!-- Mission & Vision -->
+            <div class="grid md:grid-cols-2 gap-8">
+
+                <!-- Mission Card -->
+                <div class="bg-white p-8 rounded-3xl border border-border hover:border-[#23BBB7] transition-all duration-300">
+                    <div class="w-16 h-16 rounded-2xl bg-[#90151C]/10 flex items-center justify-center mb-5">
+                        <i class="fas fa-bullseye text-3xl text-[#90151C]"></i>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-black mb-4">
+                        Our Mission
+                    </h3>
+
+                    <p class="text-gray-600 leading-relaxed">
+                        To provide a fast, reliable, and accessible blood donation network
+                        that connects donors with patients in need, ensuring timely support
+                        during critical situations and medical emergencies.
+                    </p>
+                </div>
+
+                <!-- Vision Card -->
+                <div class="bg-white p-8 rounded-3xl border border-border hover:border-[#23BBB7] transition-all duration-300">
+                    <div class="w-16 h-16 rounded-2xl bg-[#90151C]/10 flex items-center justify-center mb-5">
+                        <i class="fas fa-eye text-3xl text-[#90151C]"></i>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-black mb-4">
+                        Our Vision
+                    </h3>
+
+                    <p class="text-gray-600 leading-relaxed">
+                        To build a future where no life is lost due to the shortage of blood,
+                        creating a nationwide community of donors who can contribute to
+                        saving lives with just a few clicks.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== HOSPITALS SECTION ========== -->
+    <section id="Hospitals" class="hospitals-section py-20 lg:py-28">
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+
+                <span class="text-[#23BBB7] font-semibold text-sm uppercase tracking-wider">
+                    Healthcare Network
+                </span>
+
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 text-white">
+                    Our Partner
+                    <span class="text-[#23BBB7]">Hospitals</span>
+                </h2>
+
+                <div class="section-divider mx-auto mt-4"></div>
+
+                <p class="max-w-3xl mx-auto mt-6 text-white/80">
+                    Khoon-e-Hayat collaborates with trusted hospitals to ensure
+                    patients receive timely blood support during emergencies,
+                    surgeries, and critical medical situations.
+                </p>
+
+            </div>
+
+            <!-- Cards -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                <!-- Card 1 -->
+                <div class="reveal bg-white/15 backdrop-blur-xl border border-white/30 shadow-2xl rounded-3xl p-8 text-center hover:border-[#23BBB7] transition-all duration-300">
+
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#90151C] flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-ambulance text-white text-3xl"></i>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-3">
+                        Emergency Support
+                    </h3>
+
+                    <p class="text-white/70 text-sm">
+                        Rapid donor matching for accidents, surgeries,
+                        and life-threatening emergencies.
+                    </p>
+
+                </div>
+
+                <!-- Card 2 -->
+                <div class="reveal bg-white/15 backdrop-blur-xl border border-white/30 shadow-2xl rounded-3xl p-8 text-center hover:border-[#23BBB7] transition-all duration-300">
+
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#90151C] flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-hospital text-white text-3xl"></i>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-3">
+                        Verified Hospitals
+                    </h3>
+
+                    <p class="text-white/70 text-sm">
+                        Connected with trusted healthcare institutions
+                        across the city.
+                    </p>
+
+                </div>
+
+                <!-- Card 3 -->
+                <div class="reveal bg-white/15 backdrop-blur-xl border border-white/30 shadow-2xl rounded-3xl p-8 text-center hover:border-[#23BBB7] transition-all duration-300">
+
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#90151C] flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-droplet text-white text-3xl"></i>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-3">
+                        Blood Availability
+                    </h3>
+
+                    <p class="text-white/70 text-sm">
+                        Quick access to blood group information and
+                        donor availability.
+                    </p>
+
+                </div>
+
+                <!-- Card 4 -->
+                <div class="reveal bg-white/15 backdrop-blur-xl border border-white/30 shadow-2xl rounded-3xl p-8 text-center hover:border-[#23BBB7] transition-all duration-300">
+
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#90151C] flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-headset text-white text-3xl"></i>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-3">
+                        24/7 Coordination
+                    </h3>
+
+                    <p class="text-white/70 text-sm">
+                        Continuous support between hospitals,
+                        donors and patients.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <style>
+            .hospitals-section {
+                position: relative;
+                background-image: url('../assets/Khoon-e-Hayat-Bg-4.png');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+
+                .hospitals-section::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(0, 0, 0, 0.65); /* Dark overlay */
+                    z-index: 1;
+                }
+
+                .hospitals-section > * {
+                    position: relative;
+                    z-index: 2;
+                }
+    </style>
+
+    <!-- ========== TESTIMONIALS ========== -->
+    <section id="testimonials" class="py-20 lg:py-28 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="text-center mb-16 reveal">
+                <span class="text-[#90151C] font-semibold text-sm uppercase tracking-wider">
+                    Testimonials
+                </span>
+
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 text-gray-800">
+                    What Our <span class="text-[#23BBB7]">Community Says</span>
+                </h2>
+
+                <div class="section-divider mx-auto mt-4"></div>
+
+                <p class="text-gray-600 mt-6 max-w-3xl mx-auto">
+                    Real stories from blood donors, recipients, and healthcare partners
+                    who are making a difference through Khoon-e-Hayat.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card reveal bg-white rounded-3xl p-8 relative border border-border">
+
+                    <div class="absolute top-6 right-6 text-6xl text-[#23BBB7]/20 font-serif">
+                        "
+                    </div>
+
+                    <div class="flex items-center space-x-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        "I urgently needed blood for my father’s surgery. Through
+                        Khoon-e-Hayat, I found a donor within hours. This platform
+                        truly helped save a life."
+                    </p>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-[#90151C] flex items-center justify-center text-white font-bold text-lg">
+                            A
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-gray-800">Ahmed Raza</h4>
+                            <p class="text-gray-500 text-sm">Blood Recipient's Family</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card reveal bg-white rounded-3xl p-8 relative border border-border"
+                     style="transition-delay:0.1s;">
+
+                    <div class="absolute top-6 right-6 text-6xl text-[#23BBB7]/20 font-serif">
+                        "
+                    </div>
+
+                    <div class="flex items-center space-x-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        "As a regular donor, I love how easy it is to connect with
+                        people in need. Every donation reminds me that a small act
+                        can make a huge difference."
+                    </p>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-[#90151C] flex items-center justify-center text-white font-bold text-lg">
+                            S
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-gray-800">Sara Ali</h4>
+                            <p class="text-gray-500 text-sm">Verified Blood Donor</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card reveal bg-white rounded-3xl p-8 relative border border-border"
+                     style="transition-delay:0.2s;">
+
+                    <div class="absolute top-6 right-6 text-6xl text-[#23BBB7]/20 font-serif">
+                        "
+                    </div>
+
+                    <div class="flex items-center space-x-1 mb-4">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        "Khoon-e-Hayat has helped our hospital respond quickly to
+                        emergency blood requirements. The donor network is highly
+                        effective and reliable."
+                    </p>
+
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-full bg-[#90151C] flex items-center justify-center text-white font-bold text-lg">
+                            D
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-gray-800">Dr. Hassan Khan</h4>
+                            <p class="text-gray-500 text-sm">Partner Hospital</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- ========== ANIMATED COUNTERS ========== -->
+    <section id="counters" class="py-20 counter-section relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+
+                <div class="text-center text-white p-6">
+                    <i class="fas fa-user-friends text-4xl text-success mb-4"></i>
+                    <h3 class="text-4xl lg:text-5xl font-extrabold mb-2">
+                        <span class="counter" data-target="5000">0</span>+
+                    </h3>
+                    <p class="text-white/70 font-medium">Registered Donors</p>
+                </div>
+
+                <div class="text-center text-white p-6">
+                    <i class="fas fa-tint text-4xl text-success mb-4"></i>
+                    <h3 class="text-4xl lg:text-5xl font-extrabold mb-2">
+                        <span class="counter" data-target="12000">0</span>+
+                    </h3>
+                    <p class="text-white/70 font-medium">Blood Donations</p>
+                </div>
+
+                <div class="text-center text-white p-6">
+                    <i class="fas fa-heartbeat text-4xl text-success mb-4"></i>
+                    <h3 class="text-4xl lg:text-5xl font-extrabold mb-2">
+                        <span class="counter" data-target="8500">0</span>+
+                    </h3>
+                    <p class="text-white/70 font-medium">Lives Saved</p>
+                </div>
+
+                <div class="text-center text-white p-6">
+                    <i class="fas fa-hospital text-4xl text-success mb-4"></i>
+                    <h3 class="text-4xl lg:text-5xl font-extrabold mb-2">
+                        <span class="counter" data-target="150">0</span>+
+                    </h3>
+                    <p class="text-white/70 font-medium">Partner Hospitals</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT SECTION ========== -->
+    <section id="contact" class="py-20 lg:py-28 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-success font-semibold text-sm uppercase tracking-wider">Get In Touch</span>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 text-gray-800">
+                    Contact <span class="text-primary">Us</span>
+                </h2>
+                <div class="section-divider mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-5 gap-12">
+                <!-- Contact Info -->
+                <div class="lg:col-span-2 space-y-8 reveal">
+
+                    <!-- Location -->
+                    <div class="bg-white rounded-2xl p-6 border border-border flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-location-dot text-accent text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Our Location</h4>
+                            <p class="text-muted text-sm mt-1">
+                                Karachi, Pakistan
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="bg-white rounded-2xl p-6 border border-border flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-phone text-accent text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Emergency Helpline</h4>
+                            <p class="text-muted text-sm mt-1">+92 XXX XXXXXXX</p>
+                            <p class="text-muted text-sm mt-1">Available 24/7 for Blood Requests</p>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="bg-white rounded-2xl p-6 border border-border flex items-start space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-envelope text-accent text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Email Us</h4>
+                            <p class="text-muted text-sm mt-1">support@khoonehayat.pk</p>
+                            <p class="text-muted text-sm mt-1">24/7 Community Support</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-3 reveal">
+                    <form id="contactForm" class="bg-white rounded-2xl p-8 border border-border" onsubmit="handleContactSubmit(event)">
+                        @Html.AntiForgeryToken()
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                                <input type="text" id="contactName" placeholder="John Doe" class="form-input w-full px-4 py-3 rounded-xl focus:outline-none">
+                                <p class="text-red-500 text-xs mt-1 hidden" id="contactNameError"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                                <input type="email" id="contactEmail" placeholder="john@example.com" class="form-input w-full px-4 py-3 rounded-xl focus:outline-none">
+                                <p class="text-red-500 text-xs mt-1 hidden" id="contactEmailError"></p>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Subject</label>
+                            <input type="text" id="contactSubject" placeholder="How can we help?" class="form-input w-full px-4 py-3 rounded-xl focus:outline-none">
+                            <p class="text-red-500 text-xs mt-1 hidden" id="contactSubjectError"></p>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                            <textarea id="contactMessage" rows="5" placeholder="Tell us more about your inquiry..." class="form-input w-full px-4 py-3 rounded-xl focus:outline-none resize-none"></textarea>
+                            <p class="text-red-500 text-xs mt-1 hidden" id="contactMessageError"></p>
+                        </div>
+                        <button type="submit"
+                                class="w-full py-3 rounded-xl text-white font-bold text-lg bg-[#90151C] hover:bg-[#7A1117] border-2 border-[#90151C] transition-all duration-300">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-muted text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12">
+
+                <!-- Company Info -->
+                <div class="flex flex-col items-start pt-4">
+
+                    <!-- Logo -->
+                    <div class="flex items-center -mt-6">
+                        <div class="w-30 h-30 sm:w-28 sm:h-28 flex items-center justify-center">
+                            <img src="~/assets/finalLogo-01.png"
+                                 alt="Khoon-e-Hayat Logo"
+                                 class="w-full h-full object-contain">
+                        </div>
+                    </div>
+
+                    <!-- Paragraph -->
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Connecting blood donors, patients, hospitals, and blood banks to save lives through timely blood donations.
+                    </p>
+
+                    <!-- Social Icons -->
+                    <div class="flex space-x-3 mt-4">
+                        <a href="#" class="social-icon w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-accent hover:bg-primary">
+                            <i class="fab fa-facebook-f text-sm"></i>
+                        </a>
+                        <a href="#" class="social-icon w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-accent hover:bg-primary">
+                            <i class="fab fa-twitter text-sm"></i>
+                        </a>
+                        <a href="#" class="social-icon w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-accent hover:bg-primary">
+                            <i class="fab fa-linkedin-in text-sm"></i>
+                        </a>
+                        <a href="#" class="social-icon w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-accent hover:bg-primary">
+                            <i class="fab fa-instagram text-sm"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-gray-400 hover:text-success transition-colors text-sm">Home</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-success transition-colors text-sm">About Us</a></li>
+                        <li><a href="#Hospitals" class="text-gray-400 hover:text-success transition-colors text-sm">Hospitals</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-success transition-colors text-sm">Testimonials</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-success transition-colors text-sm">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- About Us -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Our About Us</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-success transition-colors text-sm">Find Blood Donors</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-success transition-colors text-sm">Request Blood</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-success transition-colors text-sm">Hospital Directory</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-success transition-colors text-sm">Blood Banks</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-success transition-colors text-sm">Emergency Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Stay Updated</h4>
+
+                    <p class="text-gray-400 text-sm mb-4">
+                        Subscribe to receive blood donation updates, donor alerts, and community news.
+                    </p>
+
+                    <form onsubmit="handleNewsletter(event)" class="space-y-3">
+                        <input type="email"
+                               placeholder="Your email address"
+                               class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-success text-sm">
+
+                        <button type="submit"
+                                class="w-full py-3 rounded-xl text-white font-semibold text-sm bg-[#90151C] hover:bg-[#7A1117] border-2 border-[#90151C] transition-all duration-300">
+                            Subscribe
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-accent-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+
+                <p class="text-gray-400 text-sm text-center md:text-left">
+                    &copy; 2025 Khoon-e-Hayat. All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- ========== JAVASCRIPT ========== -->
+    <script>
+            // ===== Mobile Menu =====
+            const hamburger = document.getElementById('hamburger');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            document.querySelectorAll('.mobile-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // ===== Navbar Scroll Effect =====
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('border-b', 'border-border');
+                } else {
+                    navbar.classList.remove('border-b', 'border-border');
+                }
+            });
+
+            // ===== Scroll Reveal Animation =====
+            const revealElements = document.querySelectorAll('.reveal');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // ===== Animated Counters =====
+            const counters = document.querySelectorAll('.counter');
+            let countersAnimated = false;
+
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !countersAnimated) {
+                        countersAnimated = true;
+                        counters.forEach(counter => {
+                            const target = parseInt(counter.getAttribute('data-target'));
+                            const duration = 2000;
+                            const step = target / (duration / 16);
+                            let current = 0;
+
+                            const updateCounter = () => {
+                                current += step;
+                                if (current < target) {
+                                    counter.textContent = Math.floor(current).toLocaleString();
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    counter.textContent = target.toLocaleString();
+                                }
+                            };
+                            updateCounter();
+                        });
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const counterSection = document.getElementById('counters');
+            if (counterSection) counterObserver.observe(counterSection);
+
+            // ===== Toast Notification =====
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toastMessage');
+                toast.className = `toast toast-${type} show`;
+                toastMessage.textContent = message;
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // ===== Toggle Password Visibility =====
+            function togglePassword(inputId, btn) {
+                const input = document.getElementById(inputId);
+                const icon = btn.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            }
+
+            // ===== Validation Helpers =====
+            function validateEmail(email) {
+                return /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(email);
+            }
+
+            function validateCNIC(cnic) {
+                return /^\d{5}-\d{7}-\d$/.test(cnic);
+            }
+
+            function showError(elementId, message) {
+                const el = document.getElementById(elementId);
+                el.textContent = message;
+                el.classList.remove('hidden');
+            }
+
+            function hideError(elementId) {
+                const el = document.getElementById(elementId);
+                el.textContent = '';
+                el.classList.add('hidden');
+            }
+
+            // ===== Contact Form Validation =====
+            // ===== Contact Form Submission =====
+            function handleContactSubmit(e) {
+                e.preventDefault();
+                let isValid = true;
+
+                const name = document.getElementById('contactName').value.trim();
+                const email = document.getElementById('contactEmail').value.trim();
+                const subject = document.getElementById('contactSubject').value.trim();
+                const message = document.getElementById('contactMessage').value.trim();
+
+                ['contactNameError', 'contactEmailError', 'contactSubjectError', 'contactMessageError'].forEach(hideError);
+
+                if (!name) {
+                    showError('contactNameError', 'Name is required');
+                    isValid = false;
+                }
+
+                if (!email) {
+                    showError('contactEmailError', 'Email is required');
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    showError('contactEmailError', 'Please enter a valid email');
+                    isValid = false;
+                }
+
+                if (!subject) {
+                    showError('contactSubjectError', 'Subject is required');
+                    isValid = false;
+                }
+
+                if (!message) {
+                    showError('contactMessageError', 'Message is required');
+                    isValid = false;
+                } else if (message.length < 10) {
+                    showError('contactMessageError', 'Message must be at least 10 characters');
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Get anti-forgery token
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                    // Create form data
+                    const formData = new FormData();
+                    formData.append('FullName', name);
+                    formData.append('Email', email);
+                    formData.append('Subject', subject);
+                    formData.append('Message', message);
+                    if (token) {
+                        formData.append('__RequestVerificationToken', token);
+                    }
+
+                    // Show loading state
+                    const submitBtn = e.target.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+
+                    // Send to server
+                    fetch('/Home/SubmitContactForm', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showToast(data.message, 'success');
+                                document.getElementById('contactForm').reset();
+                            } else {
+                                showToast(data.message || 'Error sending message', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showToast('An error occurred. Please try again.', 'error');
+                        })
+                        .finally(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                        });
+                }
+            }
+
+            // ===== Newsletter =====
+            function handleNewsletter(e) {
+                e.preventDefault();
+                showToast('Subscribed successfully! Thank you.', 'success');
+                e.target.reset();
+            }
+
+            // ===== Premium Calculator =====
+            const calcTerm = document.getElementById('calcTerm');
+            const calcTermValue = document.getElementById('calcTermValue');
+
+            calcTerm.addEventListener('input', () => {
+                calcTermValue.textContent = calcTerm.value + ' years';
+            });
+
+            function calculatePremium() {
+                const type = document.getElementById('calcType').value;
+                const coverage = parseFloat(document.getElementById('calcCoverage').value);
+                const age = parseInt(document.getElementById('calcAge').value);
+                const term = parseInt(document.getElementById('calcTerm').value);
+
+                if (!coverage || !age) {
+                    showToast('Please fill in coverage amount and age', 'error');
+                    return;
+                }
+
+                const rates = {
+                    life: 0.0005,
+                    medical: 0.0008,
+                    motor: 0.0012,
+                    home: 0.0003
+                };
+
+                const ageFactor = age > 50 ? 1.5 : age > 35 ? 1.2 : 1;
+                const termFactor = term > 25 ? 0.8 : 1;
+                const baseRate = rates[type] * ageFactor * termFactor;
+
+                const monthlyPremium = (coverage * baseRate) / 12;
+                const annualPremium = monthlyPremium * 12;
+                const totalPremium = annualPremium * term;
+
+                document.getElementById('calcPremium').textContent = '$' + monthlyPremium.toFixed(2);
+                document.getElementById('calcAnnual').textContent = '$' + annualPremium.toFixed(2);
+                document.getElementById('calcTotal').textContent = '$' + totalPremium.toFixed(2);
+
+                showToast('Premium calculated successfully!', 'info');
+            }
+
+            // ===== Hero Premium Calculator =====
+            const heroCoverage = document.getElementById('heroCoverage');
+            const heroCoverageValue = document.getElementById('heroCoverageValue');
+
+            heroCoverage.addEventListener('input', () => {
+                heroCoverageValue.textContent = parseInt(heroCoverage.value).toLocaleString();
+            });
+
+            function calculateHeroPremium() {
+                const type = document.getElementById('heroInsType').value;
+                const coverage = parseFloat(heroCoverage.value);
+                const age = parseInt(document.getElementById('heroAge').value);
+
+                if (!age || age < 18 || age > 100) {
+                    showToast('Please enter a valid age (18-100)', 'error');
+                    return;
+                }
+
+                const rates = {
+                    life: 0.0005,
+                    medical: 0.0008,
+                    motor: 0.0012,
+                    home: 0.0003
+                };
+
+                const ageFactor = age > 50 ? 1.5 : age > 35 ? 1.2 : 1;
+                const monthlyPremium = (coverage * rates[type] * ageFactor) / 12;
+
+                document.getElementById('heroPremiumResult').classList.remove('hidden');
+                document.getElementById('heroPremiumAmount').textContent = '$' + monthlyPremium.toFixed(2) + '/mo';
+            }
+
+            // ===== Smooth Scroll for Anchor Links =====
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const offset = 80;
+                        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // ===== Initialize =====
+            document.addEventListener('DOMContentLoaded', () => {
+                revealElements.forEach(el => revealObserver.observe(el));
+            });
+
+            // ========== TAB NAVIGATION JS ==========
+            function updateTabGlider(tabIndex) {
+                const tabLinks = document.querySelectorAll('.tab-link');
+                const glider = document.getElementById('tabGlider');
+                const activeTab = tabLinks[tabIndex];
+
+                if (activeTab && glider) {
+                    const container = activeTab.parentElement;
+                    const containerRect = container.getBoundingClientRect();
+                    const tabRect = activeTab.getBoundingClientRect();
+
+                    const leftOffset = tabRect.left - containerRect.left;
+                    const tabWidth = tabRect.width;
+
+                    glider.style.transform = `translateX(${leftOffset}px)`;
+                    glider.style.width = `${tabWidth}px`;
+
+                    tabLinks.forEach((link, idx) => {
+                        if (idx === tabIndex) {
+                            link.classList.add('active');
+                            link.setAttribute('aria-selected', 'true');
+                        } else {
+                            link.classList.remove('active');
+                            link.setAttribute('aria-selected', 'false');
+                        }
+                    });
+
+                    const radios = document.querySelectorAll('.tab-radio');
+                    radios.forEach((radio, idx) => {
+                        radio.checked = (idx === tabIndex);
+                    });
+                }
+            }
+
+            function initTabNavigation() {
+                const tabLinks = document.querySelectorAll('.tab-link');
+
+                updateTabGlider(0);
+
+                tabLinks.forEach((link, index) => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        updateTabGlider(index);
+
+                        const targetId = link.getAttribute('href');
+                        const target = document.querySelector(targetId);
+                        if (target) {
+                            const offset = 80;
+                            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+
+                        history.pushState(null, null, targetId);
+                    });
+
+                    link.addEventListener('keydown', (e) => {
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            const direction = e.key === 'ArrowRight' ? 1 : -1;
+                            let newIndex = index + direction;
+
+                            if (newIndex < 0) newIndex = tabLinks.length - 1;
+                            if (newIndex >= tabLinks.length) newIndex = 0;
+
+                            tabLinks[newIndex].focus();
+                            updateTabGlider(newIndex);
+                        }
+                    });
+                });
+
+                window.addEventListener('hashchange', () => {
+                    const hash = window.location.hash || '#home';
+                    const tabMap = {
+                        '#home': 0,
+                        '#About Us': 1,
+                        '#Hospitals': 2,
+                        '#testimonials': 3,
+                        '#contact': 4
+                    };
+                    if (tabMap[hash] !== undefined) {
+                        updateTabGlider(tabMap[hash]);
+                    }
+                });
+
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        const activeIndex = Array.from(tabLinks).findIndex(link => link.classList.contains('active'));
+                        if (activeIndex >= 0) {
+                            updateTabGlider(activeIndex);
+                        }
+                    }, 100);
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initTabNavigation);
+            } else {
+                initTabNavigation();
+            }
+
+
+
+            const heroImages = [
+                "assets/Khoon-e-Hayat-Bg-1.png",
+                "assets/Khoon-e-Hayat-Bg-6.png",
+                "assets/Khoon-e-Hayat-Bg-3.png"
+            ];
+
+            let currentImage = 0;
+            const heroSection = document.querySelector(".hero-section");
+
+            // First image
+            heroSection.style.backgroundImage = `url('${heroImages[0]}')`;
+
+            // Change image every 5 seconds
+            setInterval(() => {
+                currentImage = (currentImage + 1) % heroImages.length;
+                heroSection.style.backgroundImage = `url('${heroImages[currentImage]}')`;
+            }, 5000);
+
+    </script>
+</body>
+</html>

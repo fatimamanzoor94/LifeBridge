@@ -1,0 +1,968 @@
+﻿@model Khoon_e_Hayat.ViewModels.ReceiverTrackRequestsViewModel
+@{
+    ViewData["Title"] = "Track Requests";
+    Layout = "~/Views/Shared/_ReceiverLayout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<style>
+    /* ============================================
+       TRACK REQUESTS MODULE - Khoon-e-Hayat
+       Colors: #90151C, #5C88A8, #198754, #0dcaf0, #6c757d, #FFFFFF, #F8F9FA
+       NO shadows, NO gradients, NO glassmorphism
+       ============================================ */
+
+    .track-wrapper { padding: 0; }
+
+    /* ---------- HEADER ---------- */
+    .track-header {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+    .breadcrumb-custom {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 8px;
+        font-size: 0.85rem;
+    }
+    .breadcrumb-custom li + li::before {
+        content: "/";
+        color: #6c757d;
+        margin-right: 8px;
+    }
+    .breadcrumb-custom a { color: #5C88A8; text-decoration: none; font-weight: 500; }
+    .breadcrumb-custom a:hover { color: #90151C; }
+    .breadcrumb-custom .active { color: #6c757d; }
+    .track-title { color: #212529; font-weight: 700; }
+    .track-subtitle { color: #6c757d; font-size: 0.9rem; }
+
+    .meta-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: #F8F9FA;
+        border: 1px solid #e9ecef;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #212529;
+    }
+    .meta-chip i { color: #5C88A8; }
+    .live-chip { background: #e6f7ee; border-color: #198754; color: #198754; }
+    .live-dot {
+        width: 8px; height: 8px; border-radius: 50%;
+        background: #198754; display: inline-block;
+        animation: livePulse 1.5s infinite;
+    }
+    @@keyframes livePulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    /* ---------- STAT CARDS ---------- */
+    .stat-card {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: border-color 0.2s ease;
+    }
+    .stat-card:hover { border-color: #5C88A8; }
+    .stat-icon {
+        width: 52px; height: 52px; border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; flex-shrink: 0;
+    }
+    .stat-icon-primary { background: #e6f4ff; color: #5C88A8; }
+    .stat-icon-success { background: #e6f7ee; color: #198754; }
+    .stat-icon-info    { background: #e0f7fa; color: #0dcaf0; }
+    .stat-icon-secondary { background: #f1f3f5; color: #6c757d; }
+    .stat-label { font-size: 0.8rem; color: #6c757d; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-value { font-size: 1.75rem; font-weight: 700; color: #212529; line-height: 1.1; margin-top: 4px; }
+    .stat-value-sm { font-size: 1.35rem; }
+
+    /* ================= CUSTOM CARDS (Dashboard Style) ================= */
+    .custom-card {
+        background: #fff;
+        border-radius: 24px !important;
+        border: 1px solid #eef1f6 !important;
+        box-shadow: 0 8px 30px rgba(16, 24, 40, 0.04);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .custom-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 24, 40, 0.08);
+        }
+
+        .custom-card .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2f3e52;
+            margin-bottom: 4px;
+        }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: background 0.2s ease;
+    }
+
+    .custom-card:hover .icon-box {
+        background: #e9ecef;
+    }
+
+    .trend-icon {
+        font-size: 1.5rem;
+        color: #28a745;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+    }
+
+    .custom-card:hover .trend-icon {
+        opacity: 1;
+    }
+
+    /* ---------- FILTERS ---------- */
+    .filter-card {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 20px;
+    }
+    .filter-title-row {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e9ecef;
+    }
+    .filter-label {
+        display: block; font-size: 0.78rem; font-weight: 600;
+        color: #6c757d; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px;
+    }
+    .filter-input {
+        width: 100%; padding: 10px 14px;
+        border: 1px solid #e9ecef; border-radius: 10px;
+        font-size: 0.9rem; color: #212529; background: #FFFFFF;
+        transition: border-color 0.2s;
+    }
+    .filter-input:focus { outline: none; border-color: #5C88A8; }
+    .input-with-icon { position: relative; }
+    .input-with-icon i {
+        position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+        color: #6c757d; font-size: 0.9rem;
+    }
+    .input-with-icon .filter-input { padding-left: 38px; }
+    .filter-actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-filter {
+        padding: 9px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+        border: 1px solid transparent; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+        text-decoration: none; transition: all 0.2s;
+    }
+    .btn-filter-primary { background: #5C88A8; color: #FFFFFF; border-color: #5C88A8; }
+    .btn-filter-primary:hover { background: #90151C; border-color: #90151C; color: #FFFFFF; }
+    .btn-filter-ghost { background: #FFFFFF; color: #6c757d; border-color: #e9ecef; }
+    .btn-filter-ghost:hover { border-color: #5C88A8; color: #5C88A8; }
+
+    /* ---------- TRACKING GRID ---------- */
+    .tracking-grid { display: flex; flex-direction: column; gap: 20px; }
+
+    .tracking-card {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: border-color 0.2s;
+    }
+    .tracking-card:hover { border-color: #5C88A8; }
+
+    /* Card Header */
+    .tc-header {
+        padding: 18px 22px;
+        background: #F8F9FA;
+        border-bottom: 1px solid #e9ecef;
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .tc-header-left { display: flex; flex-direction: column; gap: 4px; }
+    .tc-id {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 0.8rem; font-weight: 600; color: #5C88A8;
+    }
+    .tc-patient {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 1.05rem; font-weight: 700; color: #212529;
+    }
+    .tc-age { color: #6c757d; font-weight: 500; font-size: 0.9rem; }
+    .tc-header-right { display: flex; align-items: center; gap: 10px; }
+    .live-indicator {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 5px 12px; background: #e6f7ee; border: 1px solid #198754;
+        border-radius: 50px; font-size: 0.75rem; font-weight: 600; color: #198754;
+    }
+    .status-badge {
+        padding: 6px 14px; border-radius: 50px;
+        font-size: 0.78rem; font-weight: 600;
+        border: 1px solid transparent;
+    }
+    .status-submitted    { background: #f1f3f5; color: #6c757d; border-color: #e9ecef; }
+    .status-under-review { background: #e0f7fa; color: #0dcaf0; border-color: #b6effb; }
+    .status-searching    { background: #e6f4ff; color: #5C88A8; border-color: #cfe4f1; }
+    .status-accepted     { background: #e6f7ee; color: #198754; border-color: #b7ebc9; }
+    .status-reserved     { background: #e0f7fa; color: #0dcaf0; border-color: #b6effb; }
+    .status-completed    { background: #e6f7ee; color: #198754; border-color: #198754; }
+    .status-cancelled    { background: #f1f3f5; color: #6c757d; border-color: #e9ecef; }
+    .status-rejected     { background: #ffebee; color: #90151C; border-color: #f5c6cb; }
+
+    /* Progress */
+    .tc-progress {
+        padding: 18px 22px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .progress-label strong {
+        color: #212529;
+    }
+
+    .progress-percent {
+        font-weight: 700;
+        color: #90151C;
+    }
+    /* Changed to #90151C */
+    .progress-track {
+        height: 10px;
+        background: #F8F9FA;
+        border: 1px solid #e9ecef;
+        border-radius: 50px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #5C88A8;
+        border-radius: 50px; /* Changed to #90151C */
+        transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        min-width: 0%;
+    }
+
+    .progress-footer {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+        .progress-footer i {
+            color: #5C88A8;
+            margin-right: 4px;
+        }
+
+    /* Card Body */
+    .tc-body {
+        display: grid; grid-template-columns: 1.3fr 1fr; gap: 0;
+    }
+    .tc-left { padding: 22px; border-right: 1px solid #e9ecef; }
+    .tc-right { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+
+    /* Info Grid */
+    .info-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+        padding-bottom: 18px; border-bottom: 1px dashed #e9ecef; margin-bottom: 18px;
+    }
+    .info-item { display: flex; flex-direction: column; gap: 4px; }
+    .info-label {
+        font-size: 0.72rem; color: #6c757d; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.4px;
+        display: flex; align-items: center; gap: 4px;
+    }
+    .info-label i { color: #5C88A8; font-size: 0.85rem; }
+    .info-value { font-size: 0.95rem; color: #212529; font-weight: 500; word-break: break-word; }
+
+    .mini-badge {
+        display: inline-block; padding: 3px 10px; border-radius: 50px;
+        font-size: 0.72rem; font-weight: 600;
+    }
+    .mini-badge-danger  { background: #ffebee; color: #90151C; }
+    .mini-badge-warning { background: #fff3cd; color: #d39e00; }
+    .mini-badge-info    { background: #e0f7fa; color: #0dcaf0; }
+
+    /* Timeline */
+    .timeline-section { }
+    .timeline-title {
+        font-size: 0.9rem; font-weight: 700; color: #212529;
+        margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+    }
+    .timeline-title i { color: #5C88A8; }
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before {
+        content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px;
+        width: 2px; background: #e9ecef;
+    }
+    .timeline-item { position: relative; padding-bottom: 14px; }
+    .timeline-item:last-child { padding-bottom: 0; }
+    .timeline-marker {
+        position: absolute; left: -28px; top: 2px;
+        width: 24px; height: 24px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.75rem; background: #FFFFFF;
+        border: 2px solid #e9ecef; color: #6c757d;
+        z-index: 1;
+    }
+    .timeline-completed .timeline-marker {
+        background: #198754; border-color: #198754; color: #FFFFFF;
+    }
+    .timeline-current .timeline-marker {
+        background: #5C88A8; border-color: #5C88A8; color: #FFFFFF;
+        animation: currentPulse 2s infinite;
+    }
+    @@keyframes currentPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(92,136,168,0.4); }
+        50% { box-shadow: 0 0 0 6px rgba(92,136,168,0); }
+    }
+    .timeline-pending .timeline-marker { background: #FFFFFF; border-color: #e9ecef; color: #adb5bd; }
+    .timeline-content { }
+    .timeline-head {
+        display: flex; justify-content: space-between; align-items: center;
+        flex-wrap: wrap; gap: 6px; margin-bottom: 2px;
+    }
+    .timeline-stage-title { font-size: 0.88rem; font-weight: 600; color: #212529; }
+    .timeline-pending .timeline-stage-title { color: #adb5bd; }
+    .timeline-time {
+        font-size: 0.75rem; color: #6c757d; font-weight: 500;
+    }
+    .timeline-time-current { color: #5C88A8; font-weight: 600; }
+    .timeline-time-pending { color: #adb5bd; font-style: italic; }
+    .timeline-desc { font-size: 0.8rem; color: #6c757d; }
+
+    /* Activity Log */
+    .activity-section { }
+    .activity-title {
+        font-size: 0.9rem; font-weight: 700; color: #212529;
+        margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+    }
+    .activity-title i { color: #5C88A8; }
+    .activity-list { display: flex; flex-direction: column; gap: 10px; }
+    .activity-item {
+        display: flex; gap: 10px; align-items: flex-start;
+        padding: 10px; background: #F8F9FA; border-radius: 10px; border: 1px solid #e9ecef;
+    }
+    .activity-icon {
+        width: 32px; height: 32px; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.9rem; flex-shrink: 0;
+    }
+    .activity-body { flex: 1; min-width: 0; }
+    .activity-desc { font-size: 0.82rem; color: #212529; font-weight: 500; line-height: 1.4; }
+    .activity-time { font-size: 0.72rem; color: #6c757d; margin-top: 2px; }
+
+    /* Details */
+    .details-section { }
+    .details-title, .reason-title {
+        font-size: 0.88rem; font-weight: 700; color: #212529;
+        margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+    .details-title i, .reason-title i { color: #5C88A8; }
+    .details-list {
+        background: #F8F9FA; border: 1px solid #e9ecef; border-radius: 10px; padding: 10px 14px;
+    }
+    .detail-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 6px 0; font-size: 0.83rem;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: #6c757d; font-weight: 500; }
+    .detail-value { color: #212529; font-weight: 600; text-align: right; max-width: 60%; word-break: break-word; }
+    .detail-value i { color: #5C88A8; margin-right: 4px; }
+
+    .reason-text {
+        font-size: 0.85rem; color: #212529; line-height: 1.5;
+        background: #F8F9FA; border: 1px solid #e9ecef; border-radius: 10px;
+        padding: 10px 14px; margin: 0;
+    }
+
+    /* Actions */
+    .actions-section {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+        padding-top: 14px; border-top: 1px solid #e9ecef;
+    }
+    .btn-action {
+        padding: 9px 12px; border-radius: 10px; font-size: 0.8rem; font-weight: 600;
+        border: 1px solid transparent; cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        text-decoration: none; transition: all 0.2s;
+    }
+    .btn-action-primary { background: #5C88A8; color: #FFFFFF; border-color: #5C88A8; }
+    .btn-action-primary:hover { background: #90151C; border-color: #90151C; color: #FFFFFF; }
+    .btn-action-ghost { background: #FFFFFF; color: #5C88A8; border-color: #e9ecef; }
+    .btn-action-ghost:hover { border-color: #5C88A8; background: #e6f4ff; }
+
+    /* ---------- EMPTY STATE ---------- */
+    .empty-state {
+        background: #FFFFFF; border: 1px solid #e9ecef; border-radius: 16px;
+        padding: 60px 30px; text-align: center;
+    }
+    .empty-icon {
+        width: 80px; height: 80px; border-radius: 50%;
+        background: #e6f4ff; color: #5C88A8;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.2rem; margin: 0 auto 18px;
+    }
+    .empty-title { color: #212529; font-weight: 700; margin-bottom: 8px; }
+    .empty-text { color: #6c757d; font-size: 0.9rem; margin-bottom: 20px; }
+    .btn-empty-action {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 10px 22px; background: #90151C; color: #FFFFFF;
+        border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem;
+        transition: background 0.2s;
+    }
+    .btn-empty-action:hover { background: #5C88A8; color: #FFFFFF; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @@media (max-width: 991px) {
+        .tc-body { grid-template-columns: 1fr; }
+        .tc-left { border-right: none; border-bottom: 1px solid #e9ecef; }
+        .info-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @@media (max-width: 576px) {
+        .track-header { padding: 18px; }
+        .tc-header, .tc-progress, .tc-left, .tc-right { padding: 16px; }
+        .info-grid { grid-template-columns: 1fr; }
+        .actions-section { grid-template-columns: 1fr; }
+        .stat-card { padding: 14px; }
+        .stat-value { font-size: 1.4rem; }
+    }
+</style>
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+<div class="track-wrapper">
+
+    <!-- ==================== PAGE HEADER ==================== -->
+    <div class="track-header">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <nav aria-label="breadcrumb" class="mb-2">
+                    <ol class="breadcrumb-custom mb-0">
+                        <li><a asp-controller="Receiver" asp-action="Dashboard">Receiver</a></li>
+                        <li class="active" aria-current="page">Track Requests</li>
+                    </ol>
+                </nav>
+                <h3 class="track-title mb-1">Track Blood Requests</h3>
+                <p class="track-subtitle mb-0">Monitor the real-time progress of your blood requests from submission until completion.</p>
+            </div>
+            <div class="header-meta d-flex align-items-center gap-3 flex-wrap">
+                <div class="meta-chip">
+                    <i class="bi bi-calendar3"></i>
+                    <span>@Model.CurrentDate.ToString("dddd, dd MMM yyyy")</span>
+                </div>
+                <div class="meta-chip live-chip">
+                    <span class="live-dot"></span>
+                    <span>Live Tracking</span>
+                    <span class="text-muted ms-1">• Updated just now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STATISTICS CARDS ==================== -->
+<div class="row g-3 mb-4">
+    <!-- Active Requests -->
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card custom-card h-100">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="icon-box"><i class="bi bi-heart-pulse text-dark"></i></div>
+                    <h6 class="card-title mt-3 mb-1">Active Requests</h6>
+                    <small class="text-muted">@Model.Statistics.ActiveRequests.ToString("N0")</small>
+                </div>
+                <i class="bx bx-trending-up trend-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Requests -->
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card custom-card h-100">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="icon-box"><i class="bi bi-check-circle text-dark"></i></div>
+                    <h6 class="card-title mt-3 mb-1">Completed Requests</h6>
+                    <small class="text-muted">@Model.Statistics.CompletedRequests.ToString("N0")</small>
+                </div>
+                <i class="bx bx-trending-up trend-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests -->
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card custom-card h-100">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="icon-box"><i class="bi bi-hourglass-split text-dark"></i></div>
+                    <h6 class="card-title mt-3 mb-1">Pending Requests</h6>
+                    <small class="text-muted">@Model.Statistics.PendingRequests.ToString("N0")</small>
+                </div>
+                <i class="bx bx-trending-up trend-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avg. Processing Time -->
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card custom-card h-100">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="icon-box"><i class="bi bi-clock-history text-dark"></i></div>
+                    <h6 class="card-title mt-3 mb-1">Avg. Processing Time</h6>
+                    <small class="text-muted">@Model.Statistics.AverageProcessingTime</small>
+                </div>
+                <i class="bx bx-trending-up trend-icon"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- ==================== FILTERS ==================== -->
+    <form method="get" asp-action="TrackRequests" class="filter-card mb-4">
+        <div class="filter-title-row">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-funnel-fill" style="color:#5C88A8;"></i>
+                <h6 class="mb-0 fw-bold">Filters</h6>
+            </div>
+            <small class="text-muted">Refine your tracking view</small>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3">
+                <label class="filter-label">Search Request</label>
+                <div class="input-with-icon">
+                    <i class="bi bi-search"></i>
+                    <input type="text" name="SearchQuery" value="@Model.Filters.SearchQuery"
+                           class="filter-input" placeholder="Patient, ID, Hospital, Blood Group..." />
+                </div>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <label class="filter-label">Blood Group</label>
+                <select name="BloodGroup" class="filter-input">
+                    <option value="all">All</option>
+                    @foreach (var bg in Model.AvailableBloodGroups)
+                    {
+                        <option value="@bg" selected="@(Model.Filters.BloodGroup == bg)">@bg</option>
+                    }
+                </select>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <label class="filter-label">Status</label>
+                <select name="Status" class="filter-input">
+                    <option value="all">All</option>
+                    <option value="Pending" selected="@(Model.Filters.Status == "Pending")">Pending</option>
+                    <option value="Matched" selected="@(Model.Filters.Status == "Matched")">Matched</option>
+                    <option value="Accepted" selected="@(Model.Filters.Status == "Accepted")">Accepted</option>
+                    <option value="Fulfilled" selected="@(Model.Filters.Status == "Fulfilled")">Fulfilled</option>
+                    <option value="Cancelled" selected="@(Model.Filters.Status == "Cancelled")">Cancelled</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-3 col-lg-2">
+                <label class="filter-label">Priority</label>
+                <select name="Priority" class="filter-input">
+                    <option value="all">All</option>
+                    <option value="Normal" selected="@(Model.Filters.Priority == "Normal")">Normal</option>
+                    <option value="High" selected="@(Model.Filters.Priority == "High")">High</option>
+                    <option value="Critical" selected="@(Model.Filters.Priority == "Critical")">Critical</option>
+                </select>
+            </div>
+            <div class="col-6 col-md-3 col-lg-3">
+                <label class="filter-label">Hospital</label>
+                <select name="Hospital" class="filter-input">
+                    <option value="all">All Hospitals</option>
+                    @foreach (var h in Model.AvailableHospitals)
+                    {
+                        <option value="@h" selected="@(Model.Filters.Hospital == h)">@h</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="filter-actions">
+            <button type="submit" class="btn-filter btn-filter-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+            <a asp-action="TrackRequests" class="btn-filter btn-filter-ghost">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </a>
+        </div>
+    </form>
+
+    <!-- ==================== TRACKING CARDS ==================== -->
+    @if (!Model.Requests.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="bi bi-geo-alt"></i>
+            </div>
+            <h4 class="empty-title">No Active Blood Requests</h4>
+            <p class="empty-text">You currently don't have any blood requests being tracked.</p>
+            <a asp-controller="Receiver" asp-action="CreateBloodRequest" class="btn-empty-action">
+                <i class="bi bi-plus-circle"></i> Create Blood Request
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="tracking-grid">
+            @foreach (var req in Model.Requests)
+            {
+                <div class="tracking-card" data-request-id="@req.RequestId">
+
+                    <!-- Card Header -->
+                    <div class="tc-header">
+                        <div class="tc-header-left">
+                            <div class="tc-id">
+                                <i class="bi bi-file-earmark-medical"></i>
+                                <span>@req.RequestCode</span>
+                            </div>
+                            <div class="tc-patient">
+                                <i class="bi bi-person-fill"></i>
+                                <span>@req.PatientName</span>
+                                @if (req.PatientAge.HasValue)
+                                {
+                                    <span class="tc-age">• @req.PatientAge yrs</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="tc-header-right">
+                            @if (req.IsLive)
+                            {
+                                <div class="live-indicator">
+                                    <span class="live-dot"></span>
+                                    <span>Live</span>
+                                </div>
+                            }
+                            <span class="status-badge @req.StatusColorClass">@req.DisplayStatus</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+<div class="tc-progress">
+    <div class="progress-meta">
+        <span class="progress-label">Current Stage: <strong>@req.CurrentStage</strong></span>
+        <span class="progress-percent">@req.ProgressPercentage%</span>
+    </div>
+    <div class="progress-track">
+        <div class="progress-fill" style="width: @(req.ProgressPercentage)%"></div>
+    </div>
+    <div class="progress-footer">
+        <span><i class="bi bi-clock"></i> Est. Completion: <strong>@req.EstimatedCompletion</strong></span>
+        <span class="text-muted">• Updated @req.LastUpdatedText</span>
+    </div>
+</div>
+
+                    <!-- Card Body: Two columns -->
+                    <div class="tc-body">
+                        <!-- Left: Info + Timeline -->
+                        <div class="tc-left">
+                            <!-- Key Info Grid -->
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-label"><i class="bi bi-droplet-fill"></i> Blood Group</span>
+                                    <span class="info-value text-danger fw-bold">@req.BloodGroup</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"><i class="bi bi-box"></i> Units</span>
+                                    <span class="info-value fw-bold">@req.UnitsRequired</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"><i class="bi bi-hospital"></i> Hospital</span>
+                                    <span class="info-value">@req.HospitalName</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"><i class="bi bi-geo-alt"></i> City</span>
+                                    <span class="info-value">@req.HospitalCity</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"><i class="bi bi-exclamation-circle"></i> Priority</span>
+                                    <span class="info-value">
+                                        @if (req.UrgencyLevel == "Critical") { <span class="mini-badge mini-badge-danger">Critical</span> }
+                                        else if (req.UrgencyLevel == "High") { <span class="mini-badge mini-badge-warning">High</span> }
+                                        else { <span class="mini-badge mini-badge-info">Normal</span> }
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label"><i class="bi bi-people"></i> Matched Donors</span>
+                                    <span class="info-value fw-bold" style="color:#198754;">@req.MatchedDonorsCount</span>
+                                </div>
+                            </div>
+
+                            <!-- Timeline -->
+                            <div class="timeline-section">
+                                <h6 class="timeline-title"><i class="bi bi-arrow-repeat"></i> Request Timeline</h6>
+                                <div class="timeline">
+                                    @foreach (var stage in req.Timeline)
+                                    {
+                                        <div class="timeline-item timeline-@stage.Status">
+                                            <div class="timeline-marker">
+                                                <i class="bi @stage.Icon"></i>
+                                            </div>
+                                            <div class="timeline-content">
+                                                <div class="timeline-head">
+                                                    <span class="timeline-stage-title">@stage.Title</span>
+                                                    @if (stage.CompletedAt.HasValue)
+                                                    {
+                                                        <span class="timeline-time">@stage.CompletedAt.Value.ToString("dd MMM, h:mm tt")</span>
+                                                    }
+                                                    else if (stage.Status == "current")
+                                                    {
+                                                        <span class="timeline-time timeline-time-current">In Progress</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="timeline-time timeline-time-pending">Pending</span>
+                                                    }
+                                                </div>
+                                                <div class="timeline-desc">@stage.Description</div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Activity Log + Details + Actions -->
+                        <div class="tc-right">
+                            <!-- Activity Log -->
+                            <div class="activity-section">
+                                <h6 class="activity-title"><i class="bi bi-activity"></i> Activity Log</h6>
+                                <div class="activity-list">
+                                    @foreach (var log in req.ActivityLogs)
+                                    {
+                                        <div class="activity-item">
+                                            <div class="activity-icon" style="background-color: @(log.IconColor)15; color: @log.IconColor;">
+                                                <i class="bi @log.Icon"></i>
+                                            </div>
+                                            <div class="activity-body">
+                                                <div class="activity-desc">@log.Description</div>
+                                                <div class="activity-time">@log.TimeAgo • @log.Timestamp.ToString("dd MMM yyyy, h:mm tt")</div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Hospital Details -->
+                            <div class="details-section">
+                                <h6 class="details-title"><i class="bi bi-hospital"></i> Hospital Details</h6>
+                                <div class="details-list">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Name</span>
+                                        <span class="detail-value">@req.HospitalName</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">City</span>
+                                        <span class="detail-value">@req.HospitalCity</span>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(req.HospitalAddress) && req.HospitalAddress != "N/A")
+                                    {
+                                        <div class="detail-row">
+                                            <span class="detail-label">Address</span>
+                                            <span class="detail-value">@req.HospitalAddress</span>
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(req.HospitalContact))
+                                    {
+                                        <div class="detail-row">
+                                            <span class="detail-label">Contact</span>
+                                            <span class="detail-value"><i class="bi bi-telephone"></i> @req.HospitalContact</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="reason-section">
+                                <h6 class="reason-title"><i class="bi bi-chat-left-text"></i> Reason</h6>
+                                <p class="reason-text">@req.Reason</p>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="actions-section">
+                                <a asp-controller="Receiver" asp-action="MyBloodRequests" class="btn-action btn-action-primary">
+                                    <i class="bi bi-eye"></i> View Details
+                                </a>
+                                <a asp-controller="Receiver" asp-action="Notifications" class="btn-action btn-action-ghost">
+                                    <i class="bi bi-bell"></i> Notifications
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // ---------- Auto-refresh live cards every 60 seconds ----------
+            const liveCards = document.querySelectorAll(".tracking-card");
+            if (liveCards.length > 0) {
+                setInterval(function () {
+                    document.querySelectorAll(".live-chip .text-muted").forEach(function (el) {
+                        el.textContent = "• Updated just now";
+                    });
+                }, 60000);
+            }
+
+            // ---------- Print Request ----------
+            window.printRequest = function (requestId) {
+                const card = document.querySelector(`.tracking-card[data-request-id="${requestId}"]`);
+                if (!card) return;
+
+                const printWindow = window.open("", "_blank", "width=900,height=700");
+                const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+                    .map(n => n.outerHTML).join("");
+
+                printWindow.document.write(`
+                    <!DOCTYPE html><html><head><title>Request #REQ-${String(requestId).padStart(4,'0')}</title>
+                    ${styles}
+                    <style>
+                        body { padding: 20px; background: #fff; }
+                        .tracking-card { border: 1px solid #e9ecef !important; }
+                        .actions-section, .filter-card, .track-header .header-meta { display: none !important; }
+                    </style></head><body>
+                    ${card.outerHTML}
+                    <script>setTimeout(function(){window.print();window.close();},400);<\/script>
+                    </body></html>
+                `);
+                printWindow.document.close();
+            };
+
+            // ---------- Download PDF ----------
+            window.downloadPdf = function (requestId, requestCode) {
+                if (!window.jspdf) { alert("PDF library not loaded."); return; }
+
+                const card = document.querySelector(`.tracking-card[data-request-id="${requestId}"]`);
+                if (!card) return;
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF("p", "mm", "a4");
+                const pageWidth = doc.internal.pageSize.getWidth();
+
+                doc.setFillColor(144, 21, 28);
+                doc.rect(0, 0, pageWidth, 25, "F");
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(16);
+                doc.setFont("helvetica", "bold");
+                doc.text("Khoon-e-Hayat", 14, 12);
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
+                doc.text("Blood Request Tracking Report", 14, 20);
+
+                doc.setTextColor(33, 37, 41);
+                doc.setFontSize(13);
+                doc.setFont("helvetica", "bold");
+                doc.text(`Request: ${requestCode}`, 14, 38);
+
+                const getText = (sel) => {
+                    const el = card.querySelector(sel);
+                    return el ? el.textContent.trim() : "-";
+                };
+
+                let y = 50;
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
+
+                const info = [
+                    ["Patient Name", getText(".tc-patient")],
+                    ["Blood Group", card.querySelector(".info-value.text-danger")?.textContent.trim() || "-"],
+                    ["Units Required", getText(".info-value.fw-bold")],
+                    ["Hospital", getText(".detail-value")],
+                    ["City", getText(".detail-row:nth-child(2) .detail-value")],
+                    ["Priority", getText(".mini-badge")],
+                    ["Status", getText(".status-badge")],
+                    ["Progress", getText(".progress-percent")],
+                    ["Estimated Completion", getText(".progress-footer strong")]
+                ];
+
+                info.forEach(function (row) {
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(92, 136, 168);
+                    doc.text(row[0] + ":", 14, y);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(33, 37, 41);
+                    doc.text(String(row[1]).substring(0, 80), 75, y);
+                    y += 7;
+                });
+
+                y += 6;
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(144, 21, 28);
+                doc.text("Timeline", 14, y);
+                y += 6;
+
+                doc.setFontSize(9);
+                card.querySelectorAll(".timeline-item").forEach(function (item) {
+                    const title = item.querySelector(".timeline-stage-title")?.textContent.trim() || "";
+                    const time = item.querySelector(".timeline-time")?.textContent.trim() || "";
+                    const status = item.classList.contains("timeline-completed") ? "✓" :
+                                   item.classList.contains("timeline-current") ? "●" : "○";
+
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(33, 37, 41);
+                    doc.text(`${status}  ${title}`, 16, y);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(108, 117, 125);
+                    doc.text(time, 130, y);
+                    y += 6;
+                    if (y > 270) { doc.addPage(); y = 20; }
+                });
+
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= pageCount; i++) {
+                    doc.setPage(i);
+                    doc.setFontSize(8);
+                    doc.setTextColor(108, 117, 125);
+                    doc.text(
+                        `Generated on ${new Date().toLocaleString()} • Page ${i} of ${pageCount}`,
+                        14, doc.internal.pageSize.getHeight() - 10
+                    );
+                }
+
+                doc.save(`${requestCode}_Tracking.pdf`);
+            };
+        });
+    </script>
+}

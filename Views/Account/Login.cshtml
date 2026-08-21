@@ -1,0 +1,394 @@
+﻿@model Khoon_e_Hayat.Models.ViewModels.LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Khoon-e-Hayat</title>
+    <link rel="icon" type="image/png" href="~/assets/Favicon.png">
+
+    <!-- Tailwind CSS & Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+        theme: {
+        extend: {
+        colors: {
+        primary: '#23BBB7',
+        secondary: '#23BBB7',
+        accent: '#90151C',
+        success: '#23BBB7',
+        background: '#F6F6F6',
+        muted: 'black',
+        deep: '#063154',
+        border: '#bcc5cc',
+        },
+        fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        }
+        }
+        }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <style>
+        :root {
+        --primary: #23BBB7;
+        --accent: #90151C;
+        }
+
+        * {
+        box-sizing: border-box;
+        }
+
+        body {
+        font-family: 'Inter', sans-serif;
+        color: #1f2937;
+        overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+        width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+        background: rgba(0,0,0,0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 10px;
+        }
+
+        .glass-nav {
+        background: rgba(144, 21, 28, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .solid-card {
+        background: #FFFFFF;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        border-radius: 30px;
+        }
+
+        .form-input-solid {
+        background: #F8FAFC;
+        border: 1px solid #E5E7EB;
+        color: #111827;
+        transition: all 0.3s ease;
+        }
+
+        .form-input-solid:focus {
+        background: #FFFFFF;
+        border-color: #23BBB7;
+        box-shadow: 0 0 0 4px rgba(35, 187, 183, 0.15);
+        outline: none;
+        }
+
+        .form-input-solid::placeholder {
+        color: #9CA3AF;
+        }
+
+        @@keyframes fadeInUp {
+        from {
+        opacity: 0;
+        transform: translateY(40px);
+        }
+
+        to {
+        opacity: 1;
+        transform: translateY(0);
+        }
+        }
+
+        @@keyframes float {
+        0%, 100% {
+        transform: translateY(0px);
+        }
+
+        50% {
+        transform: translateY(-15px);
+        }
+        }
+
+        .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .animate-float {
+        animation: float 6s ease-in-out infinite;
+        }
+
+        /* FIXED: Proper validation summary styling */
+        .validation-summary-valid {
+        display: none !important;
+        }
+
+        .validation-summary-errors {
+        display: block !important;
+        animation: fadeInUp 0.5s ease;
+        }
+
+        .validation-summary-errors ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        }
+
+        .validation-summary-errors li {
+        padding: 4px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fixed inset-0 z-0" style="background-image: url('../assets/Khoon-e-Hayat-Bg-1.png'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
+    <div class="fixed inset-0 z-0 bg-black/70"></div>
+
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-24 h-24 rounded-full bg-white/5 blur-sm animate-float"></div>
+        <div class="absolute bottom-20 right-20 w-32 h-32 rounded-full bg-[#90151C]/20 blur-md animate-float" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 right-10 w-16 h-16 rounded-full bg-[#23BBB7]/20 blur-sm animate-float" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- ✅ NEW PROFESSIONAL TOP-RIGHT TOAST SYSTEM -->
+    <div id="toastContainer" class="fixed top-24 right-6 z-[100] flex flex-col gap-3 pointer-events-none">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="toast-message bg-white border-l-4 border-[#23BBB7] text-gray-800 shadow-xl rounded-lg p-4 flex items-start gap-3 min-w-[320px] max-w-[400px] pointer-events-auto animate-slideInRight">
+                <div class="bg-[#23BBB7]/10 p-2 rounded-full flex-shrink-0">
+                    <i class="fas fa-check-circle text-[#23BBB7] text-xl"></i>
+                </div>
+                <div class="flex-1 pt-0.5">
+                    <p class="font-bold text-sm text-gray-900">Success</p>
+                    <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">@TempData["SuccessMessage"]</p>
+                </div>
+                <button onclick="this.closest('.toast-message').remove()" class="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="toast-message bg-white border-l-4 border-[#90151C] text-gray-800 shadow-xl rounded-lg p-4 flex items-start gap-3 min-w-[320px] max-w-[400px] pointer-events-auto animate-slideInRight">
+                <div class="bg-[#90151C]/10 p-2 rounded-full flex-shrink-0">
+                    <i class="fas fa-exclamation-triangle text-[#90151C] text-xl"></i>
+                </div>
+                <div class="flex-1 pt-0.5">
+                    <p class="font-bold text-sm text-gray-900">Error</p>
+                    <p class="text-xs text-gray-600 mt-0.5 leading-relaxed">@TempData["ErrorMessage"]</p>
+                </div>
+                <button onclick="this.closest('.toast-message').remove()" class="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+        }
+    </div>
+
+    <style>
+        @@keyframes slideInRight {
+        from {
+        transform: translateX(120%);
+        opacity: 0;
+        }
+
+        to {
+        transform: translateX(0);
+        opacity: 1;
+        }
+        }
+
+        .animate-slideInRight {
+        animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const toasts = document.querySelectorAll('.toast-message');
+        toasts.forEach((toast, index) => {
+        // Auto hide after 4 seconds
+        setTimeout(() => {
+        toast.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+        toast.style.transform = 'translateX(120%)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+        }, 4000 + (index * 200));
+        });
+        });
+    </script>
+    <!-- ✅ END TOAST SYSTEM -->
+
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <a href="/" class="flex items-center group">
+                    <div class="w-32 h-32 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <img src="~/assets/finalLogo-01.png" alt="Khoon-e-Hayat Logo" class="w-full h-full object-contain drop-shadow-lg">
+                    </div>
+                </a>
+
+                <div class="flex items-center space-x-4">
+                    <span class="text-white/80 text-sm hidden sm:inline">New to Khoon-e-Hayat?</span>
+                    <a asp-controller="Account" asp-action="Register" class="px-5 py-2 rounded-full border-2 border-white text-white hover:bg-white hover:text-[#90151C] font-semibold transition-all shadow-lg">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 min-h-screen flex items-center justify-center pt-24 pb-12 px-4">
+        <div class="w-full max-w-md animate-fadeInUp">
+            <div class="solid-card p-8 lg:p-10">
+
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#23BBB7]/10 flex items-center justify-center mb-4">
+                        <i class="fas fa-sign-in-alt text-4xl text-[#23BBB7]"></i>
+                    </div>
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3">Welcome Back</h2>
+                    <p class="text-gray-500 text-lg">Login to your Khoon-e-Hayat account</p>
+                </div>
+
+                <form asp-action="Login" method="post" id="loginForm" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    <!-- FIXED: Removed hardcoded validation-summary-valid class -->
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-red-600 bg-red-50 border border-red-200 p-4 rounded-xl mb-6 text-sm font-medium">
+                    </div>
+
+                    <div class="mb-5">
+                        <label asp-for="Email" class="block text-gray-700 text-sm font-semibold mb-2"></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input asp-for="Email" id="EmailInput" class="form-input-solid w-full pl-11 pr-4 py-3.5 rounded-xl transition-colors" placeholder="name@example.com" autocomplete="email" />
+                        </div>
+                        <span asp-validation-for="Email" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                    </div>
+
+                    <div class="mb-6">
+                        <label asp-for="Password" class="block text-gray-700 text-sm font-semibold mb-2"></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="form-input-solid w-full pl-11 pr-12 py-3.5 rounded-xl"
+                                   id="Password"
+                                   placeholder="Enter your password"
+                                   autocomplete="current-password" />
+                            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-red-500 text-xs mt-1.5 block font-medium"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between mb-6">
+                        <label class="flex items-center space-x-2 cursor-pointer group">
+                            <input asp-for="RememberMe" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-[#23BBB7] focus:ring-[#23BBB7]">
+                            <span class="text-sm text-gray-600 font-medium group-hover:text-gray-900 transition-colors">Remember me</span>
+                        </label>
+                        <a asp-controller="Account" asp-action="ForgotPassword" class="text-sm text-[#23BBB7] hover:text-[#1A9A96] font-semibold transition-colors">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="w-full py-4 rounded-xl bg-[#90151C] hover:bg-[#7A1117] text-white font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login to Account</span>
+                    </button>
+                </form>
+
+                <div class="flex items-center my-8">
+                    <div class="flex-grow h-px bg-gray-200"></div>
+                    <span class="px-4 text-gray-400 text-sm font-medium">OR</span>
+                    <div class="flex-grow h-px bg-gray-200"></div>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-gray-600 text-sm">
+                        Don't have an account?
+                        <a asp-controller="Account" asp-action="Register" class="text-[#90151C] hover:text-[#7A1117] font-bold transition-colors">Register here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Validation Scripts -->
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- Custom JavaScript -->
+    <script>
+        $(document).ready(function () {
+        // 1. Toggle Password Visibility
+        $('#togglePassword').on('click', function () {
+        const passwordInput = $('#Password');
+        const toggleIcon = $('#toggleIcon');
+
+        if (passwordInput.attr('type') === 'password') {
+        passwordInput.attr('type', 'text');
+        toggleIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+        passwordInput.attr('type', 'password');
+        toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+        });
+
+        // 2. Real-time Email Validation Visual Feedback
+        $('#EmailInput').on('input', function () {
+        const val = $(this).val().trim();
+        if (val === '') {
+        $(this).css('border-color', '');
+        return;
+        }
+        const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+        if (emailRegex.test(val)) {
+        $(this).css('border-color', '#10B981');
+        } else {
+        $(this).css('border-color', '#EF4444');
+        }
+        });
+
+        // 3. FIXED: Prevent Double Submission with proper reset
+        $('#loginForm').on('submit', function () {
+        const btn = $('#submitBtn');
+        const originalHtml = btn.html();
+
+        btn.prop('disabled', true);
+        btn.html('<i class="fas fa-spinner fa-spin mr-2"></i> Logging in...');
+
+        // Re-enable button after 5 seconds (in case of slow response)
+        setTimeout(function() {
+        btn.prop('disabled', false);
+        btn.html(originalHtml);
+        }, 5000);
+        });
+
+        // 4. FIXED: Re-enable button if page loads with errors
+        if ($('.validation-summary-errors').length > 0) {
+        $('#submitBtn').prop('disabled', false);
+        $('#submitBtn').html('<i class="fas fa-sign-in-alt"></i> <span>Login to Account</span>');
+        }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,750 @@
+﻿@model Khoon_e_Hayat.ViewModels.DonorDonationViewModel
+@{
+    ViewData["Title"] = "My Donations";
+    Layout = "~/Views/Shared/_DonorLayout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-2">
+                <h4 class="mb-0">My Donations</h4>
+                <span class="badge bg-label-primary rounded-pill px-3 py-2">
+                    <i class="bi bi-calendar3 me-1"></i>@DateTime.Now.ToString("dd MMM yyyy")
+                </span>
+            </div>
+
+            <!-- ==================== SUMMARY CARDS ==================== -->
+            <div class="row g-3 mb-4">
+                <!-- Total Donations -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-droplet text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Total Donations</h6>
+                                <small class="text-muted">@Model.TotalDonations.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lives Saved -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-heart text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Lives Saved</h6>
+                                <small class="text-muted">@Model.EstimatedLivesSaved.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last Donation -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-calendar-check text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Last Donation</h6>
+                                <small class="text-muted">@(Model.LastDonationDate?.ToString("dd MMM yyyy") ?? "Never")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donor Status -->
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-award text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Donor Status</h6>
+                                <small class="text-muted">@Model.DonorStatus</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== ELIGIBILITY CARD ==================== -->
+            @if (Model.IsEligibleToday)
+            {
+                <div class="alert alert-success border-0 rounded-4 mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bx bx-check-circle fs-2 me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">You are eligible to donate today!</h5>
+                            <p class="mb-0">Your last donation was on @(Model.LastDonationDate?.ToString("dd MMM yyyy") ?? "N/A"). You can donate blood again to save more lives.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning border-0 rounded-4 mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bx bx-time-five fs-2 me-3"></i>
+                        <div>
+                            <h5 class="alert-heading mb-1">Next Eligible Donation: @Model.NextEligibleDate?.ToString("dd MMM yyyy")</h5>
+                            <p class="mb-0">You need to wait <strong>@Model.DaysUntilEligible days</strong> before your next donation. This ensures your health and the quality of donated blood.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            
+
+
+            <!-- ==================== SEARCH & FILTER ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-3">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-12 col-md-4">
+                            <label class="form-label small text-muted mb-1">Search</label>
+                            <input type="text" id="searchInput" class="form-control form-control-sm rounded-pill px-3" placeholder="Hospital, Blood Group, Date..." />
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <label class="form-label small text-muted mb-1">Blood Group</label>
+                            <select id="filterBloodGroup" class="form-select form-select-sm rounded-pill">
+                                <option value="all">All</option>
+                                @foreach (var bg in Model.AvailableBloodGroups)
+                                {
+                                    <option value="@bg">@bg</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <label class="form-label small text-muted mb-1">Status</label>
+                            <select id="filterStatus" class="form-select form-select-sm rounded-pill">
+                                <option value="all">All</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <label class="form-label small text-muted mb-1">Hospital</label>
+                            <select id="filterHospital" class="form-select form-select-sm rounded-pill">
+                                <option value="all">All</option>
+                                @foreach (var hospital in Model.AvailableHospitals)
+                                {
+                                    <option value="@hospital.ToLower()">@hospital</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <button class="btn btn-sm btn-outline-secondary rounded-pill w-100" id="resetFiltersBtn">
+                                <i class="bx bx-reset"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== DONATION HISTORY TABLE ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div>
+                            <h4 class="mb-1 fw-semibold">Donation History</h4>
+                            <small class="text-muted">Complete record of your blood donations</small>
+                        </div>
+                        @* <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="exportTable('excel', 'donationsTable', 'MyDonations')">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Excel
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="exportTable('pdf', 'donationsTable', 'MyDonations')">
+                                <i class="bi bi-file-earmark-pdf me-1"></i> PDF
+                            </button>
+                        </div> *@
+                    </div>
+                </div>
+
+                <div class="card-body px-4">
+                    <div class="table-responsive p-3">
+                        <table class="table align-middle mb-0" id="donationsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Donation ID</th>
+                                    <th>Donation Date</th>
+                                    <th>Blood Group</th>
+                                    <th>Hospital Name</th>
+                                    <th>Donation Type</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Donations.Any())
+                                {
+                                    foreach (var don in Model.Donations)
+                                    {
+                                        <tr data-date="@don.DonationDate.ToString("yyyy-MM-dd")" data-id="@don.DonationId">
+                                            <td>DON-@don.DonationId.ToString("D4")</td>
+                                            <td>@don.DonationDate.ToString("dd-MMM-yyyy")</td>
+                                            <td><span class="fw-bold text-danger">@don.BloodGroup</span></td>
+                                            <td>@(don.HospitalName ?? "-")</td>
+                                            <td>
+                                                @if (don.DonationType == "Emergency")
+                                                {
+                                                    <span class="badge bg-danger-subtle text-danger">Emergency</span>
+                                                }
+                                                else if (don.DonationType == "Scheduled")
+                                                {
+                                                    <span class="badge bg-info-subtle text-info">Scheduled</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success-subtle text-success">Voluntary</span>
+                                                }
+                                            </td>
+                                            <td>@don.BloodQuantity unit@(don.BloodQuantity > 1 ? "s" : "")</td>
+                                            <td>
+                                                @if (don.Status == "Completed")
+                                                {
+                                                    <span class="badge bg-success-subtle text-success">Completed</span>
+                                                }
+                                                else if (don.Status == "Pending")
+                                                {
+                                                    <span class="badge bg-warning-subtle text-warning">Pending</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary-subtle text-secondary">@don.Status</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm d-flex gap-2">
+                                                    <button type="button" class="btn btn-outline-info view-details-btn" 
+                                                            data-id="@don.DonationId" 
+                                                            data-name="@don.DonorName" 
+                                                            data-bg="@don.BloodGroup" 
+                                                            data-hospital="@don.HospitalName" 
+                                                            data-date="@don.DonationDate.ToString("dd-MMM-yyyy")"
+                                                            data-type="@don.DonationType"
+                                                            data-quantity="@don.BloodQuantity"
+                                                            data-status="@don.Status"
+                                                            title="View Details">
+                                                        <i class="bx bx-info-circle"></i>
+                                                    </button>
+                                                    @if (don.Status == "Completed")
+                                                    {
+                                                        <button type="button" class="btn btn-outline-primary cert-btn" 
+                                                                data-id="@don.DonationId" 
+                                                                data-name="@don.DonorName" 
+                                                                data-bg="@don.BloodGroup" 
+                                                                data-hospital="@don.HospitalName" 
+                                                                data-date="@don.DonationDate.ToString("dd-MMM-yyyy")"
+                                                                data-type="@don.DonationType"
+                                                                data-quantity="@don.BloodQuantity"
+                                                                title="Download Certificate">
+                                                            <i class="bi bi-file-earmark-pdf"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="emptyStateRow">
+                                        <td colspan="8" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="bi bi-droplet fs-1 d-block mb-2 text-danger"></i>
+                                                <h5 class="fw-semibold">No Donations Found</h5>
+                                                <p class="mb-3">No donations found yet. Start saving lives by responding to a blood request.</p>
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center px-4 py-3 border-top">
+                        <small class="text-muted" id="paginationInfo">Total Donations: @Model.TotalDonations</small>
+                        <nav><ul class="pagination pagination-sm mb-0" id="pagination"></ul></nav>
+                    </div>
+                </div>
+            </div>
+
+
+<!-- ==================== VIEW DETAILS MODAL ==================== -->
+<div class="modal fade" id="viewDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-sm rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-danger-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bx bx-droplet text-danger"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0">Donation Details</h5>
+                        <small class="text-muted" id="modalDonationId">DON-XXXX</small>
+                    </div>
+                </div>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <div class="card border-0 bg-light-subtle rounded-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold text-danger mb-3"><i class="bx bx-droplet me-2"></i>Donation Information</h6>
+                        <div class="row g-3">
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Donation ID</label><p class="form-control-plaintext fw-semibold mb-0" id="d_DonationId">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Donor Name</label><p class="form-control-plaintext mb-0" id="d_DonorName">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Blood Group</label><p class="form-control-plaintext fw-bold text-danger mb-0" id="d_BloodGroup">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Blood Quantity</label><p class="form-control-plaintext mb-0" id="d_Quantity">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Donation Date</label><p class="form-control-plaintext mb-0" id="d_DonationDate">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Donation Type</label><p class="form-control-plaintext mb-0" id="d_DonationType">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Hospital Name</label><p class="form-control-plaintext mb-0" id="d_HospitalName">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Status</label><p class="form-control-plaintext mb-0" id="d_Status">-</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== STYLES ==================== -->
+<style>
+    .custom-card {
+        background: #ffffff;
+        border-radius: 16px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .custom-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    .trend-icon {
+        font-size: 1.5rem;
+        color: #28a745;
+        opacity: 0.6;
+    }
+    #viewDetailsModal .form-control-plaintext {
+        font-size: 1.05rem;
+        padding: 0.25rem 0;
+        border-bottom: 1px dashed #dee2e6;
+    }
+</style>
+
+<!-- ==================== SCRIPTS ==================== -->
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            
+
+            // ==================== FILTERS ====================
+            const searchInput = document.getElementById('searchInput');
+            const filterBloodGroup = document.getElementById('filterBloodGroup');
+            const filterStatus = document.getElementById('filterStatus');
+            const filterHospital = document.getElementById('filterHospital');
+            const resetBtn = document.getElementById('resetFiltersBtn');
+
+            function filterTable() {
+                const sVal = searchInput.value.toLowerCase();
+                const bgVal = filterBloodGroup.value;
+                const statVal = filterStatus.value;
+                const hospVal = filterHospital.value;
+                
+                const rows = document.querySelectorAll("#donationsTable tbody tr");
+
+                rows.forEach(row => {
+                    if (row.id === 'emptyStateRow') return;
+
+                    const donId = row.cells[0].textContent.toLowerCase();
+                    const hospital = row.cells[3].textContent.toLowerCase();
+                    const bg = row.cells[2].textContent.trim();
+                    
+                    const statBadge = row.cells[6].querySelector('.badge');
+                    const statText = statBadge ? statBadge.textContent : '';
+
+                    let show = true;
+
+                    if (sVal && !(donId.includes(sVal) || hospital.includes(sVal) || bg.toLowerCase().includes(sVal))) show = false;
+                    if (bgVal !== 'all' && bg !== bgVal) show = false;
+                    if (statVal !== 'all' && statText !== statVal) show = false;
+                    if (hospVal !== 'all' && hospital !== hospVal) show = false;
+
+                    row.style.display = show ? "" : "none";
+                });
+                
+                initPagination();
+            }
+
+            [searchInput, filterBloodGroup, filterStatus, filterHospital].forEach(el => {
+                el.addEventListener('input', filterTable);
+                el.addEventListener('change', filterTable);
+            });
+
+            resetBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                filterBloodGroup.value = 'all';
+                filterStatus.value = 'all';
+                filterHospital.value = 'all';
+                filterTable();
+            });
+
+            // ==================== PAGINATION ====================
+            const rowsPerPage = 10;
+            const pagination = document.getElementById("pagination");
+            const paginationInfo = document.getElementById("paginationInfo");
+            let currentPage = 1;
+
+            function initPagination() {
+                const visible = getVisible();
+                const pages = Math.ceil(visible.length / rowsPerPage);
+                if (currentPage > pages) currentPage = pages || 1;
+                showPage(currentPage, visible);
+            }
+
+            function showPage(page, visible) {
+                currentPage = page;
+                document.querySelectorAll("#donationsTable tbody tr").forEach(r => { 
+                    if(r.id !== 'emptyStateRow') r.style.display = 'none'; 
+                });
+                
+                const start = (page - 1) * rowsPerPage;
+                visible.slice(start, start + rowsPerPage).forEach(r => r.style.display = '');
+                
+                renderPagination(visible.length);
+                updatePaginationInfo(visible.length, start, start + visible.slice(start, start + rowsPerPage).length);
+            }
+
+            function updatePaginationInfo(total, start, end) {
+                if (total === 0) {
+                    paginationInfo.textContent = "No donations found";
+                } else {
+                    paginationInfo.textContent = `Showing ${start + 1}–${end} of ${total} donations`;
+                }
+            }
+
+            function renderPagination(total) {
+                pagination.innerHTML = "";
+                const pages = Math.ceil(total / rowsPerPage);
+                if (pages <= 1) return;
+
+                const prev = document.createElement("li"); 
+                prev.className = `page-item ${currentPage===1?'disabled':''}`;
+                prev.innerHTML = `<a class="page-link rounded-start-pill" href="#">Prev</a>`;
+                prev.onclick = (e) => { e.preventDefault(); if(currentPage>1) showPage(currentPage-1, getVisible()); };
+                pagination.appendChild(prev);
+
+                for (let i=1; i<=pages; i++) {
+                    const li = document.createElement("li"); 
+                    li.className = `page-item ${currentPage===i?'active':''}`;
+                    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    li.onclick = (e) => { e.preventDefault(); showPage(i, getVisible()); };
+                    pagination.appendChild(li);
+                }
+
+                const next = document.createElement("li"); 
+                next.className = `page-item ${currentPage===pages?'disabled':''}`;
+                next.innerHTML = `<a class="page-link rounded-end-pill" href="#">Next</a>`;
+                next.onclick = (e) => { e.preventDefault(); if(currentPage<pages) showPage(currentPage+1, getVisible()); };
+                pagination.appendChild(next);
+            }
+
+            function getVisible() { 
+                return Array.from(document.querySelectorAll("#donationsTable tbody tr"))
+                    .filter(r => r.style.display !== 'none' && r.id !== 'emptyStateRow'); 
+            }
+            
+            initPagination();
+
+            // ==================== EVENT DELEGATION ====================
+            document.getElementById('donationsTable').addEventListener('click', function(e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+
+                if (btn.classList.contains('view-details-btn')) {
+                    openViewDetailsModal(btn);
+                }
+                else if (btn.classList.contains('cert-btn')) {
+                    downloadCertificate(btn);
+                }
+            });
+
+            // ==================== VIEW DETAILS MODAL ====================
+            function openViewDetailsModal(btn) {
+                document.getElementById('modalDonationId').textContent = `DON-${String(btn.getAttribute('data-id')).padStart(4, '0')}`;
+                document.getElementById('d_DonationId').textContent = `DON-${String(btn.getAttribute('data-id')).padStart(4, '0')}`;
+                document.getElementById('d_DonorName').textContent = btn.getAttribute('data-name') || '-';
+                document.getElementById('d_BloodGroup').textContent = btn.getAttribute('data-bg') || '-';
+                document.getElementById('d_Quantity').textContent = `${btn.getAttribute('data-quantity')} unit(s)`;
+                document.getElementById('d_DonationDate').textContent = btn.getAttribute('data-date') || '-';
+                document.getElementById('d_DonationType').textContent = btn.getAttribute('data-type') || '-';
+                document.getElementById('d_HospitalName').textContent = btn.getAttribute('data-hospital') || '-';
+                document.getElementById('d_Status').textContent = btn.getAttribute('data-status') || '-';
+                
+                const viewModal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
+                viewModal.show();
+            }
+
+
+            // ==================== CERTIFICATE GENERATION ====================
+function downloadCertificate(btn) {
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4"
+    });
+
+    //================ DATA =================
+    const id = btn.getAttribute("data-id");
+    const name = btn.getAttribute("data-name");
+    const bg = btn.getAttribute("data-bg");
+    const hospital = btn.getAttribute("data-hospital");
+    const date = btn.getAttribute("data-date");
+    const type = btn.getAttribute("data-type");
+    const quantity = btn.getAttribute("data-quantity");
+
+    //================ LOGO =================
+    const logo = document.getElementById("logo");
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const width = 500;   // logo width
+    const height = 300;  // logo height
+
+    canvas.width = logo.naturalWidth;
+    canvas.height = logo.naturalHeight;
+    ctx.drawImage(logo, 0, 0);
+    const logoBase64 = canvas.toDataURL("image/png");
+
+    //================ PAGE =================
+    const pageWidth = 297;
+    const pageHeight = 210;
+    const centerX = pageWidth / 2;
+
+    //================ BACKGROUND =================
+    doc.setFillColor(252, 252, 252); // #FCFCFC
+    doc.rect(0, 0, pageWidth, pageHeight, "F");
+
+    //================ PREMIUM BORDERS =================
+    // Outer Border (Dark Maroon)
+    doc.setDrawColor(139, 0, 0); // #8B0000
+    doc.setLineWidth(1.5);
+    doc.rect(10, 10, 277, 190);
+
+    // Gold Decorative Line
+    doc.setDrawColor(201, 162, 39); // #C9A227
+    doc.setLineWidth(0.5);
+    doc.rect(12.5, 12.5, 272, 185);
+
+    // Inner Border (Light Gray)
+    doc.setDrawColor(234, 234, 234); // #EAEAEA
+    doc.setLineWidth(0.5);
+    doc.rect(15, 15, 267, 180);
+
+    //================ ELEGANT CORNER DECORATIONS =================
+    // Top Left
+    doc.setDrawColor(139, 0, 0); doc.setLineWidth(0.8);
+    doc.line(15, 25, 25, 25); doc.line(25, 15, 25, 25);
+    doc.setDrawColor(201, 162, 39); doc.setLineWidth(0.5);
+    doc.line(15, 27, 27, 27); doc.line(27, 15, 27, 27);
+    doc.setFillColor(201, 162, 39); doc.circle(25, 25, 0.8, "F");
+
+    // Top Right
+    doc.setDrawColor(139, 0, 0); doc.setLineWidth(0.8);
+    doc.line(282, 25, 272, 25); doc.line(272, 15, 272, 25);
+    doc.setDrawColor(201, 162, 39); doc.setLineWidth(0.5);
+    doc.line(282, 27, 270, 27); doc.line(270, 15, 270, 27);
+    doc.setFillColor(201, 162, 39); doc.circle(272, 25, 0.8, "F");
+
+    // Bottom Left
+    doc.setDrawColor(139, 0, 0); doc.setLineWidth(0.8);
+    doc.line(15, 185, 25, 185); doc.line(25, 195, 25, 185);
+    doc.setDrawColor(201, 162, 39); doc.setLineWidth(0.5);
+    doc.line(15, 183, 27, 183); doc.line(27, 195, 27, 183);
+    doc.setFillColor(201, 162, 39); doc.circle(25, 185, 0.8, "F");
+
+    // Bottom Right
+    doc.setDrawColor(139, 0, 0); doc.setLineWidth(0.8);
+    doc.line(282, 185, 272, 185); doc.line(272, 195, 272, 185);
+    doc.setDrawColor(201, 162, 39); doc.setLineWidth(0.5);
+    doc.line(282, 183, 270, 183); doc.line(270, 195, 270, 183);
+    doc.setFillColor(201, 162, 39); doc.circle(272, 185, 0.8, "F");
+
+    //================ LOGO =================
+    const logoWidth = 80;
+const logoHeight = 55;
+const logoX = (pageWidth - logoWidth) / 2;
+
+doc.addImage(logoBase64, "PNG", logoX, 5, logoWidth, logoHeight);
+
+    //================ ORGANIZATION =================
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(139, 0, 0); // #8B0000
+    // doc.text("KHOON - E - HAYAT", centerX, 52, { align: "center" });
+
+    //================ TITLE =================
+    doc.setFontSize(32);
+    doc.setTextColor(108, 117, 125);
+    doc.text("CERTIFICATE", centerX, 60, { align: "center" });
+
+    doc.setFontSize(18);
+    doc.setTextColor(178, 34, 34); // #B22222
+    doc.text("OF APPRECIATION", centerX, 68, { align: "center" });
+
+    //================ SUBTITLE =================
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.setTextColor(102, 102, 102); // #666666
+    // doc.text("Presented in recognition of your generous blood donation", centerX, 80, { align: "center" });
+
+    //================ DONOR NAME =================
+    doc.setFont("times", "bold");
+    doc.setFontSize(28);
+    doc.setTextColor(30, 79, 161); // #1E4FA1
+    doc.text(name, centerX, 82, { align: "center" });
+
+    // Elegant Underline
+    doc.setDrawColor(234, 234, 234); // #EAEAEA
+    doc.setLineWidth(0.5);
+    doc.line(80, 86, 217, 86);
+
+    //================ APPRECIATION MESSAGE =================
+    doc.setFont("times", "italic");
+    doc.setFontSize(12);
+    doc.setTextColor(102, 102, 102); // #666666
+    doc.text("This certificate is proudly presented in recognition of your", centerX, 94, { align: "center" });
+doc.text("selfless contribution towards saving precious human lives", centerX, 99, { align: "center" });
+doc.text("through voluntary blood donation.", centerX, 104, { align: "center" });
+
+    //================ INFORMATION CARD =================
+    doc.setDrawColor(234, 234, 234); // #EAEAEA
+    doc.setFillColor(245, 245, 245); // Very Light Gray
+    doc.roundedRect(40, 113, 217, 24, 2, 2, "FD");
+
+    // Left Column
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(139, 0, 0); // #8B0000
+    doc.text("Blood Group", 50, 121);
+    doc.text("Donation Date", 50, 127);
+    doc.text("Donation Type", 50, 133);
+
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(102, 102, 102); // #666666
+    doc.text(bg, 90, 121);
+    doc.text(date, 90, 127);
+    doc.text(type, 90, 133);
+
+    // Right Column
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(139, 0, 0); // #8B0000
+    doc.text("Hospital", 155, 121);
+    doc.text("Units Donated", 155, 127);
+    doc.text("Certificate ID", 155, 133);
+
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(102, 102, 102); // #666666
+    doc.text(hospital, 195, 121);
+    doc.text(quantity + " Unit(s)", 195, 127);
+    doc.text("CERT-" + String(id).padStart(4, "0"), 195, 133);
+
+    // Vertical Divider
+    doc.setDrawColor(234, 234, 234); // #EAEAEA
+    doc.setLineWidth(0.5);
+    doc.line(148.5, 116, 148.5, 134);
+
+    //================ LIVES SAVED =================
+    const livesSaved = Number(quantity) * 3;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(12);
+    doc.setTextColor(21, 128, 61); // #15803D
+    doc.text("Estimated Lives Saved", centerX, 143, { align: "center" });
+
+    // Subtle Rounded Badge
+    doc.setDrawColor(21, 128, 61); // #15803D
+    doc.setFillColor(240, 253, 244); // Light Green
+    doc.roundedRect(centerX - 15, 146, 30, 9, 4.5, 4.5, "FD");
+
+    doc.setFontSize(18);
+    doc.setTextColor(21, 128, 61); // #15803D
+    doc.text(String(livesSaved), centerX, 153, { align: "center" });
+
+    //==================== QUOTE ====================
+    doc.setFont("times", "italic");
+    doc.setFontSize(11);
+    doc.setTextColor(139, 0, 0); // #8B0000
+    doc.text('"Every Blood Donor is a Life Saver"', centerX, 161, { align: "center" });
+
+    //==================== SIGNATURE ====================
+    doc.setDrawColor(234, 234, 234); // #EAEAEA
+    doc.setLineWidth(0.5);
+
+    // Left Signature
+    doc.line(40, 167, 90, 167);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(102, 102, 102); // #666666
+    doc.text("Authorized Signature", 65, 171, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.text("Khoon-e-Hayat", 65, 175, { align: "center" });
+
+    // Right Signature
+    doc.line(207, 167, 257, 167);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text("Official Seal", 232, 171, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.text("Blood Donation Society", 232, 175, { align: "center" });
+
+    //==================== THANK YOU MESSAGE ====================
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(102, 102, 102); // #666666
+    doc.text("Thank you for your generous contribution to humanity.", centerX, 181, { align: "center" });
+
+    //==================== FOOTER ====================
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(102, 102, 102); // #666666
+    doc.text("Generated by Khoon-e-Hayat Blood Donation Management System", centerX, 187, { align: "center" });
+
+    //==================== SAVE PDF ====================
+    doc.save(`Donation_Certificate_${id}.pdf`);
+}
+
+        });
+    </script>
+}

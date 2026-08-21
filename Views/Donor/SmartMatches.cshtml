@@ -1,0 +1,878 @@
+﻿@model Khoon_e_Hayat.ViewModels.DonorSmartMatchViewModel
+@{
+    ViewData["Title"] = "Smart Matches";
+    Layout = "~/Views/Shared/_DonorLayout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-2">
+                <div>
+                    <h4 class="mb-0">Smart Match Center</h4>
+                    <small class="text-muted">AI-powered blood request matching based on your profile and location.</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-success rounded-pill px-3" id="refreshMatchesBtn">
+                        <i class="bx bx-refresh me-1"></i> Refresh Matches
+                    </button>
+                    <span class="badge bg-label-primary rounded-pill px-3 py-2">
+                        <i class="bx bx-calendar me-1"></i>@DateTime.Now.ToString("dd MMM yyyy")
+                    </span>
+                </div>
+            </div>
+
+            <!-- COOLDOWN BANNER -->
+            @if (Model.IsInCooldown)
+            {
+                <div class="alert alert-warning border-0 rounded-4 d-flex align-items-center gap-3 mb-4 shadow-sm" role="alert" style="background-color: #fff8e1; border-left: 4px solid #ffc107 !important;">
+                    <div class="icon-box" style="background: #ffe69c;"><i class="bx bx-time text-warning"></i></div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-warning">Donation Cooldown Active</h6>
+                        <p class="mb-0 small text-muted">
+                            Eligible Again: <strong>@Model.NextEligibleDate?.ToString("dd MMM yyyy")</strong><br />
+                            Remaining Cooldown: <strong>@Model.DaysUntilEligible days</strong><br /><br />
+                            You need to wait <strong>@Model.DaysUntilEligible days</strong> before your next donation. New Smart Match recommendations will automatically become available once your cooldown period ends.
+                        </p>
+                    </div>
+                </div>
+            }
+
+            <!-- Summary Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-git-compare text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Total Matches</h6>
+                                <small class="text-muted">@Model.TotalMatches.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-droplet text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Perfect Matches</h6>
+                                <small class="text-muted">@Model.PerfectMatches.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-map text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Nearby (≤20km)</h6>
+                                <small class="text-muted">@Model.NearbyRequests.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bx bx-star text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Historical Success Rate</h6>
+                                <small class="text-muted">@Model.MatchSuccessRate%</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Main Content Area -->
+                <div class="col-lg-8">
+                    <!-- Quick Statistics Section -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-4">
+                            <div class="card custom-card border-0 text-center p-3">
+                                <h5 class="fw-bold stat-value mb-1">@Model.AcceptedMatches</h5>
+                                <small class="text-muted">Accepted</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card custom-card border-0 text-center p-3">
+                                <h5 class="fw-bold stat-value mb-1">@Model.CompletedDonations</h5>
+                                <small class="text-muted">Completed</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card custom-card border-0 text-center p-3">
+                                <h5 class="fw-bold stat-value mb-1">@Model.AverageCompatibilityScore%</h5>
+                                <small class="text-muted">Avg. Score</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Container -->
+                    <div class="card custom-card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <div>
+                                    <h4 class="mb-1 fw-semibold">AI Match Results</h4>
+                                    <small class="text-muted">Intelligent donor matching engine & compatibility system</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body px-4">
+                            <!-- Search & Advanced Filters -->
+                            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                                <div class="card-body p-3">
+                                    @if (Model.IsInCooldown)
+                                    {
+                                        <div class="d-flex align-items-center gap-2 mb-3 px-1">
+                                            <i class="bx bx-info-circle text-muted"></i>
+                                            <small class="text-muted">Filters are temporarily unavailable while your donation cooldown is active.</small>
+                                        </div>
+                                    }
+
+                                    <div class="row g-3 align-items-end">
+                                        <div class="col-12 col-md-3">
+                                            <label class="form-label small text-muted mb-1">Search</label>
+                                            <input type="text" id="searchInput" class="form-control form-control-sm rounded-pill px-3" placeholder="Hospital, City..." @(Model.IsInCooldown ? "disabled" : "") />
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label class="form-label small text-muted mb-1">Blood Group</label>
+                                            <select id="filterBloodGroup" class="form-select form-select-sm rounded-pill" @(Model.IsInCooldown ? "disabled" : "")>
+                                                <option value="all">All</option>
+                                                <option value="A+">A+</option>
+                                                <option value="A-">A-</option>
+                                                <option value="B+">B+</option>
+                                                <option value="B-">B-</option>
+                                                <option value="AB+">AB+</option>
+                                                <option value="AB-">AB-</option>
+                                                <option value="O+">O+</option>
+                                                <option value="O-">O-</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label class="form-label small text-muted mb-1">City</label>
+                                            <select id="filterCity" class="form-select form-select-sm rounded-pill" @(Model.IsInCooldown ? "disabled" : "")>
+                                                <option value="all">All Cities</option>
+                                                @foreach (var city in Model.AvailableCities)
+                                                {
+                                                    <option value="@city">@city</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label class="form-label small text-muted mb-1">Hospital</label>
+                                            <select id="filterHospital" class="form-select form-select-sm rounded-pill" @(Model.IsInCooldown ? "disabled" : "")>
+                                                <option value="all">All Hospitals</option>
+                                                @foreach (var h in Model.AvailableHospitals)
+                                                {
+                                                    <option value="@h">@h</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label class="form-label small text-muted mb-1">Distance</label>
+                                            <select id="filterDistance" class="form-select form-select-sm rounded-pill" @(Model.IsInCooldown ? "disabled" : "")>
+                                                <option value="all">All</option>
+                                                <option value="5">≤ 5 km</option>
+                                                <option value="10">≤ 10 km</option>
+                                                <option value="20">≤ 20 km</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label class="form-label small text-muted mb-1">Compatibility</label>
+                                            <select id="filterScore" class="form-select form-select-sm rounded-pill" @(Model.IsInCooldown ? "disabled" : "")>
+                                                <option value="all">All Scores</option>
+                                                <option value="90">≥ 90% (Excellent)</option>
+                                                <option value="75">≥ 75% (Good)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label class="form-label small text-muted mb-1">Emergency Level</label>
+                                            <select id="filterUrgency" class="form-select form-select-sm rounded-pill" @(Model.IsInCooldown ? "disabled" : "")>
+                                                <option value="all">All</option>
+                                                <option value="Critical">Critical</option>
+                                                <option value="High">High</option>
+                                                <option value="Medium">Medium</option>
+                                                <option value="Low">Low</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label class="form-label small text-muted mb-1">Status</label>
+                                            <select id="filterStatus" class="form-select form-select-sm rounded-pill" @(Model.IsInCooldown ? "disabled" : "")>
+                                                <option value="all">All</option>
+                                                <option value="Available">Available</option>
+                                                <option value="Accepted">Accepted</option>
+                                                <option value="Assigned">Assigned</option>
+                                                <option value="Completed">Completed</option>
+                                                <option value="Cancelled">Cancelled</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <button class="btn btn-sm btn-outline-secondary rounded-pill w-100" id="resetFiltersBtn" @(Model.IsInCooldown ? "disabled" : "")>Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <small class="text-muted">Showing <span id="visibleCount">0</span> of @Model.TotalMatches Matches</small>
+                            </div>
+
+                            <div id="matchesContainer">
+                                @if (Model.Matches.Any())
+                                {
+                                    foreach (var match in Model.Matches)
+                                    {
+                                        string urgencyClass = match.UrgencyLevel == "Critical" ? "bg-danger-subtle text-danger" :
+                                                              match.UrgencyLevel == "High" ? "bg-warning-subtle text-warning" :
+                                                              match.UrgencyLevel == "Medium" ? "bg-info-subtle text-info" : "bg-secondary-subtle text-secondary";
+
+                                        string statusClass = match.Status == "Available" ? "bg-success-subtle status-badge" :
+                                                             match.Status == "Accepted" ? "bg-warning-subtle status-badge" :
+                                                             match.Status == "Assigned" ? "bg-primary-subtle status-badge" :
+                                                             match.Status == "Completed" ? "bg-info-subtle status-badge" : "bg-secondary-subtle status-badge";
+
+                                        string scoreClass = match.MatchScore >= 90 ? "bg-success" : (match.MatchScore >= 75 ? "bg-warning" : "bg-danger");
+
+                                        <div class="card custom-card border-0 shadow-sm mb-3 match-card"
+                                             data-bg="@match.BloodGroup" data-urgency="@match.UrgencyLevel"
+                                             data-status="@match.Status" data-distance="@match.DistanceKm"
+                                             data-score="@match.MatchScore" data-city="@match.City" data-hospital="@match.HospitalName">
+                                            <div class="card-body p-4">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-2 text-center border-end">
+                                                        <h2 class="fw-bold match-score mb-1">@match.MatchScore%</h2>
+                                                        <small class="text-muted d-block" style="font-size: 0.75em;">@match.CompatibilityBadge</small>
+                                                    </div>
+
+                                                    <div class="col-md-7 ps-4">
+                                                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                                            <span class="fw-bold fs-5 blood-group-text">@match.BloodGroup</span>
+                                                            <span class="text-muted">|</span>
+                                                            <span class="fw-semibold">@match.UnitsRequired Units</span>
+                                                            <span class="text-muted">|</span>
+                                                            <span class="badge @urgencyClass">@match.UrgencyLevel</span>
+                                                        </div>
+                                                        <h5 class="fw-bold mb-1">@match.HospitalName</h5>
+                                                        <p class="text-muted mb-2 small">
+                                                            <i class="bx bx-map me-1"></i> @match.City • @match.DistanceKm km away (@match.TravelTime)
+                                                        </p>
+
+                                                        <div class="match-reasons mb-2">
+                                                            @foreach (var reason in match.MatchReasons)
+                                                            {
+                                                                <span class="reason-tag me-2 mb-1 d-inline-block"><i class="bx bx-check-circle text-danger me-1"></i>@reason</span>
+                                                            }
+                                                        </div>
+
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <small class="text-muted text-nowrap">Compatibility</small>
+                                                            <div class="progress flex-grow-1" style="height: 6px;">
+                                                                <div class="progress-bar @scoreClass" role="progressbar" style="width: @match.MatchScore%"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3 text-end border-start ps-4 mt-3 mt-md-0">
+                                                        <div class="mb-3">
+                                                            <span class="badge status-badge @statusClass">@match.Status</span>
+                                                            <div class="text-muted small mt-2">
+                                                                <i class="bx bx-time me-1"></i>
+                                                                @if (match.RequiredBeforeTime.HasValue)
+                                                                {
+                                                                    <text>Before: @match.RequiredBeforeTime.Value.ToString("dd MMM, hh tt")</text>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <text>Posted: @match.RequestDate.ToString("dd MMM yyyy")</text>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div class="btn-group btn-group-sm d-flex gap-1 justify-content-end">
+                                                            @if (match.Status == "Available" && !Model.IsInCooldown)
+                                                            {
+                                                                <!-- ✅ FIXED: Added data-requestid -->
+                                                                <button type="button" class="btn btn-outline-success btn-sm accept-btn me-1" data-matchid="@match.MatchId" data-requestid="@match.RequestId" title="Accept Match">
+                                                                    <i class="bx bx-check"></i>
+                                                                </button>
+                                                                <!-- ✅ FIXED: Added data-requestid -->
+                                                                <button type="button" class="btn btn-outline-danger btn-sm decline-btn" data-matchid="@match.MatchId" data-requestid="@match.RequestId" title="Decline Match">
+                                                                    <i class="bx bx-x"></i>
+                                                                </button>
+                                                            }
+                                                            <button type="button" class="btn btn-outline-info btn-sm view-details-btn"
+                                                                    data-matchid="@match.MatchId" data-requestid="@match.RequestId" data-bg="@match.BloodGroup" data-receiver="@match.ReceiverName"
+                                                                    data-hospital="@match.HospitalName" data-address="@match.HospitalAddress" data-city="@match.City"
+                                                                    data-units="@match.UnitsRequired" data-urgency="@match.UrgencyLevel"
+                                                                    data-date="@match.RequestDate.ToString("dd-MMM-yyyy")" data-distance="@match.DistanceKm"
+                                                                    data-travel="@match.TravelTime" data-eligibility="@match.EligibilityStatus"
+                                                                    data-priority="@match.PriorityLevel" data-score="@match.MatchScore"
+                                                                    data-badge="@match.CompatibilityBadge" data-required="@match.RequiredBeforeTime?.ToString("dd-MMM-yyyy HH:mm")"
+                                                                    data-notes="@match.AdditionalNotes" data-reasons="@string.Join(", ", match.MatchReasons)" title="View Details">
+                                                                <i class="bx bx-show"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-outline-primary btn-sm navigate-btn" data-city="@match.City" data-hospital="@match.HospitalName" title="Navigate">
+                                                                <i class="bx bx-map"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    @if (Model.IsInCooldown)
+                                    {
+                                        <div class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="bx bx-time fs-1 d-block mb-2 text-warning"></i>
+                                                <h5 class="fw-semibold">No Active Smart Matches</h5>
+                                                <p class="mb-0">You are currently in your mandatory donation recovery period.</p>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-center py-5">
+                                            <div class="text-muted">
+                                                <i class="bx bx-search-alt fs-1 d-block mb-2 text-success"></i>
+                                                <h5 class="fw-semibold">No Matching Blood Requests Found</h5>
+                                                <p class="mb-0">We'll automatically notify you when a suitable request becomes available.</p>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center px-0 py-3 border-top">
+                                <small class="text-muted">Total Matches: @Model.TotalMatches</small>
+                                <nav><ul class="pagination pagination-sm mb-0" id="pagination"></ul></nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="col-lg-4">
+                    <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body p-4">
+                            @if (Model.IsInCooldown)
+                            {
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <div class="icon-box" style="background: #ffe69c;"><i class="bx bx-time text-warning"></i></div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Donation Cooldown</h6>
+                                        <small class="text-muted">Recovery period active</small>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mb-3">
+                                    You are currently in your recovery period.<br />
+                                    Next Eligible Donation: <strong>@Model.NextEligibleDate?.ToString("dd MMM yyyy")</strong><br />
+                                    <strong>@Model.DaysUntilEligible days</strong> remaining.
+                                </p>
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <div class="icon-box"><i class="bx bx-star text-dark"></i></div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Recommended For You</h6>
+                                        <small class="text-muted">Based on your profile & location</small>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mb-3">
+                                    Based on your blood group and location, these requests have the highest priority.
+                                    We've identified <strong>@Model.PerfectMatches</strong> perfect matches for you today.
+                                </p>
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-primary btn-sm rounded-pill" id="viewTopRecommendationsBtn" role="button">View Top Recommendations</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card custom-card border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-3"><i class="bx bx-bolt text-primary me-2"></i>Quick Actions</h6>
+                            <div class="d-grid gap-2">
+                                <a href="@Url.Action("EmergencyAlerts", "Donor")" class="btn btn-outline-danger btn-sm rounded-pill text-start">
+                                    <i class="bx bx-error me-2"></i> Emergency Alerts
+                                </a>
+                                <a href="@Url.Action("BloodRequests", "Donor")" class="btn btn-outline-primary btn-sm rounded-pill text-start">
+                                    <i class="bx bx-list-ul me-2"></i> Blood Requests
+                                </a>
+                                <button type="button" class="btn btn-outline-info btn-sm rounded-pill text-start" id="refreshMatchesBtnSide">
+                                    <i class="bx bx-refresh me-2"></i> Refresh Matches
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Match Details Modal -->
+<div class="modal fade" id="viewDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-sm rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-primary-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bx bx-target text-primary"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0">Match Details</h5>
+                        <small class="text-muted" id="modalMatchId">MAT-XXXX</small>
+                    </div>
+                </div>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <div class="card border-0 bg-light-subtle rounded-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold text-danger mb-3"><i class="bx bx-droplet me-2"></i>Request Information</h6>
+                        <div class="row g-3">
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Blood Group</label><p class="form-control-plaintext fw-bold text-danger fs-5 mb-0" id="d_BloodGroup">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Units Required</label><p class="form-control-plaintext fw-semibold mb-0" id="d_Units">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Urgency Level</label><p class="form-control-plaintext mb-0" id="d_Urgency">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Request Date</label><p class="form-control-plaintext mb-0" id="d_Date">-</p></div>
+                            <div class="col-12"><label class="form-label small text-muted mb-1">Required Before</label><p class="form-control-plaintext fw-semibold mb-0" id="d_Required">-</p></div>
+                        </div>
+
+                        <h6 class="fw-bold text-primary mb-3 mt-4"><i class="bx bx-building-house me-2"></i>Hospital & Receiver</h6>
+                        <div class="row g-3">
+                            <div class="col-12"><label class="form-label small text-muted mb-1">Receiver Name</label><p class="form-control-plaintext fw-semibold mb-0" id="d_Receiver">-</p></div>
+                            <div class="col-12"><label class="form-label small text-muted mb-1">Hospital Name</label><p class="form-control-plaintext mb-0" id="d_Hospital">-</p></div>
+                            <div class="col-12"><label class="form-label small text-muted mb-1">Hospital Address</label><p class="form-control-plaintext mb-0" id="d_Address">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">City</label><p class="form-control-plaintext mb-0" id="d_City">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Distance</label><p class="form-control-plaintext fw-semibold mb-0" id="d_Distance">-</p></div>
+                        </div>
+
+                        <h6 class="fw-bold text-success mb-3 mt-4"><i class="bx bx-map me-2"></i>AI Match Analytics</h6>
+                        <div class="row g-3">
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Compatibility Score</label><p class="form-control-plaintext fw-bold text-primary fs-5 mb-0" id="d_Score">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Match Quality</label><p class="form-control-plaintext fw-semibold mb-0" id="d_Badge">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Estimated Travel</label><p class="form-control-plaintext mb-0" id="d_Travel">-</p></div>
+                            <div class="col-6"><label class="form-label small text-muted mb-1">Eligibility Status</label><p class="form-control-plaintext mb-0" id="d_Eligibility">-</p></div>
+                            <div class="col-12"><label class="form-label small text-muted mb-1">Match Reasons</label><div id="d_Reasons" class="mb-0"></div></div>
+                        </div>
+
+                        <h6 class="fw-bold text-info mb-3 mt-4"><i class="bx bx-file me-2"></i>Additional Notes</h6>
+                        <p class="form-control-plaintext mb-0" id="d_Notes">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                <!-- ✅ FIXED: Added data-requestid attribute -->
+                <button type="button" class="btn btn-primary rounded-pill px-4 accept-btn-modal" data-requestid="">Accept Match</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DECLINE MATCH MODAL -->
+<div class="modal fade" id="declineModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-sm rounded-4">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Decline Match</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Please let us know why you cannot fulfill this request.</p>
+                <!-- ✅ FIXED: Changed ID to declineRequestId -->
+                <input type="hidden" id="declineRequestId" />
+                <select id="declineReason" class="form-select mb-3">
+                    <option value="Out of City">I am currently out of the city</option>
+                    <option value="Health Issue">Temporary health issue</option>
+                    <option value="Not Available">Not available at this time</option>
+                    <option value="Other">Other reason</option>
+                </select>
+                <textarea id="declineCustomReason" class="form-control" rows="2" placeholder="Additional details (optional)"></textarea>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger rounded-pill" id="confirmDeclineBtn">Confirm Decline</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-card {
+        background: #ffffff;
+        border-radius: 16px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .custom-card:hover {
+            transform: translateY(-2px);
+        }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .trend-icon {
+        font-size: 1.5rem;
+        color: #28a745;
+        opacity: 0.6;
+    }
+
+    #viewDetailsModal .form-control-plaintext {
+        font-size: 1.05rem;
+        padding: 0.25rem 0;
+        border-bottom: 1px dashed #dee2e6;
+    }
+
+    .match-card {
+        transition: all 0.3s ease;
+    }
+
+        .match-card:hover {
+            border-left: 4px solid #90151C !important;
+        }
+
+    .reason-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: transparent;
+        border: 1px solid #dfe5ee;
+        color: #5b6472;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: .78rem;
+        font-weight: 500;
+        transition: .2s;
+    }
+
+        .reason-tag i {
+            color: #5C88A8 !important;
+        }
+
+    .bg-label-primary {
+        background-color: rgba(13, 110, 253, 0.1) !important;
+        color: #0d6efd !important;
+    }
+
+    @@keyframes popIn {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .progress {
+        box-shadow: none !important;
+        border: none !important;
+        background: #edf1f7;
+    }
+
+    .progress-bar {
+        box-shadow: none !important;
+    }
+
+    .blood-group-text {
+        color: #90151C !important;
+    }
+
+    .match-score {
+        color: #5C88A8 !important;
+    }
+
+    .status-badge {
+        color: #5C88A8 !important;
+    }
+
+    .stat-value {
+        color: #5C88A8 !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchInput = document.getElementById('searchInput');
+            const filterBloodGroup = document.getElementById('filterBloodGroup');
+            const filterCity = document.getElementById('filterCity');
+            const filterHospital = document.getElementById('filterHospital');
+            const filterDistance = document.getElementById('filterDistance');
+            const filterScore = document.getElementById('filterScore');
+            const filterUrgency = document.getElementById('filterUrgency');
+            const filterStatus = document.getElementById('filterStatus');
+            const resetBtn = document.getElementById('resetFiltersBtn');
+            const refreshBtn = document.getElementById('refreshMatchesBtn');
+            const refreshBtnSide = document.getElementById('refreshMatchesBtnSide');
+
+            function filterCards() {
+                const sVal = searchInput.value.toLowerCase();
+                const bgVal = filterBloodGroup.value;
+                const cityVal = filterCity.value;
+                const hospVal = filterHospital.value;
+                const distVal = filterDistance.value === 'all' ? null : parseFloat(filterDistance.value);
+                const scoreVal = filterScore.value === 'all' ? null : parseFloat(filterScore.value);
+                const urgVal = filterUrgency.value;
+                const statVal = filterStatus.value;
+
+                const cards = document.querySelectorAll(".match-card");
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const hospital = card.getAttribute('data-hospital').toLowerCase();
+                    const city = card.getAttribute('data-city').toLowerCase();
+                    const bg = card.getAttribute('data-bg');
+                    const urgency = card.getAttribute('data-urgency');
+                    const status = card.getAttribute('data-status');
+                    const distance = parseFloat(card.getAttribute('data-distance'));
+                    const score = parseFloat(card.getAttribute('data-score'));
+
+                    let show = true;
+                    if (sVal && !(hospital.includes(sVal) || city.includes(sVal))) show = false;
+                    if (bgVal !== 'all' && bg !== bgVal) show = false;
+                    if (cityVal !== 'all' && city !== cityVal.toLowerCase()) show = false;
+                    if (hospVal !== 'all' && hospital !== hospVal.toLowerCase()) show = false;
+                    if (distVal !== null && distance > distVal) show = false;
+                    if (scoreVal !== null && score < scoreVal) show = false;
+                    if (urgVal !== 'all' && urgency !== urgVal) show = false;
+                    if (statVal !== 'all' && status !== statVal) show = false;
+
+                    card.style.display = show ? "" : "none";
+                    if (show) visibleCount++;
+                });
+                document.getElementById('visibleCount').textContent = visibleCount;
+            }
+
+            [searchInput, filterBloodGroup, filterCity, filterHospital, filterDistance, filterScore, filterUrgency, filterStatus].forEach(el => {
+                el.addEventListener('input', filterCards);
+                el.addEventListener('change', filterCards);
+            });
+
+            resetBtn.addEventListener('click', () => {
+                searchInput.value = ''; filterBloodGroup.value = 'all'; filterCity.value = 'all';
+                filterHospital.value = 'all'; filterDistance.value = 'all'; filterScore.value = 'all';
+                filterUrgency.value = 'all'; filterStatus.value = 'all';
+                filterCards();
+            });
+
+            [refreshBtn, refreshBtnSide].forEach(btn => { if (btn) btn.addEventListener('click', () => location.reload()); });
+            filterCards();
+
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+
+                if (btn.classList.contains('view-details-btn')) {
+                    document.getElementById('modalMatchId').textContent = `MAT-${btn.getAttribute('data-matchid').padStart(4, '0')}`;
+                    document.getElementById('d_BloodGroup').textContent = btn.getAttribute('data-bg');
+                    document.getElementById('d_Units').textContent = btn.getAttribute('data-units');
+                    document.getElementById('d_Urgency').textContent = btn.getAttribute('data-urgency');
+                    document.getElementById('d_Date').textContent = btn.getAttribute('data-date');
+                    document.getElementById('d_Required').textContent = btn.getAttribute('data-required') || 'Not specified';
+                    document.getElementById('d_Receiver').textContent = btn.getAttribute('data-receiver');
+                    document.getElementById('d_Hospital').textContent = btn.getAttribute('data-hospital');
+                    document.getElementById('d_Address').textContent = btn.getAttribute('data-address');
+                    document.getElementById('d_City').textContent = btn.getAttribute('data-city');
+                    document.getElementById('d_Distance').textContent = `${btn.getAttribute('data-distance')} km`;
+                    document.getElementById('d_Score').textContent = `${btn.getAttribute('data-score')}%`;
+                    document.getElementById('d_Badge').textContent = btn.getAttribute('data-badge');
+                    document.getElementById('d_Travel').textContent = btn.getAttribute('data-travel');
+                    document.getElementById('d_Eligibility').textContent = btn.getAttribute('data-eligibility');
+                    document.getElementById('d_Notes').textContent = btn.getAttribute('data-notes');
+
+                    const reasonsContainer = document.getElementById('d_Reasons');
+                    reasonsContainer.innerHTML = '';
+                    const reasons = btn.getAttribute('data-reasons').split(', ');
+                    reasons.forEach(r => {
+                        if (r) {
+                            const span = document.createElement('span');
+                            span.className = 'reason-tag me-2 mb-1 d-inline-block';
+                            span.innerHTML = `<i class="bx bx-check-circle text-danger me-1"></i>${r}`;
+                            reasonsContainer.appendChild(span);
+                        }
+                    });
+
+                    const modalAcceptBtn = document.querySelector('.accept-btn-modal');
+                    // ✅ FIXED: Set data-requestid instead of data-matchid for the modal button
+                    modalAcceptBtn.setAttribute('data-requestid', btn.getAttribute('data-requestid'));
+                    const isCooldown = @(Model.IsInCooldown ? "true" : "false");
+                    modalAcceptBtn.style.display = (btn.closest('.match-card').getAttribute('data-status') === 'Available' && !isCooldown) ? '' : 'none';
+
+                    const viewModal = new bootstrap.Modal(document.getElementById('viewDetailsModal'));
+                    viewModal.show();
+                }
+                else if (btn.classList.contains('accept-btn') || btn.classList.contains('accept-btn-modal')) {
+                    // ✅ FIXED: Use data-requestid for API call
+                    const requestId = btn.getAttribute('data-requestid');
+                    const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                    const token = tokenInput ? tokenInput.value : '';
+
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                    btn.disabled = true;
+
+                    fetch('/Donor/AcceptSmartMatch', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        // ✅ FIXED: Send requestId in body
+                        body: `requestId=${requestId}&__RequestVerificationToken=${encodeURIComponent(token)}`
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                showNotification(data.message, 'success');
+                                const card = btn.closest('.match-card');
+                                if (card) {
+                                    const statusBadge = card.querySelector('.status-badge');
+                                    if (statusBadge) {
+                                        statusBadge.className = 'badge status-badge bg-warning-subtle text-warning';
+                                        statusBadge.textContent = 'Accepted';
+                                    }
+                                    const acceptBtns = card.querySelectorAll('.accept-btn, .accept-btn-modal');
+                                    acceptBtns.forEach(b => b.style.display = 'none');
+                                    card.setAttribute('data-status', 'Accepted');
+                                }
+                                const modalEl = document.getElementById('viewDetailsModal');
+                                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                                if (modalInstance) modalInstance.hide();
+
+                                setTimeout(() => location.reload(), 1500);
+                            } else {
+                                showNotification(data.message || 'Failed to accept match.', 'error');
+                                btn.innerHTML = originalHTML;
+                                btn.disabled = false;
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            showNotification('An error occurred while processing your request.', 'error');
+                            btn.innerHTML = originalHTML;
+                            btn.disabled = false;
+                        });
+                }
+                else if (btn.classList.contains('navigate-btn')) {
+                    const hospital = btn.getAttribute('data-hospital');
+                    const city = btn.getAttribute('data-city');
+                    window.open(`https://www.google.com/maps/search/${encodeURIComponent(hospital)}+${encodeURIComponent(city)}`, '_blank');
+                }
+                else if (btn.classList.contains('decline-btn')) {
+                    // ✅ FIXED: Use data-requestid
+                    document.getElementById('declineRequestId').value = btn.getAttribute('data-requestid');
+                    document.getElementById('declineReason').value = "Not Available";
+                    document.getElementById('declineCustomReason').value = "";
+                    const declineModal = new bootstrap.Modal(document.getElementById('declineModal'));
+                    declineModal.show();
+                }
+            });
+
+            document.getElementById('confirmDeclineBtn').addEventListener('click', function() {
+                // ✅ FIXED: Read from declineRequestId
+                const requestId = document.getElementById('declineRequestId').value;
+                const reason = document.getElementById('declineReason').value;
+                const customReason = document.getElementById('declineCustomReason').value;
+                const finalReason = customReason ? `${reason}: ${customReason}` : reason;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                const btnEl = this;
+                btnEl.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+                btnEl.disabled = true;
+
+                const formData = new FormData();
+                // ✅ FIXED: Append requestId
+                formData.append('requestId', requestId);
+                formData.append('reason', finalReason);
+                formData.append('__RequestVerificationToken', token);
+
+                fetch('/Donor/DeclineSmartMatch', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showNotification(data.message, 'success');
+                            const modalEl = document.getElementById('declineModal');
+                            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                            modalInstance.hide();
+
+                            const card = document.querySelector(`.match-card button[data-requestid="${requestId}"]`)?.closest('.match-card');
+                            if (card) {
+                                card.style.transition = "all 0.5s ease";
+                                card.style.opacity = "0";
+                                card.style.transform = "translateX(50px)";
+                                setTimeout(() => card.remove(), 500);
+                            }
+                        } else {
+                            showNotification(data.message, 'error');
+                        }
+                    })
+                    .catch(err => {
+                        showNotification('An error occurred.', 'error');
+                    })
+                    .finally(() => {
+                        btnEl.innerHTML = 'Confirm Decline';
+                        btnEl.disabled = false;
+                    });
+            });
+
+            function showNotification(msg, type) {
+                const bg = type === 'success' ? '#28a745' : (type === 'warning' ? '#ffc107' : '#dc3545');
+                const textColor = type === 'warning' ? '#000' : '#fff';
+                const n = document.createElement('div');
+                n.style.cssText = `position:fixed;top:20px;right:20px;z-index:9999;background:${bg};color:${textColor};padding:12px 20px;border-radius:10px;font-weight:500;animation:popIn 0.3s ease;`;
+                n.textContent = msg;
+                document.body.appendChild(n);
+                setTimeout(() => { if (n.parentNode) n.remove(); }, 4000);
+            }
+
+            const viewTopBtn = document.getElementById('viewTopRecommendationsBtn');
+            if (viewTopBtn) {
+                viewTopBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    filterScore.value = '90';
+                    filterStatus.value = 'Available';
+                    filterDistance.value = '20';
+                    filterCards();
+                    document.getElementById('matchesContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('hidden.bs.modal', function() {
+                    document.body.classList.remove('modal-open');
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) backdrop.remove();
+                });
+            });
+        });
+    </script>
+}

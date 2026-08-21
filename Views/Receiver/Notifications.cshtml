@@ -1,0 +1,1561 @@
+﻿@model Khoon_e_Hayat.ViewModels.ReceiverNotificationsViewModel
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Views/Shared/_ReceiverLayout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<style>
+    /* ============================================
+           NOTIFICATIONS MODULE - Khoon-e-Hayat
+           ============================================ */
+    .notif-wrapper {
+        padding: 0;
+    }
+
+    /* ---------- HEADER ---------- */
+    .notif-header {
+        /* background: #FFFFFF; */
+        /* border: 1px solid #e9ecef; */
+        /* border-radius: 16px; */
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+
+    .notif-title {
+        color: #212529;
+        font-weight: 700;
+    }
+
+    .notif-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .meta-chip-n {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: #F8F9FA;
+        border: 1px solid #e9ecef;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #212529;
+    }
+
+        .meta-chip-n i {
+            color: #5C88A8;
+        }
+
+    .live-chip-n {
+        background: #e6f7ee;
+        border-color: #198754;
+        color: #198754;
+    }
+
+    .live-dot-n {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #198754;
+        display: inline-block;
+        animation: livePulseN 1.5s infinite;
+    }
+
+    @@keyframes livePulseN {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.5;
+            transform: scale(1.3);
+        }
+    }
+
+    /* ---------- STAT CARDS (MATCHING TRACK REQUESTS) ---------- */
+    .stat-card {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: border-color 0.2s ease;
+    }
+
+        .stat-card:hover {
+            border-color: #5C88A8;
+        }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon-primary {
+        background: #e6f4ff;
+        color: #5C88A8;
+    }
+
+    .stat-icon-success {
+        background: #e6f7ee;
+        color: #198754;
+    }
+
+    .stat-icon-info {
+        background: #e0f7fa;
+        color: #0dcaf0;
+    }
+
+    .stat-icon-secondary {
+        background: #f1f3f5;
+        color: #6c757d;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #212529;
+        line-height: 1.1;
+        margin-top: 4px;
+    }
+
+    .stat-value-sm {
+        font-size: 1.35rem;
+    }
+
+    /* Custom Cards (Dashboard Style) */
+    .custom-card {
+        background: #fff;
+        border-radius: 24px !important;
+        border: 1px solid #eef1f6 !important;
+        box-shadow: 0 8px 30px rgba(16, 24, 40, 0.04);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+        .custom-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(16, 24, 40, 0.08);
+        }
+
+        .custom-card .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2f3e52;
+            margin-bottom: 4px;
+        }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: background 0.2s ease;
+    }
+
+    .custom-card:hover .icon-box {
+        background: #e9ecef;
+    }
+
+    .trend-icon {
+        font-size: 1.5rem;
+        color: #28a745;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+    }
+
+    .custom-card:hover .trend-icon {
+        opacity: 1;
+    }
+
+    /* ---------- FILTERS ---------- */
+    .filter-card-n {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filter-title-row-n {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .filter-label-n {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 6px;
+    }
+
+    .filter-input-n {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: #212529;
+        background: #FFFFFF;
+        transition: border-color 0.2s;
+    }
+
+        .filter-input-n:focus {
+            outline: none;
+            border-color: #5C88A8;
+        }
+
+    .input-with-icon-n {
+        position: relative;
+    }
+
+        .input-with-icon-n i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .input-with-icon-n .filter-input-n {
+            padding-left: 38px;
+        }
+
+    .filter-actions-n {
+        margin-top: 16px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-filter-n {
+        padding: 9px 18px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .btn-filter-primary-n {
+        background: #5C88A8;
+        color: #FFFFFF;
+        border-color: #5C88A8;
+    }
+
+        .btn-filter-primary-n:hover {
+            background: #90151C;
+            border-color: #90151C;
+            color: #FFFFFF;
+        }
+
+    .btn-filter-ghost-n {
+        background: #FFFFFF;
+        color: #6c757d;
+        border-color: #e9ecef;
+    }
+
+        .btn-filter-ghost-n:hover {
+            border-color: #5C88A8;
+            color: #5C88A8;
+        }
+
+    .btn-filter-danger-n {
+        background: #FFFFFF;
+        color: #90151C;
+        border-color: #e9ecef;
+    }
+
+        .btn-filter-danger-n:hover {
+            background: #90151C;
+            color: #FFFFFF;
+            border-color: #90151C;
+        }
+
+    /* ---------- BULK ACTION BAR ---------- */
+    .bulk-bar-n {
+        background: #e6f4ff;
+        border: 1px solid #5C88A8;
+        border-radius: 12px;
+        padding: 12px 18px;
+        margin-bottom: 16px;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .bulk-bar-n.show {
+            display: flex;
+        }
+
+        .bulk-bar-n .bulk-info {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #212529;
+        }
+
+            .bulk-bar-n .bulk-info strong {
+                color: #5C88A8;
+            }
+
+    /* ---------- NOTIFICATION LIST ---------- */
+    .notif-list-n {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .notif-card-n {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 18px 20px;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+        .notif-card-n:hover {
+            border-color: #5C88A8;
+        }
+
+        .notif-card-n.unread {
+            background: #fafcff;
+            border-left: 4px solid #5C88A8;
+        }
+
+            .notif-card-n.unread .notif-title-n {
+                font-weight: 700;
+            }
+
+        .notif-card-n .notif-check {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #5C88A8;
+        }
+
+        .notif-card-n.has-check {
+            padding-left: 52px;
+        }
+
+    .notif-top-n {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 10px;
+    }
+
+    .notif-icon-n {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .notif-head-n {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .notif-title-n {
+        font-size: 0.98rem;
+        color: #212529;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .notif-msg-n {
+        font-size: 0.85rem;
+        color: #6c757d;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .notif-unread-dot-n {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #5C88A8;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    .notif-meta-n {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed #e9ecef;
+        align-items: center;
+    }
+
+    .notif-meta-item-n {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.76rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+        .notif-meta-item-n i {
+            color: #5C88A8;
+            font-size: 0.85rem;
+        }
+
+    .notif-badges-n {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-left: auto;
+    }
+
+    .mini-badge-n {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .badge-unread-n {
+        background: #e6f4ff;
+        color: #5C88A8;
+    }
+
+    .badge-read-n {
+        background: #f1f3f5;
+        color: #6c757d;
+    }
+
+    .badge-high-n {
+        background: #ffebee;
+        color: #90151C;
+    }
+
+    .badge-medium-n {
+        background: #e6f4ff;
+        color: #5C88A8;
+    }
+
+    .badge-low-n {
+        background: #f1f3f5;
+        color: #6c757d;
+    }
+
+    .badge-emergency-n {
+        background: #ffebee;
+        color: #90151C;
+    }
+
+    .badge-reminder-n {
+        background: #e0f7fa;
+        color: #0dcaf0;
+    }
+
+    .badge-approved-n {
+        background: #e6f7ee;
+        color: #198754;
+    }
+
+    .badge-rejected-n {
+        background: #ffebee;
+        color: #90151C;
+    }
+
+    .badge-pending-n {
+        background: #fff3cd;
+        color: #d39e00;
+    }
+
+    .badge-completed-n {
+        background: #e6f7ee;
+        color: #198754;
+    }
+
+    .notif-actions-n {
+        display: flex;
+        gap: 6px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+    }
+
+    .notif-btn-n {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.76rem;
+        font-weight: 600;
+        border: 1px solid #e9ecef;
+        background: #FFFFFF;
+        color: #5C88A8;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+        .notif-btn-n:hover {
+            border-color: #5C88A8;
+            background: #e6f4ff;
+        }
+
+        .notif-btn-n.danger {
+            color: #90151C;
+        }
+
+            .notif-btn-n.danger:hover {
+                background: #ffebee;
+                border-color: #90151C;
+            }
+
+        .notif-btn-n.success {
+            color: #198754;
+        }
+
+            .notif-btn-n.success:hover {
+                background: #e6f7ee;
+                border-color: #198754;
+            }
+
+    /* ---------- PAGINATION ---------- */
+    .pagination-wrapper-n {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+        padding: 16px 20px;
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+    }
+
+    .pagination-n .page-link {
+        border: 1px solid #e9ecef;
+        color: #5C88A8;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        margin: 0 2px;
+        border-radius: 8px !important;
+    }
+
+    .pagination-n .page-item.active .page-link {
+        background: #5C88A8;
+        border-color: #5C88A8;
+        color: #FFFFFF;
+    }
+
+    .pagination-n .page-item.disabled .page-link {
+        color: #adb5bd;
+        background: #FFFFFF;
+    }
+
+    /* ---------- EMPTY STATE ---------- */
+    .empty-state-n {
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 16px;
+        padding: 60px 30px;
+        text-align: center;
+    }
+
+    .empty-icon-n {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #e6f4ff;
+        color: #5C88A8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        margin: 0 auto 18px;
+    }
+
+    .empty-title-n {
+        color: #212529;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .empty-text-n {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .btn-empty-n {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 22px;
+        background: #90151C;
+        color: #FFFFFF;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+    }
+
+        .btn-empty-n:hover {
+            background: #5C88A8;
+            color: #FFFFFF;
+        }
+
+    /* ---------- MODAL ---------- */
+    .notif-modal-content {
+        border-radius: 20px;
+        border: 1px solid #e9ecef;
+    }
+
+    .notif-modal-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .notif-modal-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+
+    .notif-modal-body {
+        padding: 24px;
+    }
+
+    .notif-detail-row-n {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px dashed #e9ecef;
+        font-size: 0.88rem;
+    }
+
+        .notif-detail-row-n:last-child {
+            border-bottom: none;
+        }
+
+    .notif-detail-label-n {
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .notif-detail-value-n {
+        color: #212529;
+        font-weight: 600;
+        text-align: right;
+        max-width: 60%;
+        word-break: break-word;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @@media (max-width: 768px) {
+        .notif-top-n {
+            flex-direction: column;
+        }
+
+        .notif-meta-n {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .notif-badges-n {
+            margin-left: 0;
+        }
+
+        .notif-card-n.has-check {
+            padding-left: 44px;
+        }
+    }
+
+
+    /* Delete Modal Styling */
+    .delete-modal {
+        border-radius: 22px;
+        border: none;
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+        overflow: visible;
+        animation: popIn 0.3s ease;
+    }
+
+    .delete-icon-wrapper {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+
+    .icons-box {
+        width: 85px;
+        height: 85px;
+        background: #fff5f5; /* Light red background */
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 6px solid white;
+    }
+
+        .icons-box i {
+            font-size: 34px;
+            color: #dc3545; /* Red color */
+        }
+
+    @@keyframes popIn {
+        from {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+</style>
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <div class="notif-wrapper">
+
+                <!-- ==================== HEADER ==================== -->
+                <div class="notif-header">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                        <div>
+                            <h3 class="notif-title mb-1">Receiver Notifications</h3>
+                            <p class="notif-subtitle mb-0">Stay updated with all activities related to your blood requests, hospitals, donors and important alerts.</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <div class="meta-chip-n">
+                                <i class="bi bi-calendar3"></i>
+                                <span>@Model.CurrentDate.ToString("dddd, dd MMM yyyy")</span>
+                            </div>
+                            <div class="meta-chip-n live-chip-n">
+                                <span class="live-dot-n"></span>
+                                <span>Live Updates</span>
+                                <span class="text-muted ms-1" id="liveUpdateText">• Updated just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== STATISTICS (MATCHING TRACK REQUESTS) ==================== -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card custom-card h-100">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box"><i class="bi bi-bell text-dark"></i></div>
+                                    <h6 class="card-title mt-3 mb-1">Total Notifications</h6>
+                                    <small class="text-muted" id="statTotal">@Model.Statistics.TotalNotifications.ToString("N0")</small>
+                                </div>
+                                <i class="bx bx-trending-up trend-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card custom-card h-100">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box"><i class="bi bi-envelope text-dark"></i></div>
+                                    <h6 class="card-title mt-3 mb-1">Unread Notifications</h6>
+                                    <small class="text-muted" id="statUnread">@Model.Statistics.UnreadNotifications.ToString("N0")</small>
+                                </div>
+                                <i class="bx bx-trending-up trend-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card custom-card h-100">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box"><i class="bi bi-calendar-day text-dark"></i></div>
+                                    <h6 class="card-title mt-3 mb-1">Today's Notifications</h6>
+                                    <small class="text-muted" id="statToday">@Model.Statistics.TodayNotifications.ToString("N0")</small>
+                                </div>
+                                <i class="bx bx-trending-up trend-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="card custom-card h-100">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="icon-box"><i class="bi bi-exclamation-circle text-dark"></i></div>
+                                    <h6 class="card-title mt-3 mb-1">Important Alerts</h6>
+                                    <small class="text-muted" id="statImportant">@Model.Statistics.ImportantAlerts.ToString("N0")</small>
+                                </div>
+                                <i class="bx bx-trending-up trend-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== FILTERS ==================== -->
+                <form method="get" asp-action="Notifications" class="filter-card-n">
+                    <div class="filter-title-row-n">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-funnel-fill" style="color:#5C88A8;"></i>
+                            <h6 class="mb-0 fw-bold">Filters</h6>
+                        </div>
+                        <small class="text-muted">Refine your notifications</small>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6 col-lg-4">
+                            <label class="filter-label-n">Search</label>
+                            <div class="input-with-icon-n">
+                                <i class="bi bi-search"></i>
+                                <input type="text" name="SearchQuery" value="@Model.Filters.SearchQuery"
+                                       class="filter-input-n" placeholder="Title, message, hospital, request ID..." />
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="filter-label-n">Status</label>
+                            <select name="ReadStatus" class="filter-input-n">
+                                <option value="all" selected="@(Model.Filters.ReadStatus == "all")">All</option>
+                                <option value="unread" selected="@(Model.Filters.ReadStatus == "unread")">Unread</option>
+                                <option value="read" selected="@(Model.Filters.ReadStatus == "read")">Read</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="filter-label-n">Type</label>
+                            <select name="Category" class="filter-input-n">
+                                <option value="all" selected="@(Model.Filters.Category == "all")">All</option>
+                                <option value="BloodRequest" selected="@(Model.Filters.Category == "BloodRequest")">Blood Request</option>
+                                <option value="Hospital" selected="@(Model.Filters.Category == "Hospital")">Hospital</option>
+                                <option value="Donor" selected="@(Model.Filters.Category == "Donor")">Donor</option>
+                                <option value="Emergency" selected="@(Model.Filters.Category == "Emergency")">Emergency</option>
+                                <option value="Reminder" selected="@(Model.Filters.Category == "Reminder")">Reminder</option>
+                                <option value="System" selected="@(Model.Filters.Category == "System")">System</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="filter-label-n">Priority</label>
+                            <select name="Priority" class="filter-input-n">
+                                <option value="all" selected="@(Model.Filters.Priority == "all")">All</option>
+                                <option value="High" selected="@(Model.Filters.Priority == "High")">High</option>
+                                <option value="Medium" selected="@(Model.Filters.Priority == "Medium")">Medium</option>
+                                <option value="Low" selected="@(Model.Filters.Priority == "Low")">Low</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="filter-label-n">Sort By</label>
+                            <select name="SortOrder" class="filter-input-n">
+                                <option value="newest" selected="@(Model.Filters.SortOrder == "newest")">Newest First</option>
+                                <option value="oldest" selected="@(Model.Filters.SortOrder == "oldest")">Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-actions-n">
+                        <button type="submit" class="btn-filter-n btn-filter-primary-n">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                        <a asp-action="Notifications" class="btn-filter-n btn-filter-ghost-n">
+                            <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        </a>
+                        <button type="button" class="btn-filter-n btn-filter-ghost-n" id="markAllReadBtn">
+                            <i class="bi bi-check2-all"></i> Mark All As Read
+                        </button>
+                        <button type="button" class="btn-filter-n btn-filter-ghost-n" id="refreshBtn">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                        </button>
+                        <div class="ms-auto d-flex gap-2">
+                            <button type="button" class="btn-filter-n btn-filter-ghost-n" onclick="exportNotifications('excel')">
+                                <i class="bi bi-file-earmark-excel"></i> Excel
+                            </button>
+                            <button type="button" class="btn-filter-n btn-filter-ghost-n" onclick="exportNotifications('pdf')">
+                                <i class="bi bi-file-earmark-pdf"></i> PDF
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- ==================== BULK ACTION BAR ==================== -->
+                <div class="bulk-bar-n" id="bulkBar">
+                    <div class="bulk-info">
+                        <strong id="selectedCount">0</strong> notification(s) selected
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="button" class="btn-filter-n btn-filter-primary-n" onclick="bulkAction('markread')">
+                            <i class="bi bi-check2"></i> Mark as Read
+                        </button>
+                        <button type="button" class="btn-filter-n btn-filter-ghost-n" onclick="bulkAction('markunread')">
+                            <i class="bi bi-envelope"></i> Mark as Unread
+                        </button>
+                        <button type="button" class="btn-filter-n btn-filter-danger-n" onclick="bulkAction('delete')">
+                            <i class="bi bi-trash"></i> Delete Selected
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ==================== NOTIFICATION LIST ==================== -->
+                @if (!Model.Notifications.Any())
+                {
+                    <div class="empty-state-n">
+                        <div class="empty-icon-n"><i class="bi bi-bell-slash"></i></div>
+                        <h4 class="empty-title-n">No Notifications Yet</h4>
+                        <p class="empty-text-n">You haven't received any notifications yet.<br />Create a blood request and you'll receive updates here.</p>
+                        <a asp-controller="Receiver" asp-action="CreateBloodRequest" class="btn-empty-n">
+                            <i class="bi bi-plus-circle"></i> Create Blood Request
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="notif-list-n" id="notifList">
+                        @foreach (var n in Model.Notifications)
+                        {
+                            <div class="notif-card-n @(n.IsRead ? "" : "unread") has-check" data-id="@n.NotificationId" data-read="@n.IsRead.ToString().ToLower()">
+                                <input type="checkbox" class="notif-check notif-select" data-id="@n.NotificationId" />
+
+                                <div class="notif-top-n">
+                                    <div class="notif-icon-n" style="background-color: @(n.CategoryColor)15; color: @n.CategoryColor;">
+                                        <i class="bi @n.CategoryIcon"></i>
+                                    </div>
+                                    <div class="notif-head-n">
+                                        <div class="notif-title-n">
+                                            @if (!n.IsRead)
+                                            {
+                                                <span class="notif-unread-dot-n" title="Unread"></span>
+                                            }
+                                            <span>@n.Title</span>
+                                        </div>
+                                        <p class="notif-msg-n">@n.Message</p>
+                                    </div>
+                                </div>
+
+                                <div class="notif-meta-n">
+                                    @if (n.RequestId.HasValue)
+                                    {
+                                        <span class="notif-meta-item-n"><i class="bi bi-file-earmark-medical"></i> @n.RequestCode</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(n.HospitalName))
+                                    {
+                                        <span class="notif-meta-item-n"><i class="bi bi-hospital"></i> @n.HospitalName</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(n.BloodGroup))
+                                    {
+                                        <span class="notif-meta-item-n"><i class="bi bi-droplet-fill"></i> @n.BloodGroup</span>
+                                    }
+                                    @if (!string.IsNullOrEmpty(n.RequestStatus))
+                                    {
+                                        <span class="notif-meta-item-n"><i class="bi bi-activity"></i> @n.RequestStatus</span>
+                                    }
+                                    <span class="notif-meta-item-n"><i class="bi bi-clock"></i> @n.FormattedDate, @n.FormattedTime</span>
+
+                                    <div class="notif-badges-n">
+                                        @if (n.IsRead)
+                                        {
+                                            <span class="mini-badge-n badge-read-n">Read</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="mini-badge-n badge-unread-n">Unread</span>
+                                        }
+                                        @if (n.Priority == "High")
+                                        {
+                                            <span class="mini-badge-n badge-high-n"><i class="bi bi-exclamation-circle me-1"></i>High</span>
+                                        }
+                                        else if (n.Priority == "Medium")
+                                        {
+                                            <span class="mini-badge-n badge-medium-n">Medium</span>
+                                        }
+                                        else if (n.Priority == "Low")
+                                        {
+                                            <span class="mini-badge-n badge-low-n">Low</span>
+                                        }
+                                        @if (n.Category == "Emergency")
+                                        {
+                                            <span class="mini-badge-n badge-emergency-n"><i class="bi bi-exclamation-triangle me-1"></i>Emergency</span>
+                                        }
+                                        else if (n.Category == "Reminder")
+                                        {
+                                            <span class="mini-badge-n badge-reminder-n"><i class="bi bi-alarm me-1"></i>Reminder</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="notif-actions-n">
+                                    <button type="button" class="notif-btn-n" onclick="viewDetails(@n.NotificationId)" title="View Details">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </button>
+                                    @if (n.IsRead)
+                                    {
+                                        <button type="button" class="notif-btn-n" onclick="markAs('unread', @n.NotificationId)" title="Mark as Unread">
+                                            <i class="bi bi-envelope"></i> Mark Unread
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="notif-btn-n success" onclick="markAs('read', @n.NotificationId)" title="Mark as Read">
+                                            <i class="bi bi-check2"></i> Mark Read
+                                        </button>
+                                    }
+                                    <button type="button" class="notif-btn-n danger" onclick="deleteNotif(@n.NotificationId)" title="Delete">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                    @if (!string.IsNullOrEmpty(n.ActionUrl))
+                                    {
+                                        <a href="@n.ActionUrl" class="notif-btn-n" title="Take Action">
+                                            <i class="bi bi-arrow-right"></i> Take Action
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- ==================== PAGINATION ==================== -->
+                    @if (Model.TotalPages > 1)
+                    {
+                        <div class="pagination-wrapper-n">
+                            <small class="text-muted">
+                                Showing <strong>@((Model.CurrentPage - 1) * Model.PageSize + 1)</strong> to
+                                <strong>@Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount)</strong> of
+                                <strong>@Model.TotalCount</strong> notifications
+                            </small>
+                            <nav>
+                                <ul class="pagination pagination-n mb-0">
+                                    @{
+                                        var prevDisabled = Model.CurrentPage == 1 ? "disabled" : "";
+                                        var nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : "";
+                                    }
+                                    <li class="page-item @prevDisabled">
+                                        <a class="page-link" href="@Url.Action("Notifications", WithPage(Model.Filters, Model.CurrentPage - 1))">
+                                            <i class="bi bi-chevron-left"></i> Previous
+                                        </a>
+                                    </li>
+                                    @for (int i = 1; i <= Model.TotalPages; i++)
+                                    {
+                                        var active = i == Model.CurrentPage ? "active" : "";
+                                        <li class="page-item @active">
+                                            <a class="page-link" href="@Url.Action("Notifications", WithPage(Model.Filters, i))">@i</a>
+                                        </li>
+                                    }
+                                    <li class="page-item @nextDisabled">
+                                        <a class="page-link" href="@Url.Action("Notifications", WithPage(Model.Filters, Model.CurrentPage + 1))">
+                                            Next <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    }
+                }
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ==================== DETAILS MODAL ==================== -->
+<div class="modal fade" id="notifDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content notif-modal-content">
+            <div class="notif-modal-header">
+                <div class="notif-modal-icon" id="modalIcon" style="background:#e6f4ff; color:#5C88A8;">
+                    <i class="bi bi-bell"></i>
+                </div>
+                <div>
+                    <h5 class="mb-0 fw-bold" id="modalTitle">Notification</h5>
+                    <small class="text-muted" id="modalDate">-</small>
+                </div>
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="notif-modal-body">
+                <p id="modalMessage" class="mb-3" style="color:#212529; line-height:1.6;"></p>
+                <div style="background:#F8F9FA; border:1px solid #e9ecef; border-radius:12px; padding:14px;">
+                    <div class="notif-detail-row-n">
+                        <span class="notif-detail-label-n">Request ID</span>
+                        <span class="notif-detail-value-n" id="modalRequestId">-</span>
+                    </div>
+                    <div class="notif-detail-row-n">
+                        <span class="notif-detail-label-n">Hospital</span>
+                        <span class="notif-detail-value-n" id="modalHospital">-</span>
+                    </div>
+                    <div class="notif-detail-row-n">
+                        <span class="notif-detail-label-n">Blood Group</span>
+                        <span class="notif-detail-value-n" id="modalBloodGroup">-</span>
+                    </div>
+                    <div class="notif-detail-row-n">
+                        <span class="notif-detail-label-n">Request Status</span>
+                        <span class="notif-detail-value-n" id="modalRequestStatus">-</span>
+                    </div>
+                    <div class="notif-detail-row-n">
+                        <span class="notif-detail-label-n">Category</span>
+                        <span class="notif-detail-value-n" id="modalCategory">-</span>
+                    </div>
+                    <div class="notif-detail-row-n">
+                        <span class="notif-detail-label-n">Priority</span>
+                        <span class="notif-detail-value-n" id="modalPriority">-</span>
+                    </div>
+                    <div class="notif-detail-row-n">
+                        <span class="notif-detail-label-n">Status</span>
+                        <span class="notif-detail-value-n" id="modalReadStatus">-</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    <a href="@Url.Action("TrackRequests")" class="notif-btn-n" id="modalTrackLink">
+                        <i class="bi bi-geo-alt"></i> Track Request
+                    </a>
+                    <a href="@Url.Action("MyBloodRequests")" class="notif-btn-n">
+                        <i class="bi bi-clipboard2-pulse"></i> My Requests
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== DELETE CONFIRMATION MODAL ==================== -->
+<div class="modal fade" id="deleteNotificationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content delete-modal position-relative">
+            <div class="delete-icon-wrapper">
+                <div class="icons-box">
+                    <i class="bi bi-trash"></i>
+                </div>
+            </div>
+            <div class="modal-body text-center pt-5 pb-4">
+                <h4 class="fw-bold">Delete Notification?</h4>
+                <p class="text-muted">
+                    Are you sure you want to delete this notification?<br />
+                    This action cannot be undone.
+                </p>
+                <div class="d-flex gap-2 justify-content-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger px-4 rounded-pill" id="confirmDeleteBtn">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    Dictionary<string, string> WithPage(Khoon_e_Hayat.ViewModels.NotificationFiltersViewModel f, int page)
+    {
+        var d = new Dictionary<string, string> { { "page", page.ToString() } };
+        if (!string.IsNullOrEmpty(f?.SearchQuery)) d["SearchQuery"] = f.SearchQuery;
+        if (!string.IsNullOrEmpty(f?.ReadStatus) && f.ReadStatus != "all") d["ReadStatus"] = f.ReadStatus;
+        if (!string.IsNullOrEmpty(f?.Category) && f.Category != "all") d["Category"] = f.Category;
+        if (!string.IsNullOrEmpty(f?.Priority) && f.Priority != "all") d["Priority"] = f.Priority;
+        if (!string.IsNullOrEmpty(f?.SortOrder) && f.SortOrder != "newest") d["SortOrder"] = f.SortOrder;
+        return d;
+    }
+}
+
+@section Scripts {
+    <script>
+        /* ============================================
+           NOTIFICATIONS MODULE - JavaScript
+           ============================================ */
+        (function () {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            // ============ DELETE MODAL VARIABLES (ADD THESE) ============
+            let notificationToDeleteId = null;
+            const deleteModalElement = document.getElementById('deleteNotificationModal');
+            const deleteModal = new bootstrap.Modal(deleteModalElement);
+
+            // ============ DATA STORE (for modal) ============
+            const notifData = {};
+            document.querySelectorAll('.notif-card-n').forEach(card => {
+                const id = card.getAttribute('data-id');
+                notifData[id] = {
+                    title: card.querySelector('.notif-title-n span:last-child')?.textContent.trim() || '',
+                    message: card.querySelector('.notif-msg-n')?.textContent.trim() || '',
+                    requestId: card.querySelector('.notif-meta-item-n .bi-file-earmark-medical')?.parentElement?.textContent.trim() || '-',
+                    hospital: card.querySelector('.notif-meta-item-n .bi-hospital')?.parentElement?.textContent.trim() || '-',
+                    bloodGroup: card.querySelector('.notif-meta-item-n .bi-droplet-fill')?.parentElement?.textContent.trim() || '-',
+                    requestStatus: card.querySelector('.notif-meta-item-n .bi-activity')?.parentElement?.textContent.trim() || '-',
+                    category: card.querySelector('.notif-icon-n i')?.className.replace('bi ', '') || 'bell',
+                    priority: card.querySelector('.badge-high-n') ? 'High' : (card.querySelector('.badge-low-n') ? 'Low' : 'Medium'),
+                    isRead: card.getAttribute('data-read') === 'true',
+                    iconColor: card.querySelector('.notif-icon-n')?.style.color || '#5C88A8'
+                };
+            });
+
+            // ============ BULK SELECTION ============
+            const bulkBar = document.getElementById('bulkBar');
+            const selectedCount = document.getElementById('selectedCount');
+
+            document.addEventListener('change', function (e) {
+                if (e.target.classList.contains('notif-select')) {
+                    updateBulkBar();
+                }
+            });
+
+            function updateBulkBar() {
+                const checked = document.querySelectorAll('.notif-select:checked');
+                if (checked.length > 0) {
+                    bulkBar.classList.add('show');
+                    selectedCount.textContent = checked.length;
+                } else {
+                    bulkBar.classList.remove('show');
+                }
+            }
+
+            window.bulkAction = async function (action) {
+                const ids = Array.from(document.querySelectorAll('.notif-select:checked'))
+                    .map(cb => parseInt(cb.getAttribute('data-id')));
+                if (!ids.length) return;
+
+                try {
+                    const res = await fetch('/Receiver/BulkAction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
+                        },
+                        body: JSON.stringify({ action: action, ids: ids })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        setTimeout(() => location.reload(), 800);
+                    } else {
+                        showToast(data.message, 'error');
+                    }
+                } catch (err) {
+                    showToast('Network error. Please try again.', 'error');
+                }
+            };
+
+            // ============ INDIVIDUAL ACTIONS ============
+            window.markAs = async function (status, id) {
+                const url = status === 'read' ? '/Receiver/MarkAsRead' : '/Receiver/MarkAsUnread';
+                const fd = new FormData();
+                fd.append('id', id);
+                fd.append('__RequestVerificationToken', token);
+
+                try {
+                    const res = await fetch(url, { method: 'POST', body: fd });
+                    const data = await res.json();
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        setTimeout(() => location.reload(), 600);
+                    } else {
+                        showToast(data.message, 'error');
+                    }
+                } catch (err) {
+                    showToast('Network error.', 'error');
+                }
+            };
+
+            // ============ UPDATED DELETE FUNCTION ============
+            window.deleteNotif = function (id) {
+                notificationToDeleteId = id;
+                deleteModal.show();
+            };
+
+            // Event Listener for the "Yes, Delete" button inside the modal
+            document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+                if (!notificationToDeleteId) return;
+
+                const fd = new FormData();
+                fd.append('id', notificationToDeleteId);
+                fd.append('__RequestVerificationToken', token);
+
+                try {
+                    const res = await fetch('/Receiver/DeleteNotification', { method: 'POST', body: fd });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        deleteModal.hide();
+
+                        const card = document.querySelector(`.notif-card-n[data-id="${notificationToDeleteId}"]`);
+                        if (card) {
+                            card.style.transition = 'all 0.3s';
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateX(20px)';
+                            setTimeout(() => card.remove(), 300);
+                        }
+
+                        notificationToDeleteId = null;
+                        setTimeout(() => location.reload(), 800);
+                    } else {
+                        showToast(data.message, 'error');
+                    }
+                } catch (err) {
+                    showToast('Network error.', 'error');
+                }
+            });
+
+            // ============ MARK ALL AS READ ============
+            document.getElementById('markAllReadBtn')?.addEventListener('click', async function () {
+                const fd = new FormData();
+                fd.append('__RequestVerificationToken', token);
+                try {
+                    const res = await fetch('/Receiver/MarkAllAsRead', { method: 'POST', body: fd });
+                    const data = await res.json();
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        setTimeout(() => location.reload(), 800);
+                    }
+                } catch (err) {
+                    showToast('Network error.', 'error');
+                }
+            });
+
+            // ============ REFRESH ============
+            document.getElementById('refreshBtn')?.addEventListener('click', function () {
+                location.reload();
+            });
+
+            // ============ VIEW DETAILS MODAL ============
+            window.viewDetails = function (id) {
+                const d = notifData[id];
+                if (!d) return;
+
+                document.getElementById('modalTitle').textContent = d.title;
+                document.getElementById('modalMessage').textContent = d.message;
+                document.getElementById('modalRequestId').textContent = d.requestId;
+                document.getElementById('modalHospital').textContent = d.hospital;
+                document.getElementById('modalBloodGroup').textContent = d.bloodGroup;
+                document.getElementById('modalRequestStatus').textContent = d.requestStatus;
+                document.getElementById('modalCategory').textContent = d.category;
+                document.getElementById('modalPriority').textContent = d.priority;
+                document.getElementById('modalReadStatus').innerHTML = d.isRead
+                    ? '<span class="mini-badge-n badge-read-n">Read</span>'
+                    : '<span class="mini-badge-n badge-unread-n">Unread</span>';
+
+                const iconEl = document.getElementById('modalIcon');
+                iconEl.style.background = d.iconColor + '15';
+                iconEl.style.color = d.iconColor;
+                iconEl.innerHTML = `<i class="bi ${d.category}"></i>`;
+
+                new bootstrap.Modal(document.getElementById('notifDetailsModal')).show();
+
+                if (!d.isRead) {
+                    markAs('read', id);
+                }
+            };
+
+            // ============ REAL-TIME POLLING ============
+            let lastUnreadCount = parseInt(document.getElementById('statUnread')?.textContent.replace(/,/g, '') || '0');
+
+            async function pollUpdates() {
+                try {
+                    const res = await fetch('/Receiver/GetNotificationsLive');
+                    const data = await res.json();
+                    if (data.success) {
+                        const s = data.data;
+                        const newUnread = s.unread;
+
+                        document.getElementById('statTotal').textContent = s.total.toLocaleString();
+                        document.getElementById('statUnread').textContent = s.unread.toLocaleString();
+                        document.getElementById('statToday').textContent = s.today.toLocaleString();
+                        document.getElementById('statImportant').textContent = s.important.toLocaleString();
+
+                        updateAllBadges(s.unread);
+
+                        document.getElementById('liveUpdateText').textContent = '• Updated just now';
+
+                        if (newUnread > lastUnreadCount && lastUnreadCount >= 0) {
+                            showToast(`You have ${newUnread - lastUnreadCount} new notification(s)`, 'info');
+                        }
+                        lastUnreadCount = newUnread;
+                    }
+                } catch (err) {
+                    console.warn('Polling error:', err);
+                }
+            }
+
+            function updateAllBadges(unreadCount) {
+                const sidebarBadge = document.getElementById('unreadNotifBadge');
+                const sidebarDot = document.getElementById('notifIndicatorDot');
+                if (sidebarBadge && sidebarDot) {
+                    if (unreadCount > 0) {
+                        sidebarBadge.innerText = unreadCount;
+                        sidebarBadge.style.display = 'flex';
+                        sidebarDot.style.display = 'block';
+                    } else {
+                        sidebarBadge.style.display = 'none';
+                        sidebarDot.style.display = 'none';
+                    }
+                }
+
+                const navbarBadge = document.getElementById('navbarNotifBadge');
+                if (navbarBadge) {
+                    if (unreadCount > 0) {
+                        navbarBadge.textContent = unreadCount;
+                        navbarBadge.classList.remove('d-none');
+                    } else {
+                        navbarBadge.classList.add('d-none');
+                    }
+                }
+            }
+
+            setInterval(pollUpdates, 5000);
+
+            // ============ EXPORT ============
+            window.exportNotifications = function (type) {
+                const cards = document.querySelectorAll('.notif-card-n');
+                if (!cards.length) {
+                    showToast('No notifications to export.', 'error');
+                    return;
+                }
+
+                const headers = ['Title', 'Message', 'Category', 'Priority', 'Request ID', 'Hospital', 'Blood Group', 'Status', 'Date'];
+                const rows = [];
+
+                cards.forEach(card => {
+                    const d = notifData[card.getAttribute('data-id')];
+                    if (d) {
+                        rows.push([
+                            d.title,
+                            d.message,
+                            d.category,
+                            d.priority,
+                            d.requestId,
+                            d.hospital,
+                            d.bloodGroup,
+                            d.isRead ? 'Read' : 'Unread',
+                            card.querySelector('.notif-meta-item-n .bi-clock')?.parentElement?.textContent.trim() || ''
+                        ]);
+                    }
+                });
+
+                const fileName = 'ReceiverNotifications_' + new Date().toISOString().split('T')[0];
+
+                if (type === 'excel' && window.XLSX) {
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Notifications');
+                    XLSX.writeFile(wb, fileName + '.xlsx');
+                    showToast('Excel exported successfully.', 'success');
+                } else if (type === 'pdf' && window.jspdf) {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('landscape');
+                    doc.setFontSize(16);
+                    doc.setTextColor(144, 21, 28);
+                    doc.text('Khoon-e-Hayat - Receiver Notifications', 14, 15);
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('Generated: ' + new Date().toLocaleString(), 14, 23);
+
+                    doc.autoTable({
+                        startY: 30,
+                        head: [headers],
+                        body: rows,
+                        theme: 'grid',
+                        headStyles: { fillColor: [92, 136, 168], textColor: [255, 255, 255] },
+                        styles: { fontSize: 8, cellPadding: 3 }
+                    });
+                    doc.save(fileName + '.pdf');
+                    showToast('PDF exported successfully.', 'success');
+                } else {
+                    showToast('Export library not loaded.', 'error');
+                }
+            };
+
+            // ============ TOAST NOTIFICATION ============
+            function showToast(msg, type) {
+                const colors = {
+                    success: { bg: '#e6f7ee', border: '#198754', text: '#198754', icon: 'bi-check-circle-fill' },
+                    error:   { bg: '#ffebee', border: '#90151C', text: '#90151C', icon: 'bi-x-circle-fill' },
+                    info:    { bg: '#e0f7fa', border: '#0dcaf0', text: '#0dcaf0', icon: 'bi-info-circle-fill' }
+                };
+                const c = colors[type] || colors.info;
+
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; z-index: 99999;
+                    background: ${c.bg}; color: ${c.text};
+                    border: 1px solid ${c.border}; border-left: 4px solid ${c.border};
+                    padding: 14px 20px; border-radius: 12px;
+                    font-weight: 600; font-size: 0.88rem;
+                    display: flex; align-items: center; gap: 10px;
+                    animation: slideInToast 0.3s ease;
+                    box-shadow: none;
+                `;
+                toast.innerHTML = `<i class="bi ${c.icon}"></i> ${msg}`;
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.3s';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            const style = document.createElement('style');
+            style.textContent = `
+                @@keyframes slideInToast {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+        })();
+    </script>
+}

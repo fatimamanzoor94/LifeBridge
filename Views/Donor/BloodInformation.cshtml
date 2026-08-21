@@ -1,0 +1,976 @@
+﻿@{
+    ViewData["Title"] = "Blood Information";
+    Layout = "~/Views/Shared/_DonorLayout.cshtml";
+}
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-2">
+                <div>
+                    <h4 class="mb-0">Blood Information & Guidelines</h4>
+                    <small class="text-muted">Essential medical information and safety guidelines for blood donors.</small>
+                </div>
+                <span class="badge bg-label-primary rounded-pill px-3 py-2">
+                    <i class="bi bi-calendar3 me-1"></i>@DateTime.Now.ToString("dd MMM yyyy")
+                </span>
+            </div>
+
+            <!-- ==================== SECTION 1: BLOOD GROUP BASICS ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-droplet-half me-2" style="color: #5C88A8;"></i>Blood Group Basics</h4>
+                    <small class="text-muted">Understanding the ABO and Rh blood group systems</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 text-center">
+                                <div class="display-5 fw-bold mb-2" style="color: #5C88A8;">A</div>
+                                <h6 class="fw-semibold">Type A</h6>
+                                <p class="small text-muted mb-0">Has A antigens on red blood cells and anti-B antibodies in plasma.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 text-center">
+                                <div class="display-5 fw-bold mb-2" style="color: #5C88A8;">B</div>
+                                <h6 class="fw-semibold">Type B</h6>
+                                <p class="small text-muted mb-0">Has B antigens on red blood cells and anti-A antibodies in plasma.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 text-center">
+                                <div class="display-5 fw-bold mb-2" style="color: #5C88A8;">AB</div>
+                                <h6 class="fw-semibold">Type AB</h6>
+                                <p class="small text-muted mb-0">Has both A and B antigens. Universal recipient for plasma.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 text-center">
+                                <div class="display-5 fw-bold mb-2" style="color: #5C88A8;">O</div>
+                                <h6 class="fw-semibold">Type O</h6>
+                                <p class="small text-muted mb-0">Has no antigens but both antibodies. Universal donor for red cells.</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="alert border-0 rounded-4 d-flex align-items-start gap-3 mb-0"
+                                 role="alert"
+                                 style="background-color: #5C88A8; color: #fff;">
+
+                                <i class="bi bi-plus-circle-fill fs-3"></i>
+
+                                <div>
+                                    <strong class="d-block mb-1">The Rh Factor (+ / -)</strong>
+                                    <span>
+                                        The Rh factor is a protein on red blood cells. If you have it, you are Rh-positive (+); if not, you are Rh-negative (-). Rh-negative blood is crucial for pregnant women and their babies.
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 2: DONATION SAFETY GUIDELINES ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-shield-check me-2" style="color: #5C88A8;"></i>Donation Safety Guidelines</h4>
+                    <small class="text-muted">Eligibility criteria and safety measures for a successful donation</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-4">
+                                <i class="bi bi-calendar-check fs-3" style="color: #90151C;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Age Requirement</h6>
+                                    <p class="small text-muted mb-0">You must be at least 17 years old (or 16 with parental consent in some regions) and generally under 66 years of age.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-4">
+                                <i class="bi bi-speedometer2 fs-3" style="color: #90151C;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Weight Requirement</h6>
+                                    <p class="small text-muted mb-0">You must weigh at least 50 kg (110 lbs). This ensures your body can safely handle the volume of blood being drawn.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-4">
+                                <i class="bi bi-heart-pulse fs-3 " style="color: #90151C;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Health Conditions</h6>
+                                    <p class="small text-muted mb-0">You should be in good general health. Certain conditions like active infections, low hemoglobin, or recent surgeries may defer you.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3 p-3 bg-light rounded-4">
+                                <i class="bi bi-droplet fs-3" style="color: #90151C;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Hydration & Rest</h6>
+                                    <p class="small text-muted mb-0">Drink plenty of water (an extra 16 oz) before your appointment and get a good night's sleep to prevent dizziness.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 3: BLOOD DONATION PROCESS ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-clock-history text-primary me-2"></i>The Donation Process</h4>
+                    <small class="text-muted">Step-by-step guide to what happens when you donate blood</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="bg-primary-subtle rounded-circle d-flex align-items-center justify-content-center" style=" color: #90151C;" style="width: 40px; height: 40px; font-weight: bold;">1</div>
+                                    <h6 class="fw-bold mb-0">Registration</h6>
+                                </div>
+                                <p class="small text-muted mb-0">You will sign in, show ID, and read about the donation process. Your information is kept strictly confidential.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="bg-info-subtle rounded-circle d-flex align-items-center justify-content-center" style=" color: #90151C;" style="width: 40px; height: 40px; font-weight: bold;">2</div>
+                                    <h6 class="fw-bold mb-0">Health Screening</h6>
+                                </div>
+                                <p class="small text-muted mb-0">A quick check of your blood pressure, pulse, temperature, and hemoglobin levels to ensure it's safe for you to donate.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="bg-danger-subtle rounded-circle d-flex align-items-center justify-content-center" style=" color: #90151C;" style="width: 40px; height: 40px; font-weight: bold;">3</div>
+                                    <h6 class="fw-bold mb-0">Blood Collection</h6>
+                                </div>
+                                <p class="small text-muted mb-0">The actual donation takes about 8-10 minutes. A sterile needle is used, and you can relax while saving lives.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="bg-success-subtle rounded-circle d-flex align-items-center justify-content-center" style=" color: #90151C;" style="width: 40px; height: 40px; font-weight: bold;">4</div>
+                                    <h6 class="fw-bold mb-0">Refreshment & Rest</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Enjoy some snacks and juice in the canteen. Rest for 10-15 minutes to allow your body to adjust before leaving.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="bg-warning-subtle rounded-circle d-flex align-items-center justify-content-center" style=" color: #90151C;" style="width: 40px; height: 40px; font-weight: bold;">5</div>
+                                    <h6 class="fw-bold mb-0">Testing & Distribution</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Your blood is tested, separated into components (red cells, plasma, platelets), and distributed to hospitals in need.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 4: MYTHS VS FACTS ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-lightbulb text-warning me-2"></i>Myths vs. Facts</h4>
+                    <small class="text-muted">Separating common misconceptions from medical facts</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="accordion accordion-flush" id="mythsAccordion">
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth1">
+                                    <i class="bi bi-x-circle-fill me-2" style=" color: #90151C;"></i> Myth: Blood donation weakens the body and causes fatigue.
+                                </button>
+                            </h2>
+                            <div id="myth1" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style=" color: #5C88A8;"></i> <strong>Fact:</strong> The human body is incredibly resilient. The volume of blood drawn (about 1 pint) is replenished by your body within 24 to 48 hours, and red blood cells are replaced within a few weeks. Most donors feel completely normal immediately after a brief rest.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth2">
+                                    <i class="bi bi-x-circle-fill me-2" style=" color: #90151C;"></i> Myth: Blood donation is a painful procedure.
+                                </button>
+                            </h2>
+                            <div id="myth2" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style=" color: #5C88A8;"></i> <strong>Fact:</strong> The only pain involved is a quick, mild pinch when the needle is inserted. The actual donation process is virtually painless. Modern equipment and trained staff ensure maximum comfort.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth3">
+                                    <i class="bi bi-x-circle-fill me-2" style=" color: #90151C;"></i> Myth: People with tattoos or piercings can never donate blood.
+                                </button>
+                            </h2>
+                            <div id="myth3" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style=" color: #5C88A8;"></i> <strong>Fact:</strong> Having a tattoo or piercing does not permanently disqualify you. As long as it was done in a state-regulated facility with sterile needles, you can often donate immediately. If done elsewhere, a temporary deferral of 3 to 6 months may apply.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth4">
+                                    <i class="bi bi-x-circle-fill me-2" style=" color: #90151C;"></i> Myth: I can get an infection from donating blood.
+                                </button>
+                            </h2>
+                            <div id="myth4" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style=" color: #5C88A8;"></i> <strong>Fact:</strong> It is absolutely impossible to contract any blood-borne illness from donating blood. All equipment used is sterile, single-use, and disposed of safely after one donation.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth5">
+                                    <i class="bi bi-x-circle-fill me-2" style="color:#90151C;"></i>
+                                    Myth: Women should not donate blood.
+                                </button>
+                            </h2>
+                            <div id="myth5" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style="color:#5C88A8;"></i>
+                                    <strong>Fact:</strong> Healthy women who meet the required age, weight, and hemoglobin levels can safely donate blood. Pregnancy and certain medical conditions may require a temporary deferral.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth6">
+                                    <i class="bi bi-x-circle-fill me-2" style="color:#90151C;"></i>
+                                    Myth: People with diabetes can never donate blood.
+                                </button>
+                            </h2>
+                            <div id="myth6" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style="color:#5C88A8;"></i>
+                                    <strong>Fact:</strong> Many people with well-controlled diabetes are eligible to donate blood if they are healthy and meet the donation guidelines.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth7">
+                                    <i class="bi bi-x-circle-fill me-2" style="color:#90151C;"></i>
+                                    Myth: Older adults cannot donate blood.
+                                </button>
+                            </h2>
+                            <div id="myth7" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style="color:#5C88A8;"></i>
+                                    <strong>Fact:</strong> Healthy older adults can often continue donating blood. Eligibility depends on overall health rather than age alone.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth8">
+                                    <i class="bi bi-x-circle-fill me-2" style="color:#90151C;"></i>
+                                    Myth: Blood donation causes weight loss or weight gain.
+                                </button>
+                            </h2>
+                            <div id="myth8" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style="color:#5C88A8;"></i>
+                                    <strong>Fact:</strong> Blood donation has no effect on body weight. Your body naturally replaces the donated blood volume within a short period.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth9">
+                                    <i class="bi bi-x-circle-fill me-2" style="color:#90151C;"></i>
+                                    Myth: Vegetarians cannot donate blood.
+                                </button>
+                            </h2>
+                            <div id="myth9" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style="color:#5C88A8;"></i>
+                                    <strong>Fact:</strong> Vegetarians can donate blood if they have healthy hemoglobin levels and meet all donation eligibility requirements.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item border-0 mb-3 rounded-4 overflow-hidden shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#myth10">
+                                    <i class="bi bi-x-circle-fill me-2" style="color:#90151C;"></i>
+                                    Myth: Donating blood weakens the immune system.
+                                </button>
+                            </h2>
+                            <div id="myth10" class="accordion-collapse collapse" data-bs-parent="#mythsAccordion">
+                                <div class="accordion-body bg-light">
+                                    <i class="bi bi-check-circle-fill me-2" style="color:#5C88A8;"></i>
+                                    <strong>Fact:</strong> Blood donation does not weaken your immune system. Your body quickly replaces blood cells while your immune system continues to function normally.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 5: EMERGENCY IMPORTANCE ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4" style="border-left: 5px solid #90151C !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="icon-box bg-danger-subtle"><i class="bi bi-exclamation-triangle-fill" style="color: #5C88A8;"></i></div>
+                        <h4 class="fw-bold mb-0" style="color: #5C88A8;">Why Blood Donation is Critical in Emergencies</h4>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-car-front fs-4" style="color: #063154;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Accidents & Trauma</h6>
+                                    <p class="small text-muted mb-0">Victims of severe accidents can lose pints of blood in minutes. Immediate transfusions are the only way to prevent fatal shock.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-heart-pulse fs-4" style="color: #063154;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Surgeries & Childbirth</h6>
+                                    <p class="small text-muted mb-0">Complex surgeries, organ transplants, and complications during childbirth require ready supplies of compatible blood.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="bi bi-capsule-pill fs-4" style="color: #063154;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1">Chronic Illnesses</h6>
+                                    <p class="small text-muted mb-0">Patients with cancer, sickle cell anemia, and other chronic conditions require regular, lifelong blood transfusions to survive.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert border-0 rounded-4 mt-4 mb-0 d-flex align-items-start gap-3"
+                         role="alert"
+                         style="background-color: #5C88A8; color: #fff;">
+
+                        <i class="bi bi-info-circle-fill fs-3"></i>
+
+                        <div>
+                            <strong class="d-block mb-1">Remember:</strong>
+                            <span>
+                                Blood cannot be manufactured. It can only come from generous donors like you. In an emergency, every single drop counts and time is the most critical factor.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 6: ONE DONATION = THREE COMPONENTS ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-droplet-half me-2" style="color: #5C88A8;"></i>One Donation = Three Blood Components</h4>
+                    <small class="text-muted">How a single pint of blood is separated to save multiple lives</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="row g-4">
+                        <!-- Red Blood Cells -->
+                        <div class="col-md-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 text-center component-card">
+                                <div class="component-icon mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 70px; height: 70px; background-color: rgba(144, 21, 28, 0.1);">
+                                    <i class="bi bi-heart-pulse-fill fs-1" style="color: #90151C;"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2" style="color: #90151C;">Red Blood Cells</h5>
+                                <span class="badge bg-danger-subtle text-danger rounded-pill px-3 py-2 mb-3">Oxygen Transport</span>
+                                <p class="small text-muted mb-2"><strong>Main Function:</strong> Carries oxygen from lungs to the body's tissues and organs.</p>
+                                <p class="small text-muted mb-2"><strong>Used For:</strong> Trauma, anemia, and surgical procedures.</p>
+                                <p class="small text-muted mb-0"><strong>Storage:</strong> Up to 42 days under refrigeration.</p>
+                            </div>
+                        </div>
+                        <!-- Plasma -->
+                        <div class="col-md-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 text-center component-card">
+                                <div class="component-icon mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 70px; height: 70px; background-color: rgba(255, 193, 7, 0.15);">
+                                    <i class="bi bi-droplet-fill fs-1" style="color: #ffc107;"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2" style="color: #b8860b;">Plasma</h5>
+                                <span class="badge bg-warning-subtle text-warning rounded-pill px-3 py-2 mb-3">Liquid Medium</span>
+                                <p class="small text-muted mb-2"><strong>Main Function:</strong> The liquid portion of blood that carries cells and proteins throughout the body.</p>
+                                <p class="small text-muted mb-2"><strong>Used For:</strong> Burns, liver disease, and clotting disorders.</p>
+                                <p class="small text-muted mb-0"><strong>Storage:</strong> Up to 1 year when frozen.</p>
+                            </div>
+                        </div>
+                        <!-- Platelets -->
+                        <div class="col-md-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 text-center component-card">
+                                <div class="component-icon mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 70px; height: 70px; background-color: rgba(92, 136, 168, 0.15);">
+                                    <i class="bi bi-shield-fill fs-1" style="color: #5C88A8;"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2" style="color: #5C88A8;">Platelets</h5>
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-3">Clotting Agents</span>
+                                <p class="small text-muted mb-2"><strong>Main Function:</strong> Tiny cell fragments that help blood clot and stop bleeding.</p>
+                                <p class="small text-muted mb-2"><strong>Used For:</strong> Cancer treatments, organ transplants, and surgeries.</p>
+                                <p class="small text-muted mb-0"><strong>Storage:</strong> Only 5 days at room temperature.</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="alert border-0 rounded-4 d-flex align-items-start gap-3 mb-0" role="alert" style="background-color: #5C88A8; color: #fff;">
+                                <i class="bi bi-info-circle-fill fs-3"></i>
+                                <div>
+                                    <strong class="d-block mb-1">The Power of Separation:</strong>
+                                    <span>One blood donation can help save up to three different lives because each blood component is separated and used for different patients.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 7: WHO CAN YOUR BLOOD HELP? ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-people-fill me-2" style="color: #5C88A8;"></i>Who Can Your Blood Help?</h4>
+                    <small class="text-muted">The diverse group of patients who rely on generous blood donors</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="row g-4">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 help-card">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="icon-box bg-danger-subtle"><i class="bi bi-car-front-fill" style="color: #90151C;"></i></div>
+                                    <h6 class="fw-bold mb-0">Accident Victims</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Severe trauma from car crashes or falls can cause massive blood loss. Immediate transfusions are critical to prevent shock and save lives.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 help-card">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="icon-box bg-primary-subtle"><i class="bi bi-ribbon-fill" style="color: #5C88A8;"></i></div>
+                                    <h6 class="fw-bold mb-0">Cancer Patients</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Chemotherapy and radiation often destroy healthy blood cells. Patients require regular platelet and red cell transfusions to survive treatment.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 help-card">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="icon-box bg-warning-subtle"><i class="bi bi-heart-fill" style="color: #b8860b;"></i></div>
+                                    <h6 class="fw-bold mb-0">Mothers During Childbirth</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Complications during pregnancy and childbirth can lead to severe hemorrhaging. Blood banks must be ready to supply O-negative blood instantly.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 help-card">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="icon-box bg-info-subtle"><i class="bi bi-emoji-smile-fill" style="color: #0dcaf0;"></i></div>
+                                    <h6 class="fw-bold mb-0">Children with Thalassemia</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Children born with this genetic blood disorder require lifelong, regular blood transfusions every few weeks just to stay alive and grow.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 help-card">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="icon-box bg-success-subtle"><i class="bi bi-scissors" style="color: #198754;"></i></div>
+                                    <h6 class="fw-bold mb-0">Surgery Patients</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Major surgeries, including heart bypasses and joint replacements, often require multiple units of blood to replace what is lost during the procedure.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card custom-card border-0 shadow-sm rounded-4 h-100 p-4 help-card">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="icon-box bg-secondary-subtle"><i class="bi bi-heart-pulse-fill" style="color: #6c757d;"></i></div>
+                                    <h6 class="fw-bold mb-0">Organ Transplant Patients</h6>
+                                </div>
+                                <p class="small text-muted mb-0">Liver, kidney, and heart transplants are highly complex procedures that demand a massive, immediate supply of compatible blood on standby.</p>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm rounded-4 p-4 text-center" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-left: 5px solid #5C88A8 !important;">
+                                <i class="bi bi-quote fs-1 mb-3" style="color: #5C88A8;"></i>
+                                <h5 class="fw-bold mb-2" style="color: #063154;">"Every donation tells a story of hope."</h5>
+                                <p class="text-muted mb-0 fst-italic">Your blood may reach someone you'll never meet, yet change their life forever.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 8: CAN I DONATE TODAY? ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-clipboard2-check-fill me-2" style="color: #5C88A8;"></i>Can I Donate Today?</h4>
+                    <small class="text-muted">An educational quick-checker to see if you meet the basic criteria</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="row g-3">
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Age 17+</h6>
+                                    <small class="text-muted">Or 16 with consent</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Weight 50kg+</h6>
+                                    <small class="text-muted">Minimum weight limit</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Feeling Healthy</h6>
+                                    <small class="text-muted">No active symptoms</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">No Fever</h6>
+                                    <small class="text-muted">Free from infections</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Enough Sleep</h6>
+                                    <small class="text-muted">At least 7-8 hours</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Well Hydrated</h6>
+                                    <small class="text-muted">Drank plenty of water</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Not Donated Recently</h6>
+                                    <small class="text-muted">Wait 56 days (8 weeks)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-4 checklist-card">
+                                <i class="bi bi-check-circle-fill fs-3" style="color: #198754;"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-0">Normal Hemoglobin</h6>
+                                    <small class="text-muted">Iron levels checked on-site</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="alert border-0 rounded-4 d-flex align-items-start gap-3 mb-0" role="alert" style="background-color: rgba(144, 21, 28, 0.1); color: #90151C; border-left: 5px solid #90151C !important;">
+                                <i class="bi bi-exclamation-triangle-fill fs-3"></i>
+                                <div>
+                                    <strong class="d-block mb-1">Important Medical Disclaimer:</strong>
+                                    <span>Meeting these points does not guarantee eligibility. Final approval is always determined during the professional health screening before donation.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 9: RECOVERY TIMELINE ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-hourglass-split me-2" style="color: #5C88A8;"></i>Recovery Timeline After Donation</h4>
+                    <small class="text-muted">How your body replenishes itself after a successful donation</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="timeline-container">
+                        <div class="timeline-steps">
+                            <div class="timeline-step">
+                                <div class="timeline-icon bg-danger-subtle">
+                                    <i class="bi bi-droplet" style="color: #90151C;"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1" style="color: #063154;">Immediately</h6>
+                                    <p class="small text-muted mb-0">Drink extra fluids and rest for a few minutes. Enjoy the provided snacks.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="timeline-icon bg-warning-subtle">
+                                    <i class="bi bi-cup-straw" style="color: #b8860b;"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1" style="color: #063154;">24 Hours</h6>
+                                    <p class="small text-muted mb-0">Avoid heavy exercise or lifting. Keep eating healthy, iron-rich foods.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="timeline-icon bg-primary-subtle">
+                                    <i class="bi bi-heart-pulse" style="color: #5C88A8;"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1" style="color: #063154;">48 Hours</h6>
+                                    <p class="small text-muted mb-0">Your blood plasma volume is fully restored by your body.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="timeline-icon bg-info-subtle">
+                                    <i class="bi bi-arrow-repeat" style="color: #0dcaf0;"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1" style="color: #063154;">4–6 Weeks</h6>
+                                    <p class="small text-muted mb-0">Red blood cells are completely replaced and back to normal levels.</p>
+                                </div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="timeline-icon bg-success-subtle">
+                                    <i class="bi bi-check2-circle" style="color: #198754;"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1" style="color: #063154;">Ready Again</h6>
+                                    <p class="small text-muted mb-0">Eligible for your next donation according to standard guidelines.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SECTION 10: BLOOD HERO JOURNEY ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                    <h4 class="mb-1 fw-semibold"><i class="bi bi-trophy-fill me-2" style="color: #5C88A8;"></i>Blood Hero Journey</h4>
+                    <small class="text-muted">The complete roadmap from your arm to a patient in need</small>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="roadmap-container">
+                        <div class="roadmap-line"></div>
+                        <div class="roadmap-steps">
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #5C88A8; color: #fff;"><i class="bi bi-person-plus-fill"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">1. Register</h6>
+                                    <p class="small text-muted mb-0">Sign in and verify your ID securely.</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #5C88A8; color: #fff;"><i class="bi bi-clipboard2-pulse-fill"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">2. Health Screening</h6>
+                                    <p class="small text-muted mb-0">Quick check of vitals and hemoglobin.</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #90151C; color: #fff;"><i class="bi bi-droplet-fill"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">3. Donate Blood</h6>
+                                    <p class="small text-muted mb-0">The 10-minute life-saving process.</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #5C88A8; color: #fff;"><i class="bi bi-clipboard2-pulse"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">4. Blood Tested</h6>
+                                    <p class="small text-muted mb-0">Rigorous testing for safety and compatibility.</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #5C88A8; color: #fff;"><i class="bi bi-diagram-3-fill"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">5. Components Prepared</h6>
+                                    <p class="small text-muted mb-0">Separated into RBCs, plasma, and platelets.</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #90151C; color: #fff;"><i class="bi bi-truck"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">6. Sent to Hospital</h6>
+                                    <p class="small text-muted mb-0">Delivered to where it is needed most.</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #5C88A8; color: #fff;"><i class="bi bi-hospital-fill"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">7. Patient Receives</h6>
+                                    <p class="small text-muted mb-0">Transfused into the patient in need.</p>
+                                </div>
+                            </div>
+                            <div class="roadmap-step">
+                                <div class="roadmap-icon" style="background: #5C88A8; color: #fff;"><i class="bi bi-heart-fill"></i></div>
+                                <div class="roadmap-card">
+                                    <h6 class="fw-bold mb-1">8. Life Saved ❤️</h6>
+                                    <p class="small text-muted mb-0">Your gift gives someone a second chance.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @* <div class="col-12 mt-4">
+                        <div class="alert border-0 rounded-4 d-flex align-items-center justify-content-center text-center mb-0 py-4" role="alert" style="background-color: #5C88A8; color: #fff;">
+                            <div>
+                                <i class="bi bi-trophy-fill fs-1 d-block mb-2"></i>
+                                <h4 class="fw-bold mb-2">Every Blood Hero begins with a single donation.</h4>
+                                <p class="mb-0 fst-italic">Your few minutes can become someone's lifetime.</p>
+                            </div>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ==================== STYLES ==================== -->
+<style>
+    .custom-card {
+        background: #ffffff;
+        border-radius: 16px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .custom-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+    .accordion-button:not(.collapsed) {
+        background-color: #f8f9fa;
+        color: #212529;
+        box-shadow: none;
+    }
+    .accordion-button:focus {
+        border-color: rgba(0,0,0,.125);
+        box-shadow: none;
+    }
+
+    /* ==================== NEW SECTIONS STYLES ==================== */
+
+    /* Section 6: Component Cards */
+    .component-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+    .component-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .component-card:hover .component-icon {
+        transform: scale(1.1);
+    }
+
+    /* Section 7: Help Cards */
+    .help-card {
+        transition: all 0.3s ease;
+        border: 1px solid transparent !important;
+    }
+
+        .help-card:hover {
+            border-color: #5C88A8 !important;
+            transform: translateY(-3px);
+        }
+
+    /* Section 8: Checklist Cards */
+    .checklist-card {
+        transition: all 0.2s ease;
+        border: 1px solid #e9ecef;
+    }
+
+        .checklist-card:hover {
+            background-color: #e8f5e9 !important;
+            border-color: #198754 !important;
+            transform: translateX(5px);
+        }
+
+    /* Section 9: Timeline */
+    .timeline-container {
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+
+    .timeline-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        min-width: 800px;
+    }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e9ecef;
+            z-index: 0;
+        }
+
+    .timeline-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        flex: 1;
+    }
+
+    .timeline-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+        background-color: #fff;
+        border: 4px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    /* .timeline-step:hover .timeline-icon {
+        transform: scale(1.1);
+        border-color: #5C88A8;
+    } */
+
+    .timeline-content {
+        max-width: 150px;
+    }
+
+    /* Section 10: Roadmap */
+    .roadmap-container {
+        position: relative;
+        padding: 2rem 0;
+    }
+
+    .roadmap-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 35px; /* Centers the line behind the 70px icons */
+        width: 4px;
+        background: linear-gradient(to bottom, #5C88A8, #90151C);
+        z-index: 0;
+    }
+
+    .roadmap-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .roadmap-step {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .roadmap-icon {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .roadmap-step:hover .roadmap-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .roadmap-card {
+        background: #fff;
+        padding: 1.25rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        flex: 1;
+        border: 1px solid #eef1f6;
+        transition: all 0.3s ease;
+    }
+
+    .roadmap-step:hover .roadmap-card {
+        transform: translateX(10px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: #5C88A8;
+    }
+
+    /* Mobile adjustments for Timeline */
+    @@media (max-width: 768px) {
+        .timeline-steps {
+            flex-direction: column;
+            min-width: unset;
+            gap: 2rem;
+        }
+
+            .timeline-steps::before {
+                top: 0;
+                bottom: 0;
+                left: 35px;
+                width: 4px;
+                height: 100%;
+            }
+
+        .timeline-step {
+            flex-direction: row;
+            text-align: left;
+            gap: 1.5rem;
+        }
+
+        .timeline-icon {
+            margin-bottom: 0;
+        }
+
+        .timeline-content {
+            max-width: unset;
+        }
+    }
+</style>

@@ -1,0 +1,91 @@
+﻿@model Khoon_e_Hayat.ViewModels.DonorAvailabilityViewModel
+@{
+    ViewData["Title"] = "Update Availability";
+    Layout = "~/Views/Shared/_DonorLayout.cshtml";
+}
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid px-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-2">
+                <div>
+                    <h4 class="mb-0">Update Availability</h4>
+                    <small class="text-muted">Manage your donation status and location preferences.</small>
+                </div>
+                <a href="@Url.Action("SmartMatches", "Donor")" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                    <i class="bx bx-arrow-back me-1"></i> Back to Smart Match
+                </a>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show border-0 rounded-4" role="alert">
+                    <i class="bx bx-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card custom-card border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4 p-md-5">
+                            <form asp-action="UpdateAvailability" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <!-- Donation Status -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold mb-2">Donation Status</label>
+                                    <div class="d-flex gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="IsAvailable" value="true" id="statusAvailable" checked="@(Model.IsAvailable)">
+                                            <label class="form-check-label" for="statusAvailable">
+                                                <i class="bx bx-check-circle text-success me-1"></i> Available
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" asp-for="IsAvailable" value="false" id="statusUnavailable" checked="@(!Model.IsAvailable)">
+                                            <label class="form-check-label" for="statusUnavailable">
+                                                <i class="bx bx-x-circle text-danger me-1"></i> Temporarily Unavailable
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">Let us know if you are currently able to respond to blood requests.</small>
+                                </div>
+
+                                <hr class="my-4" />
+
+                                <!-- Last Donation Date -->
+                                <div class="mb-4">
+                                    <label asp-for="LastDonationDate" class="form-label fw-semibold mb-2"></label>
+                                    <input asp-for="LastDonationDate" type="date" class="form-control rounded-pill px-3" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <small class="text-muted">Helps us calculate your eligibility based on the standard 56-day donation cycle.</small>
+                                </div>
+
+                                <hr class="my-4" />
+
+                                <!-- Preferred Area -->
+                                <div class="mb-4">
+                                    <label asp-for="PreferredArea" class="form-label fw-semibold mb-2"></label>
+                                    <select asp-for="PreferredArea" class="form-select rounded-pill px-3" asp-items="@(new SelectList(Model.AvailableAreas, Model.PreferredArea))">
+                                        <option value="">-- Select Preferred Area / City --</option>
+                                    </select>
+                                    <small class="text-muted">Prioritize blood requests near your preferred location.</small>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="d-grid mt-5">
+                                    <button type="submit" class="btn btn-primary btn-lg rounded-pill">
+                                        <i class="bx bx-save me-2"></i> Save Preferences
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

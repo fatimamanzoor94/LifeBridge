@@ -1,0 +1,832 @@
+﻿@model Khoon_e_Hayat.ViewModels.ExpiringBloodViewModel
+@{
+    ViewData["Title"] = "Expiring Blood";
+    Layout = "~/Views/Shared/_HospitalLayout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<style>
+    /* Strict Theme Colors & Card Styling (Matches Blood Inventory Exactly) */
+    .text-blood {
+        color: #90151C !important;
+    }
+
+    .text-theme {
+        color: #5C88A8 !important;
+    }
+
+    .btn-theme {
+        background-color: #5C88A8;
+        border-color: #5C88A8;
+        color: #fff;
+    }
+
+        .btn-theme:hover {
+            background-color: #4a6d87;
+            border-color: #4a6d87;
+            color: #fff;
+        }
+
+    .custom-card {
+        background: #ffffff;
+        border-radius: 16px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .custom-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .trend-icon {
+        font-size: 1.5rem;
+        color: #28a745;
+        opacity: 0.6;
+    }
+
+    #viewDetailsModal .form-control-plaintext {
+        font-size: 1.05rem;
+        padding: 0.25rem 0;
+        border-bottom: 1px dashed #dee2e6;
+    }
+
+    .pagination-wrapper-n {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+        padding: 16px 20px;
+        background: #FFFFFF;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+    }
+
+    .pagination-n .page-link {
+        border: 1px solid #e9ecef;
+        color: #5C88A8;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        margin: 0 2px;
+        border-radius: 8px !important;
+    }
+
+    .pagination-n .page-item.active .page-link {
+        background: #5C88A8;
+        border-color: #5C88A8;
+        color: #FFFFFF;
+    }
+
+    .pagination-n .page-item.disabled .page-link {
+        color: #adb5bd;
+        background: #FFFFFF;
+    }
+
+    .progress {
+        height: 10px;
+        border-radius: 50px;
+        background-color: #e9ecef;
+    }
+
+    .progress-bar {
+        box-shadow: none !important;
+        border-radius: 50px;
+        transition: width 0.6s ease;
+    }
+
+    .smart-alert {
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+        .smart-alert.alert-danger-custom {
+            background-color: #fff5f5;
+            border: 1px solid #fecaca;
+            color: #90151C;
+        }
+
+        .smart-alert.alert-warning-custom {
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        .smart-alert.alert-success-custom {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+    /* FIFO Priority Highlight */
+    .fifo-priority {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #5C88A8;
+        color: white;
+        font-size: 0.75rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .fifo-critical {
+        background: #90151C;
+    }
+
+    .fifo-expiring-soon {
+        background: #ECBD35;
+    }
+</style>
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-2">
+                <h4 class="mb-0">Expiring Blood Monitor</h4>
+            </div>
+
+            <!-- ==================== SMART ALERT BANNER ==================== -->
+            @if (Model.ExpiringThisWeekUnits > 0)
+            {
+                <div class="smart-alert alert-danger-custom">
+                    <i class="bi bi-exclamation-octagon-fill fs-3 text-danger"></i>
+                    <span>
+                        <strong>Critical Alert:</strong>
+                        @Model.ExpiringThisWeekUnits blood units are expiring within
+                        <strong>7 days</strong>. Immediate action is required.
+                    </span>
+                </div>
+            }
+            else if (Model.ExpiringSoonUnits > 0)
+            {
+                <div class="smart-alert alert-warning-custom">
+                    <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
+                    <span>
+                        <strong>Warning:</strong>
+                        @Model.ExpiringSoonUnits blood units are expiring within
+                        <strong>15 days</strong>. Plan their usage to minimize wastage.
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="smart-alert alert-success-custom">
+                    <i class="bi bi-patch-check-fill fs-3 text-success"></i>
+                    <span>
+                        <strong>All Clear:</strong>
+                        All blood units have sufficient shelf life. No immediate action is required.
+                    </span>
+                </div>
+            }
+
+            <!-- ==================== STATISTICS CARDS ==================== -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-droplet-fill text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Total Units</h6>
+                                <small class="text-muted">@Model.TotalBloodUnits.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-shield-check text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Safe Units</h6>
+                                <small class="text-muted" style="color: #198754 !important; font-weight: bold;">@Model.SafeUnits.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-exclamation-triangle text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Expiring Soon</h6>
+                                <small class="text-muted" style="color: #ECBD35 !important; font-weight: bold;">@Model.ExpiringSoonUnits.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-clock-history text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Critical (7 days)</h6>
+                                <small class="text-muted" style="color: #90151C !important; font-weight: bold;">@Model.ExpiringThisWeekUnits.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-calendar-x text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Expired Units</h6>
+                                <small class="text-muted" style="color: #90151C !important; font-weight: bold;">@Model.ExpiredUnits.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== SEARCH & FILTER ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-3">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-12 col-md-4">
+                            <label class="form-label small text-muted mb-1">Search</label>
+                            <input type="text" id="searchInput" class="form-control form-control-sm rounded-pill px-3" placeholder="Blood group, location..." />
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label small text-muted mb-1">Expiry Status</label>
+                            <select id="filterStatus" class="form-select form-select-sm rounded-pill">
+                                <option value="all">All</option>
+                                <option value="safe">Safe</option>
+                                <option value="expiring soon">Expiring Soon</option>
+                                <option value="critical">Critical</option>
+                                <option value="expired">Expired</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label small text-muted mb-1">Sort By</label>
+                            <select id="filterSortBy" class="form-select form-select-sm rounded-pill">
+                                <option value="nearest">Nearest Expiry</option>
+                                <option value="latest">Latest Expiry</option>
+                                <option value="bloodgroup">Blood Group</option>
+                                <option value="units">Available Units</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== TABLE ==================== -->
+            <div class="card custom-card border-0 shadow-sm rounded-4">
+                @if (!Model.ExpiringBlood.Any())
+                {
+                    <!-- Empty State - NO EXPORT BUTTONS HERE -->
+                    <div class="card-body px-4">
+                        <div class="text-center py-5">
+                            <div class="text-muted">
+                                <i class="bi bi-shield-check fs-1 d-block mb-2 text-success"></i>
+                                <h5 class="fw-semibold">No Expiring Blood Records Found</h5>
+                                <p class="mb-3">Great news! All blood units are safe for use.</p>
+                                <a asp-controller="Hospital" asp-action="BloodInventory" class="btn btn-theme rounded-pill px-4">
+                                    <i class="bi bi-droplet me-2"></i> View Full Inventory
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Data Exists - SHOW EXPORT BUTTONS -->
+                    <div class="card-header bg-transparent border-0 pb-2 pt-4 px-4">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                                <h4 class="mb-1 fw-semibold">Expiring Blood Records</h4>
+                                <small class="text-muted">Monitor blood units approaching expiry</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="exportTable('excel', 'expiringTable', 'ExpiringBlood')">
+                                    <i class="bi bi-file-earmark-excel me-1"></i> Excel
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="exportTable('pdf', 'expiringTable', 'ExpiringBlood')">
+                                    <i class="bi bi-file-earmark-pdf me-1"></i> PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body px-4">
+                        <div class="table-responsive p-3">
+                            <table class="table align-middle mb-0" id="expiringTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Blood Group</th>
+                                        <th>Available Units</th>
+                                        <th>Collection Date</th>
+                                        <th>Expiry Date</th>
+                                        <th>Days Remaining</th>
+                                        <th>Shelf Life</th>
+                                        <th>Expiry Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ExpiringBlood)
+                                    {
+                                        string progressColor = "#198754";
+                                        string badgeColor = "#198754";
+                                        string badgeClass = "bg-success-subtle text-success";
+
+                                        if (item.ExpiryStatus == "Expired")
+                                        {
+                                            progressColor = "#90151C";
+                                            badgeColor = "#90151C";
+                                            badgeClass = "bg-danger-subtle text-danger";
+                                        }
+                                        else if (item.ExpiryStatus == "Critical")
+                                        {
+                                            progressColor = "#90151C";
+                                            badgeColor = "#90151C";
+                                            badgeClass = "bg-danger-subtle text-danger";
+                                        }
+                                        else if (item.ExpiryStatus == "Expiring Soon")
+                                        {
+                                            progressColor = "#ECBD35";
+                                            badgeColor = "#ECBD35";
+                                            badgeClass = "bg-warning-subtle text-warning";
+                                        }
+
+                                        int clampedPercentage = Math.Min(100, item.ExpiryPercentage);
+                                        string daysText = "";
+                                        string daysClass = "";
+
+                                        if (item.DaysRemaining == 0 && item.ExpiryStatus != "Expired")
+                                        {
+                                            daysText = "Today";
+                                            daysClass = "text-danger fw-bold";
+                                        }
+                                        else if (item.DaysRemaining < 0)
+                                        {
+                                            daysText = "Expired";
+                                            daysClass = "text-danger fw-bold";
+                                        }
+                                        else if (item.DaysRemaining == 1)
+                                        {
+                                            daysText = "1 Day Left";
+                                            daysClass = "text-warning fw-bold";
+                                        }
+                                        else if (item.DaysRemaining <= 7)
+                                        {
+                                            daysText = $"{item.DaysRemaining} Days Left";
+                                            daysClass = "text-danger fw-bold";
+                                        }
+                                        else if (item.DaysRemaining <= 15)
+                                        {
+                                            daysText = $"{item.DaysRemaining} Days Left";
+                                            daysClass = "text-warning fw-bold";
+                                        }
+                                        else
+                                        {
+                                            daysText = $"{item.DaysRemaining} Days Left";
+                                            daysClass = "text-success fw-bold";
+                                        }
+
+                                        string fifoBadge = "";
+                                        if (item.DaysRemaining <= 7)
+                                        {
+                                            fifoBadge = $"<span class='fifo-priority fifo-critical'>FIFO Priority</span>";
+                                        }
+                                        else if (item.DaysRemaining <= 15)
+                                        {
+                                            fifoBadge = $"<span class='fifo-priority fifo-expiring-soon'>FIFO Priority</span>";
+                                        }
+
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold text-blood">@item.BloodGroup</span>
+                                                @Html.Raw(fifoBadge)
+                                            </td>
+                                            <td>@item.AvailableUnits units</td>
+                                            <td>@item.CollectionDate.ToString("dd-MMM-yyyy")</td>
+                                            <td>
+                                                @item.ExpiryDate.ToString("dd-MMM-yyyy")
+                                                @if (item.DaysRemaining == 0 && item.ExpiryStatus != "Expired")
+                                                {
+                                                    <span class="badge ms-2" style="background-color: #90151C; color: white;">Today</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="@daysClass">@daysText</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress flex-grow-1">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: @clampedPercentage%; background-color: @progressColor !important;"
+                                                             aria-valuenow="@clampedPercentage"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                    <small class="text-muted" style="min-width: 40px;">@clampedPercentage%</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge @badgeClass" style="font-weight: 600; padding: 6px 12px; border-radius: 50px;">@item.ExpiryStatus</span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm d-flex gap-2">
+                                                    <button type="button" class="btn btn-outline-info view-details-btn"
+                                                            data-id="@item.InventoryId"
+                                                            data-bg="@item.BloodGroup"
+                                                            data-units="@item.AvailableUnits"
+                                                            data-collection="@item.CollectionDate.ToString("yyyy-MM-dd")"
+                                                            data-expiry="@item.ExpiryDate.ToString("yyyy-MM-dd")"
+                                                            data-days="@item.DaysRemaining"
+                                                            data-status="@item.ExpiryStatus"
+                                                            data-location="@(item.StorageLocation ?? "N/A")"
+                                                            title="View Details">
+                                                        <i class="bx bx-info-circle"></i>
+                                                    </button>
+                                                    <a asp-controller="Hospital" asp-action="BloodInventory" class="btn btn-outline-primary" title="Update Inventory">
+                                                        <i class="bx bx-pencil"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        @if (Model.TotalPages > 1)
+                        {
+                            <div class="pagination-wrapper-n" style="margin-top: 20px;">
+                                <small class="text-muted">
+                                    Showing <strong>@((Model.CurrentPage - 1) * Model.PageSize + 1)</strong> to
+                                    <strong>@Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount)</strong> of
+                                    <strong>@Model.TotalCount</strong> records
+                                </small>
+                                <nav>
+                                    <ul class="pagination pagination-n mb-0">
+                                        @{
+                                            var prevDisabled = Model.CurrentPage == 1 ? "disabled" : "";
+                                            var nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : "";
+
+                                            var routeValues = new Dictionary<string, object>
+                                            {
+                                                { "Filters.SearchQuery", Model.Filters?.SearchQuery },
+                                                { "Filters.ExpiryStatus", Model.Filters?.ExpiryStatus ?? "all" },
+                                                { "Filters.SortBy", Model.Filters?.SortBy ?? "nearest" }
+                                            };
+                                        }
+                                        <li class="page-item @prevDisabled">
+                                            @{
+                                                routeValues["page"] = Model.CurrentPage - 1;
+                                            }
+                                            <a class="page-link" href="@Url.Action("ExpiringBlood", routeValues)">
+                                                <i class="bi bi-chevron-left"></i> Previous
+                                            </a>
+                                        </li>
+                                        @for (int i = 1; i <= Model.TotalPages; i++)
+                                        {
+                                            var active = i == Model.CurrentPage ? "active" : "";
+                                            routeValues["page"] = i;
+                                            <li class="page-item @active">
+                                                <a class="page-link" href="@Url.Action("ExpiringBlood", routeValues)">@i</a>
+                                            </li>
+                                        }
+                                        <li class="page-item @nextDisabled">
+                                            @{
+                                                routeValues["page"] = Model.CurrentPage + 1;
+                                            }
+                                            <a class="page-link" href="@Url.Action("ExpiringBlood", routeValues)">
+                                                Next <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== VIEW DETAILS MODAL ==================== -->
+<div class="modal fade" id="viewDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-sm rounded-4">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-primary-subtle rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bx bx-droplet text-theme"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0">Blood Unit Details</h5>
+                        <small class="text-muted" id="modalInventoryId">INV-XXXX</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <div class="card border-0 bg-light-subtle rounded-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold text-blood mb-3"><i class="bx bx-droplet me-2"></i>Blood Information</h6>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-1">Blood Group</label>
+                                <p class="form-control-plaintext fw-bold text-blood mb-0" id="d_BloodGroup">-</p>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-1">Available Units</label>
+                                <p class="form-control-plaintext mb-0" id="d_Units">-</p>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-1">Collection Date</label>
+                                <p class="form-control-plaintext mb-0" id="d_Collection">-</p>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-1">Expiry Date</label>
+                                <p class="form-control-plaintext mb-0" id="d_Expiry">-</p>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-success mb-3 mt-4"><i class="bx bx-info-circle me-2"></i>Expiry Details</h6>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-1">Days Remaining</label>
+                                <p class="form-control-plaintext mb-0" id="d_Days">-</p>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-1">Expiry Status</label>
+                                <p class="form-control-plaintext mb-0" id="d_Status">-</p>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small text-muted mb-1">Storage Location</label>
+                                <p class="form-control-plaintext mb-0" id="d_Location">-</p>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-bold text-danger mb-3 mt-4"><i class="bx bx-exclamation-triangle me-2"></i>Recommended Action</h6>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div id="d_Recommendation" class="p-3 rounded-3 border bg-light-subtle">
+                                    <p class="mb-0 fw-semibold" id="d_RecommendationText">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                <a asp-controller="Hospital" asp-action="BloodInventory" class="btn btn-theme rounded-pill px-4">Update Inventory</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        console.log("🚀 Expiring Blood Script Loaded Successfully!");
+
+        function applyFilters() {
+            try {
+                const sVal = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+                const statVal = (document.getElementById('filterStatus').value || 'all').toLowerCase().trim();
+                const sortBy = document.getElementById('filterSortBy').value;
+                const tbody = document.querySelector("#expiringTable tbody");
+                const rows = Array.from(tbody.querySelectorAll("tr"));
+
+                rows.forEach(row => {
+                    const bg = (row.cells[0]?.textContent || '').toLowerCase().trim();
+                    const location = (row.cells[6]?.textContent || '').toLowerCase().trim();
+                    const status = (row.cells[6]?.querySelector('.badge')?.textContent || '').toLowerCase().trim();
+                    let show = true;
+                    if (sVal && !(bg.includes(sVal) || location.includes(sVal))) show = false;
+                    if (statVal !== 'all' && status !== statVal) show = false;
+                    row.style.display = show ? "" : "none";
+                });
+
+                sortTable(sortBy);
+            } catch (error) {
+                console.error("Error in applyFilters:", error);
+            }
+        }
+
+        function sortTable(sortBy) {
+            const tbody = document.querySelector("#expiringTable tbody");
+            const rows = Array.from(tbody.querySelectorAll("tr"));
+            const visibleRows = rows.filter(r => r.style.display !== 'none');
+
+            visibleRows.sort((a, b) => {
+                if (sortBy === 'nearest') {
+                    const daysA = parseInt(a.cells[4].textContent) || 9999;
+                    const daysB = parseInt(b.cells[4].textContent) || 9999;
+                    return daysA - daysB;
+                } else if (sortBy === 'latest') {
+                    const daysA = parseInt(a.cells[4].textContent) || -1;
+                    const daysB = parseInt(b.cells[4].textContent) || -1;
+                    return daysB - daysA;
+                } else if (sortBy === 'bloodgroup') {
+                    return a.cells[0].textContent.localeCompare(b.cells[0].textContent);
+                } else if (sortBy === 'units') {
+                    const unitsA = parseInt(a.cells[1].textContent) || 0;
+                    const unitsB = parseInt(b.cells[1].textContent) || 0;
+                    return unitsB - unitsA;
+                }
+                return 0;
+            });
+
+            visibleRows.forEach(row => tbody.appendChild(row));
+            rows.filter(r => r.style.display === 'none').forEach(row => tbody.appendChild(row));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const filterStatus = document.getElementById('filterStatus');
+            const filterSortBy = document.getElementById('filterSortBy');
+
+            [searchInput, filterStatus, filterSortBy].forEach(el => {
+                if (el) {
+                    el.addEventListener('input', applyFilters);
+                    el.addEventListener('change', applyFilters);
+                }
+            });
+
+            applyFilters();
+        });
+
+        function openViewDetailsModal(btn) {
+            const id = btn.getAttribute('data-id');
+            const bg = btn.getAttribute('data-bg');
+            const units = btn.getAttribute('data-units');
+            const collection = btn.getAttribute('data-collection');
+            const expiry = btn.getAttribute('data-expiry');
+            const days = btn.getAttribute('data-days');
+            const status = btn.getAttribute('data-status');
+            const location = btn.getAttribute('data-location');
+
+            document.getElementById('modalInventoryId').textContent = 'INV-' + String(id).padStart(4, '0');
+            document.getElementById('d_BloodGroup').textContent = bg || '-';
+            document.getElementById('d_Units').textContent = (units || '-') + ' units';
+            document.getElementById('d_Collection').textContent = collection || '-';
+            document.getElementById('d_Expiry').textContent = expiry || '-';
+
+            let daysText = '';
+            let daysClass = '';
+            if (days === '0') { daysText = 'Today'; daysClass = 'text-danger fw-bold'; }
+            else if (days < 0) { daysText = 'Expired'; daysClass = 'text-danger fw-bold'; }
+            else if (days === '1') { daysText = '1 Day Left'; daysClass = 'text-warning fw-bold'; }
+            else if (days <= 7) { daysText = days + ' Days Left'; daysClass = 'text-danger fw-bold'; }
+            else if (days <= 15) { daysText = days + ' Days Left'; daysClass = 'text-warning fw-bold'; }
+            else { daysText = days + ' Days Left'; daysClass = 'text-success fw-bold'; }
+            document.getElementById('d_Days').innerHTML = `<span class="${daysClass}">${daysText}</span>`;
+            document.getElementById('d_Status').textContent = status || '-';
+            document.getElementById('d_Location').textContent = location || '-';
+
+            let recommendation = '';
+            let recommendationClass = 'bg-success-subtle text-success border-success';
+            if (status === 'Expired') {
+                recommendation = 'Dispose Immediately - This unit has expired and should be discarded.';
+                recommendationClass = 'bg-danger-subtle text-danger border-danger';
+            } else if (status === 'Critical') {
+                recommendation = 'Issue First (FIFO) - This unit is critical and should be used immediately.';
+                recommendationClass = 'bg-danger-subtle text-danger border-danger';
+            } else if (status === 'Expiring Soon') {
+                recommendation = 'Use Before Newer Stock - This unit is expiring soon, prioritize using it before newer stock.';
+                recommendationClass = 'bg-warning-subtle text-warning border-warning';
+            } else {
+                recommendation = 'No Immediate Action Required - This unit has sufficient shelf life.';
+                recommendationClass = 'bg-success-subtle text-success border-success';
+            }
+            document.getElementById('d_RecommendationText').textContent = recommendation;
+            document.getElementById('d_Recommendation').className = 'p-3 rounded-3 border ' + recommendationClass;
+
+            const modalElement = document.getElementById('viewDetailsModal');
+            if (typeof bootstrap !== 'undefined') {
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            }
+        }
+
+        function showNotification(message, type = "success") {
+            const old = document.getElementById("customNotification");
+            if (old) old.remove();
+            const notification = document.createElement("div");
+            notification.id = "customNotification";
+            let bg = "#5C88A8", icon = "✔";
+            if (type === "error") { bg = "#dc3545"; icon = "✖"; }
+            else if (type === "warning") { bg = "#ffc107"; icon = "⚠"; }
+
+            notification.innerHTML = `<div style="display: flex; align-items: center; gap: 12px; padding: 16px 24px; background: ${bg}; color: #ffffff; border-radius: 12px; box-shadow: none; font-weight: 600; font-size: 15px; z-index: 9999999999; border: 1px solid rgba(255,255,255,0.1);"><span style="font-size: 20px;">${icon}</span><span>${message}</span></div>`;
+            notification.style.cssText = "position: fixed !important; top: 20px !important; right: 20px !important; z-index: 2147483647 !important; animation: slideInRight 0.4s ease;";
+
+            if (!document.getElementById('notification-anim-style')) {
+                const style = document.createElement('style');
+                style.id = 'notification-anim-style';
+                style.innerHTML = `@@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`;
+                document.head.appendChild(style);
+            }
+
+            document.documentElement.appendChild(notification);
+            setTimeout(() => {
+                notification.style.transition = "all 0.4s ease";
+                notification.style.opacity = "0";
+                notification.style.transform = "translateX(400px)";
+                setTimeout(() => { if (notification.parentNode) notification.parentNode.removeChild(notification); }, 400);
+            }, 3000);
+        }
+
+        window.exportTable = function(type, tableId, fileName) {
+            const table = document.getElementById(tableId);
+            if (!table) { showNotification('Table not found!', 'error'); return; }
+
+            try {
+                if (type === 'excel') {
+                    let csv = [];
+                    let rows = table.querySelectorAll("tr");
+                    for (let i = 0; i < rows.length; i++) {
+                        if (rows[i].style.display === 'none') continue;
+                        let row = [];
+                        let cols = rows[i].querySelectorAll("td, th");
+                        for (let j = 0; j < cols.length - 1; j++) {
+                            let cellText = cols[j].innerText.replace(/"/g, '""').trim().replace(/\s+/g, ' ');
+                            row.push(`"${cellText}"`);
+                        }
+                        csv.push(row.join(","));
+                    }
+                    if (csv.length <= 1) { showNotification('No records to export!', 'warning'); return; }
+                    let csvContent = "\uFEFF" + csv.join("\n");
+                    let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    let link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${fileName}.csv`;
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    showNotification('Excel Export Successful', 'success');
+                } else if (type === 'pdf') {
+                    if (typeof window.jspdf === 'undefined') { showNotification('PDF library not loaded!', 'error'); return; }
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('l', 'mm', 'a4');
+                    doc.setFontSize(18); doc.setTextColor(92, 136, 168); doc.text("Expiring Blood Report", 14, 20);
+                    doc.setFontSize(10); doc.setTextColor(108, 117, 125); doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+                    const rows = [];
+                    table.querySelectorAll("tbody tr").forEach(tr => {
+                        if (tr.style.display !== 'none') {
+                            const cells = tr.querySelectorAll("td");
+                            if (cells.length >= 7) rows.push([cells[0].innerText.trim(), cells[1].innerText.trim(), cells[2].innerText.trim(), cells[3].innerText.trim(), cells[4].innerText.trim(), cells[5].innerText.trim(), cells[6].innerText.trim()]);
+                        }
+                    });
+                    if (rows.length === 0) { showNotification('No records to export!', 'warning'); return; }
+                    doc.autoTable({ startY: 40, head: [['Blood Group', 'Units', 'Collection Date', 'Expiry Date', 'Days Remaining', 'Shelf Life', 'Status']], body: rows, theme: 'grid', headStyles: { fillColor: [92, 136, 168], textColor: 255, fontSize: 10 }, styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' } });
+                    doc.save(`${fileName}.pdf`);
+                    showNotification('PDF Export Successful', 'success');
+                }
+            } catch (error) {
+                console.error("💥 Export Error:", error);
+                showNotification('Export failed: ' + error.message, 'error');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const table = document.getElementById('expiringTable');
+            if (table) {
+                table.addEventListener('click', function(e) {
+                    const viewBtn = e.target.closest('.view-details-btn');
+                    if (viewBtn) openViewDetailsModal(viewBtn);
+                });
+            }
+        });
+    </script>
+}

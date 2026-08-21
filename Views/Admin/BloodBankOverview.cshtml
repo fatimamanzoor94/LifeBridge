@@ -1,0 +1,528 @@
+﻿@model Khoon_e_Hayat.ViewModels.BloodBankOverviewViewModel
+@{
+    ViewData["Title"] = "Blood Bank Overview";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .text-blood {
+        color: #90151C !important;
+    }
+
+    .text-theme {
+        color: #5C88A8 !important;
+    }
+
+    .btn-outline-theme {
+        color: #5C88A8;
+        border-color: #5C88A8;
+    }
+
+        .btn-outline-theme:hover {
+            background-color: #5C88A8;
+            border-color: #5C88A8;
+            color: #fff;
+        }
+
+    .custom-card {
+        background: #ffffff;
+        border-radius: 16px !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .custom-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+        }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .trend-icon {
+        font-size: 1.5rem;
+        color: #28a745;
+        opacity: 0.6;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+    .activity-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+</style>
+
+<div class="card border-0 w-100 mb-3" style="border-radius: 30px; background-color: #f5f8fd;">
+    <div class="p-3 main-card">
+        <div class="container-fluid card-scroll-content px-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 mt-3 flex-wrap gap-2">
+                <h4 class="mb-0">Blood Bank Overview</h4>
+                <div class="d-flex gap-2">
+                    <a asp-action="BloodBankInventory" class="btn btn-sm btn-outline-theme rounded-pill px-3">
+                        <i class="bi bi-box-seam me-1"></i> Manage Inventory
+                    </a>
+                    <a asp-action="BloodCollectionLog" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                        <i class="bi bi-file-earmark-text me-1"></i> Collection Log
+                    </a>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-hospital text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Hospitals</h6>
+                                <small class="text-muted">@Model.TotalHospitals</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-droplet text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Total Units</h6>
+                                <small class="text-muted">@Model.TotalBloodUnits.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-clipboard2-pulse text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Total Requests</h6>
+                                <small class="text-muted">@Model.TotalRequests.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-exclamation-triangle text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Emergencies</h6>
+                                <small class="text-muted">@Model.EmergencyRequests</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-graph-down text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Low Stock</h6>
+                                <small class="text-muted">@Model.LowStockHospitals</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div class="card custom-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="icon-box"><i class="bi bi-calendar-x text-dark"></i></div>
+                                <h6 class="card-title mt-3 mb-1">Expired</h6>
+                                <small class="text-muted">@Model.ExpiredUnits.ToString("N0")</small>
+                            </div>
+                            <i class="bx bx-trending-up trend-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Blood Group Distribution Chart -->
+                <div class="col-lg-6">
+                    <div class="card custom-card h-100">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Blood Group Distribution</h5>
+                            <div id="bloodGroupChart" style="min-height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="col-lg-6">
+                    <div class="card custom-card h-100">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Recent System Activities</h5>
+                            @if (!Model.RecentActivities.Any())
+                            {
+                                <div class="text-center text-muted py-4">No recent activities found.</div>
+                            }
+                            else
+                            {
+                                foreach (var activity in Model.RecentActivities)
+                                {
+                                    <div class="activity-item">
+                                        <div class="activity-icon" style="background-color: @(activity.Color)20; color: @activity.Color;">
+                                            <i class="bi @activity.Icon"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <p class="mb-1 fw-semibold text-dark">@activity.Action</p>
+                                            <small class="text-muted">@activity.TimeAgo</small>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Hospitals Table -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-4">Hospital Stock Summary</h5>
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Hospital Name</th>
+                                            <th>Total Units</th>
+                                            <th>Low Stock Alerts</th>
+                                            <th>Overall Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var hospital in Model.HospitalStocks)
+                                        {
+                                            <tr>
+                                                <td class="fw-semibold">@hospital.HospitalName</td>
+                                                <td><span class="fw-bold text-blood">@hospital.TotalUnits</span> units</td>
+                                                <td>
+                                                    @if (hospital.LowStockCount > 0)
+                                                    {
+                                                        <span class="badge bg-warning-subtle text-warning">@hospital.LowStockCount Groups</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-success-subtle text-success">0 Groups</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (hospital.Status == "Critical")
+                                                    {
+                                                        <span class="badge bg-danger-subtle text-danger">Critical</span>
+                                                    }
+                                                    else if (hospital.Status == "Warning")
+                                                    {
+                                                        <span class="badge bg-warning-subtle text-warning">Warning</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-success-subtle text-success">Healthy</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a asp-action="BloodBankInventory" asp-route-filters-SearchQuery="@hospital.HospitalName" class="btn btn-sm btn-outline-theme rounded-pill">
+                                                        View Details
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: background 0.2s ease;
+    }
+
+    .custom-card:hover .icon-box {
+        background: #e9ecef;
+    }
+    </style>
+
+@section Scripts {
+    <!-- ✅ STABLE VERSION: ApexCharts 3.49.0 -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.0/dist/apexcharts.min.js"></script>
+    
+    <script>
+        // Global chart instance
+        let bloodGroupChart = null;
+        
+        function initializeChart() {
+            console.log("🔍 Chart Initialization Started...");
+            
+            // ✅ Get data from model safely
+            const bloodGroupData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.BloodGroupDistribution));
+            
+            console.log("📊 Raw Data:", bloodGroupData);
+            
+            if (!bloodGroupData || !Array.isArray(bloodGroupData) || bloodGroupData.length === 0) {
+                console.error("❌ No data received from server!");
+                showEmptyState("No data received from server");
+                return;
+            }
+            
+            // Extract data arrays
+            const seriesData = bloodGroupData.map(item => item.Value || 0);
+            const labels = bloodGroupData.map(item => item.Label || 'Unknown');
+            
+            // ✅ EXACT THEME COLORS FROM ADMIN DASHBOARD
+            const themeColors = ['#0E1A2B', '#5C88A8', '#06162B', '#2F6E9B', '#0B2342', '#214D72', '#0A1A33', '#223A5E'];
+            const colors = labels.map((_, index) => themeColors[index % themeColors.length]);
+            
+            console.log("📈 Series:", seriesData);
+            console.log("🏷️ Labels:", labels);
+            console.log("🎨 Colors:", colors);
+            
+            const totalUnits = seriesData.reduce((a, b) => a + b, 0);
+            console.log("📊 Total Units:", totalUnits);
+            
+            const chartElement = document.getElementById('bloodGroupChart');
+            if (!chartElement) {
+                console.error("❌ Chart element not found!");
+                return;
+            }
+            
+            // Check if all values are zero
+            if (totalUnits === 0 || seriesData.every(v => v === 0)) {
+                console.warn("⚠️ All values are zero!");
+                showEmptyState("No blood inventory data available. Add blood stock to see the distribution.");
+                return;
+            }
+            
+            // Check if ApexCharts is loaded
+            if (typeof ApexCharts === 'undefined') {
+                console.error("❌ ApexCharts library not loaded!");
+                showEmptyState("Chart library not loaded. Check internet connection.");
+                return;
+            }
+            
+            // Destroy existing chart
+            if (bloodGroupChart) {
+                bloodGroupChart.destroy();
+                bloodGroupChart = null;
+            }
+            
+            // Chart Configuration (Matched with Admin Dashboard Styling)
+            const options = {
+                series: seriesData,
+                chart: {
+                    type: 'donut',
+                    height: 350,
+                    fontFamily: "'Public Sans', 'Inter', system-ui, sans-serif",
+                    toolbar: { show: false },
+                    animations: { 
+                        enabled: true, 
+                        easing: 'easeinout', 
+                        speed: 800,
+                        animateGradually: { enabled: true, delay: 150 },
+                        dynamicAnimation: { enabled: true, speed: 350 }
+                    }
+                },
+                labels: labels,
+                colors: colors, // ✅ Applied Admin Theme Colors
+                legend: { 
+                    position: 'bottom', 
+                    show: true, 
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    fontFamily: "'Public Sans', 'Inter', system-ui, sans-serif",
+                    labels: { colors: '#898F99' },
+                    markers: {
+                        width: 12,
+                        height: 12,
+                        radius: 3,
+                        offsetX: 0,
+                        offsetY: 0
+                    },
+                    itemMargin: {
+                        horizontal: 15,
+                        vertical: 5
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '72%', // ✅ Matched Admin Dashboard cutout style
+                            labels: {
+                                show: true,
+                                name: { 
+                                    show: true, 
+                                    fontSize: '13px', 
+                                    fontWeight: 600,
+                                    fontFamily: "'Public Sans', 'Inter', system-ui, sans-serif",
+                                    color: '#898F99',
+                                    offsetY: -10
+                                },
+                                value: { 
+                                    show: true, 
+                                    fontSize: '16px', 
+                                    fontWeight: 700,
+                                    fontFamily: "'Public Sans', 'Inter', system-ui, sans-serif",
+                                    color: '#0E1A2B',
+                                    offsetY: 5,
+                                    formatter: function(val) {
+                                        return parseInt(val).toString();
+                                    }
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total Units',
+                                    fontSize: '13px',
+                                    fontWeight: 600,
+                                    fontFamily: "'Public Sans', 'Inter', system-ui, sans-serif",
+                                    color: '#898F99',
+                                    formatter: function(w) {
+                                        const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                        return total.toString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: { enabled: false },
+                stroke: { 
+                    show: true, 
+                    width: 0, // ✅ Cleaner look (no white borders between slices)
+                    colors: ['#ffffff'] 
+                },
+                tooltip: {
+                    enabled: true,
+                    theme: 'dark', // ✅ Matched Admin Dashboard dark tooltip style
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: "'Public Sans', 'Inter', system-ui, sans-serif"
+                    },
+                    y: {
+                        formatter: function(val) {
+                            return " " + val + " Units";
+                        }
+                    }
+                },
+                responsive: [{
+                    breakpoint: 768,
+                    options: {
+                        chart: { height: 300 },
+                        legend: { 
+                            position: 'bottom',
+                            fontSize: '11px'
+                        },
+                        plotOptions: {
+                            pie: {
+                                donut: { size: '65%' }
+                            }
+                        }
+                    }
+                }]
+            };
+            
+            try {
+                // Create and render chart
+                bloodGroupChart = new ApexCharts(chartElement, options);
+                bloodGroupChart.render();
+                
+                // Force resize after render to fix any initial sizing glitches
+                setTimeout(() => {
+                    if (bloodGroupChart) {
+                        bloodGroupChart.updateOptions({ 
+                            chart: { height: 350 } 
+                        });
+                    }
+                }, 100);
+                
+                console.log("✅ Chart rendered successfully with Admin Theme!");
+            } catch (error) {
+                console.error("❌ Chart rendering error:", error);
+                showEmptyState("Error rendering chart: " + error.message);
+            }
+        }
+        
+        function showEmptyState(message) {
+            const chartElement = document.getElementById('bloodGroupChart');
+            if (chartElement) {
+                chartElement.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted" style="min-height: 320px;">
+                        <div class="text-center">
+                            <i class="bi bi-pie-chart fs-1 d-block mb-2" style="color: #D1D5DB;"></i>
+                            <p class="mb-0">No blood inventory data available.</p>
+                            <small class="text-muted">Add blood stock to see the distribution chart.</small>
+                        </div>
+                    </div>`;
+            }
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeChart);
+        } else {
+            // DOM is already loaded
+            setTimeout(initializeChart, 100);
+        }
+        
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (bloodGroupChart) {
+                    bloodGroupChart.updateOptions({ 
+                        chart: { height: 350 } 
+                    });
+                }
+            }, 250);
+        });
+    </script>
+}
